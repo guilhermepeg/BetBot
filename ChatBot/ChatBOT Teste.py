@@ -3,20 +3,12 @@ import streamlit.components.v1 as components
 import anthropic
 from datetime import date, datetime
 from uuid import uuid4
-from supabase import create_client
 
 st.set_page_config(
     page_title="🎰 BetBot AI",
     page_icon="🎰",
     layout="centered",
 )
-
-if not st.user.is_logged_in:
-    st.markdown("## BetBot AI")
-    st.button("Entrar com Google", on_click=st.login)
-    st.stop()
-
-USER_ID = str(st.user.sub)
 
 # --- CSS: black/neon futuristic theme ---
 st.markdown("""
@@ -429,57 +421,6 @@ def create_chat() -> dict:
     }
 
 
-@st.cache_resource
-def get_database_client():
-    return create_client(
-        st.secrets["supabase"]["url"],
-        st.secrets["supabase"]["service_role_key"],
-    )
-
-
-def load_user_data() -> dict:
-    response = (
-        get_database_client()
-        .table("user_data")
-        .select("chats, bet_history")
-        .eq("user_id", USER_ID)
-        .limit(1)
-        .execute()
-    )
-    if response.data:
-        return response.data[0]
-
-    user_data = {"user_id": USER_ID, "chats": [], "bet_history": []}
-    get_database_client().table("user_data").upsert(user_data).execute()
-    return user_data
-
-
-def save_chat_history() -> None:
-    try:
-        (
-            get_database_client()
-            .table("user_data")
-            .update({"chats": st.session_state.chats})
-            .eq("user_id", USER_ID)
-            .execute()
-        )
-    except Exception:
-        st.error("Não foi possível salvar o histórico dos chats no banco de dados.")
-
-
-def save_bet_history() -> None:
-    try:
-        (
-            get_database_client()
-            .table("user_data")
-            .update({"bet_history": st.session_state.bet_history})
-            .eq("user_id", USER_ID)
-            .execute()
-        )
-    except Exception:
-        st.error("Não foi possível salvar o histórico de bets no banco de dados.")
-
-
 def get_active_chat() -> dict:
     active_chat_id = st.session_state.active_chat_id
     for chat in st.session_state.chats:
@@ -489,7 +430,6 @@ def get_active_chat() -> dict:
     chat = create_chat()
     st.session_state.chats.insert(0, chat)
     st.session_state.active_chat_id = chat["id"]
-    save_chat_history()
     return chat
 
 
@@ -499,19 +439,9 @@ def select_chat(chat_id: str) -> None:
 
 
 if "chats" not in st.session_state:
-    try:
-        user_data = load_user_data()
-    except Exception:
-        st.error("Não foi possível acessar o banco. Verifique a configuração do Supabase.")
-        st.stop()
-
-    saved_chats = user_data.get("chats", [])
-    st.session_state.chats = saved_chats if isinstance(saved_chats, list) else []
-    saved_bets = user_data.get("bet_history", [])
-    st.session_state.bet_history = saved_bets if isinstance(saved_bets, list) else []
-    if not st.session_state.chats:
-        st.session_state.chats = [create_chat()]
-        save_chat_history()
+    st.session_state.chats = [create_chat()]
+if "bet_history" not in st.session_state:
+    st.session_state.bet_history = []
 
 if "active_chat_id" not in st.session_state:
     st.session_state.active_chat_id = st.session_state.chats[0]["id"]
@@ -520,13 +450,11 @@ st.session_state.messages = get_active_chat()["messages"]
 
 with st.sidebar:
     st.markdown("## ⚡ BetBot AI")
-    st.button("Sair", on_click=st.logout, use_container_width=True)
     if st.button("➕ Criar novo chat", use_container_width=True):
         chat = create_chat()
         st.session_state.chats.insert(0, chat)
         st.session_state.active_chat_id = chat["id"]
         st.session_state.messages = chat["messages"]
-        save_chat_history()
         st.rerun()
 
     st.markdown("### 💬 Seus chats")
@@ -544,7 +472,6 @@ with st.sidebar:
         active_chat["title"] = "Novo chat"
         active_chat["updated_at"] = datetime.now().isoformat(timespec="seconds")
         st.session_state.messages = active_chat["messages"]
-        save_chat_history()
         st.rerun()
 
     st.markdown(
@@ -560,9 +487,6 @@ if "sim_bets" not in st.session_state:
 
 if "multi_bets" not in st.session_state:
     st.session_state.multi_bets = []
-
-if "bet_history" not in st.session_state:
-    st.session_state.bet_history = []
 
 # --- Real AI engine (Anthropic Claude) ---
 SYSTEM_PROMPT = """Você é o BetBot, um assistente de IA especializado EXCLUSIVAMENTE em apostas esportivas.
@@ -709,7 +633,6 @@ with tab_chat:
         if active_chat["title"] == "Novo chat":
             active_chat["title"] = user_input.strip()[:40]
         st.session_state.chats.sort(key=lambda chat: chat["updated_at"], reverse=True)
-        save_chat_history()
         st.rerun()
 
 # ============================
@@ -1066,7 +989,6 @@ with tab_history:
             "gross_return": history_return,
         })
         st.session_state.bet_history.sort(key=lambda bet: bet["date"], reverse=True)
-        save_bet_history()
         st.rerun()
 
     if st.session_state.bet_history:
@@ -1120,12 +1042,10 @@ with tab_history:
             )
             if col5.button("✕", key=f"delete_history_{index}"):
                 st.session_state.bet_history.pop(index)
-                save_bet_history()
                 st.rerun()
 
         if st.button("🗑️ Limpar histórico de bets"):
             st.session_state.bet_history = []
-            save_bet_history()
             st.rerun()
     else:
         st.info("Nenhuma bet registrada. Adicione um resultado encerrado para acompanhar seu desempenho.")
