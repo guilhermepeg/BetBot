@@ -1,6 +1,7 @@
 import streamlit as st
 import streamlit.components.v1 as components
 import anthropic
+import os
 from datetime import date, datetime
 from uuid import uuid4
 
@@ -517,9 +518,16 @@ Regras:
 """
 
 def _get_client():
-    api_key = st.secrets.get("ANTHROPIC_API_KEY", None) if hasattr(st, "secrets") else None
+    api_key = os.getenv("ANTHROPIC_API_KEY")
+    if not api_key:
+        try:
+            api_key = st.secrets.get("ANTHROPIC_API_KEY")
+        except Exception:
+            api_key = None
+
     if not api_key:
         return None
+
     return anthropic.Anthropic(api_key=api_key)
 
 def get_bot_response(history: list) -> str:
