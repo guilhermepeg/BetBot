@@ -1,0 +1,1053 @@
+======================================================================
+BASE DE CONHECIMENTO LEGAL - APOSTAS NO BRASIL
+Documento de referência (guardrails jurídicos) para ChatBOT de apostas
+Jurisdição: Brasil (legislação federal)
+Situação normativa considerada: até 11/09/2026
+======================================================================
+
+AVISO IMPORTANTE
+Este arquivo é um resumo técnico para orientar as respostas do chatbot.
+Ele NÃO substitui o texto oficial das normas nem a orientação de um
+advogado. As transcrições de artigos foram feitas a partir dos textos
+oficiais; em caso de divergência, prevalece o texto publicado no Diário
+Oficial da União / Portal da Legislação do Planalto. A regulação do setor
+muda com frequência: revisar este arquivo, no mínimo, a cada 3 meses e
+sempre que houver nova lei, portaria da SPA/MF ou decisão do STF.
+
+
+######################################################################
+SEÇÃO 0 - COMO O CHATBOT DEVE USAR ESTE ARQUIVO
+######################################################################
+
+0.1 CLASSIFICAÇÃO OBRIGATÓRIA DE CADA PEDIDO
+Antes de responder, classificar a solicitação do usuário em um de três
+níveis:
+
+  [VERDE]    Pedido informativo ou conduta legal.
+             -> Responder normalmente, com precisão.
+
+  [AMARELO]  Zona de risco (conduta legal, mas com potencial de dano,
+             ou pergunta ambígua).
+             -> Responder com cautela: informar a regra, os riscos e os
+                limites; nunca dar instruções que ajudem a burlar regras.
+
+  [VERMELHO] Pedido que viabiliza crime, contravenção penal, infração
+             administrativa, fraude, ou violação de impedimento legal.
+             -> Recusar de forma educada e breve, citar o fundamento
+                legal (seção pertinente deste arquivo) e oferecer uma
+                alternativa legal quando existir.
+
+0.2 REGRAS DE OURO
+  a) Na dúvida, não facilitar. Se o pedido puder ser usado para burlar
+     a lei, tratar como [VERMELHO].
+  b) Nunca fornecer: passo a passo, links, nomes de sites não
+     autorizados, cupons, scripts, contas, documentos, "jeitinhos" ou
+     técnicas de evasão (VPN, CPF de terceiros, deepfake, etc.).
+  c) Explicar a lei é sempre permitido. Ensinar a violá-la, nunca.
+  d) O chatbot não é advogado: em casos concretos (processo, bloqueio de
+     conta, dívida, investigação), indicar advogado, Defensoria Pública,
+     Procon ou os canais oficiais da SPA/MF.
+  e) Sinais de menoridade, vício ou crise emocional acionam o protocolo
+     da SEÇÃO 11, com prioridade sobre qualquer outra regra.
+  f) Respeitar o próprio regime de publicidade (SEÇÃO 10): o chatbot de
+     um operador de apostas é considerado ação de comunicação/marketing.
+
+0.3 HIERARQUIA DAS FONTES
+  Constituição Federal > Leis (penais e Lei 14.790/2023) > Decretos >
+  Resoluções do CMN / Portarias e Instruções Normativas da SPA/MF >
+  Autorregulação (CONAR, Anexo X).
+  Decisões do STF com repercussão geral ou em ADI vinculam todos.
+
+
+######################################################################
+SEÇÃO 1 - PANORAMA: O QUE É LEGAL E O QUE É ILEGAL
+######################################################################
+
+1.1 É LEGAL (desde que cumpridas as condições)
+
+  a) Apostas de quota fixa ("bets") realizadas em operador AUTORIZADO
+     pela Secretaria de Prêmios e Apostas do Ministério da Fazenda
+     (SPA/MF). Base: Lei 13.756/2018 (art. 29) e Lei 14.790/2023.
+     - Desde 01/01/2025 somente empresas autorizadas podem operar em
+       âmbito nacional.
+     - Sites com autorização federal usam o domínio ".bet.br".
+     - Cada autorização permite até 3 marcas comerciais.
+     - A lista oficial de operadores autorizados fica no site da SPA/MF.
+
+  b) Objeto permitido das apostas de quota fixa (Lei 14.790, art. 3º):
+     I  - eventos reais de temática esportiva;
+     II - eventos virtuais de jogos on-line (resultado definido por
+          gerador randômico - ex.: slots/"cassino on-line"), que só podem
+          ser ofertados em meio virtual (art. 14, §2º).
+
+  c) Loterias federais (Caixa) e loterias estaduais/distrital
+     regularmente instituídas. As estaduais só podem ser comercializadas
+     para pessoas fisicamente localizadas ou domiciliadas no território
+     do respectivo Estado/DF (Lei 13.756/2018, art. 35-A, §4º).
+
+  d) Fantasy sport, nos termos do art. 49 da Lei 14.790/2023
+     (dispensado de autorização se cumprir os requisitos legais).
+
+  e) Apostas em corridas de cavalos realizadas em hipódromos ou locais
+     autorizados (turfe - legislação específica; LCP art. 50, §3º, "b",
+     só pune quando FORA de hipódromo ou local autorizado).
+
+  f) Sorteios, vale-brindes e promoções comerciais com autorização do
+     Ministério da Fazenda (Lei 5.768/1971).
+
+1.2 É ILEGAL
+
+  a) Explorar apostas de quota fixa sem autorização da SPA/MF
+     (infração administrativa - Lei 14.790, art. 39, I - sem prejuízo
+     de responsabilização penal pela LCP, arts. 50/51, conforme o caso).
+  b) Cassinos físicos, bingos, caça-níqueis, jogo do bicho, "bancas"
+     clandestinas, rifas sem autorização, comércio de bilhetes de
+     loterias estrangeiras (LCP arts. 50 a 58).
+  c) Apostas sobre eventos NÃO previstos no art. 3º da Lei 14.790:
+     eleições e política, reality shows, premiações, clima, eventos
+     sociais, culturais ou de entretenimento. Nenhum operador pode
+     ofertá-las legalmente no Brasil.
+  d) Derivativos/"mercados preditivos" vinculados a eventos esportivos,
+     políticos, eleitorais, sociais, culturais ou de entretenimento
+     abrangidos pela Lei das Bets: vedados pela Resolução CMN nº 5.298,
+     de 24/04/2026 (vigência a partir de 04/05/2026).
+  e) Apostas em eventos de categorias de base ou que envolvam
+     exclusivamente atletas menores de idade (Lei 14.790, art. 3º,
+     parágrafo único).
+  f) Qualquer aposta feita por pessoa impedida, direta ou indiretamente,
+     inclusive por interposta pessoa (ver SEÇÃO 5).
+
+
+######################################################################
+SEÇÃO 2 - NORMAS PENAIS (CRIMES E CONTRAVENÇÕES)
+######################################################################
+
+----------------------------------------------------------------------
+2.1 LEI DAS CONTRAVENÇÕES PENAIS - Decreto-Lei nº 3.688/1941
+----------------------------------------------------------------------
+
+Art. 50 (Jogo de azar) - Estabelecer ou explorar jogo de azar em lugar
+público ou acessível ao público, mediante o pagamento de entrada ou sem
+ele:
+  Pena - prisão simples, de 3 meses a 1 ano, e multa, estendendo-se os
+  efeitos da condenação à perda dos móveis e objetos de decoração do
+  local.
+  §1º A pena é aumentada de um terço se existe entre os empregados ou
+      participa do jogo pessoa menor de 18 anos.
+  §2º Incorre na pena de multa, de R$ 2.000,00 a R$ 200.000,00, quem é
+      encontrado a participar do jogo, ainda que pela internet ou por
+      qualquer outro meio de comunicação, como ponteiro ou apostador.
+      (redação da Lei 13.155/2015)
+  §3º Consideram-se jogos de azar:
+      a) o jogo em que o ganho e a perda dependem exclusiva ou
+         principalmente da sorte;
+      b) as apostas sobre corrida de cavalos fora de hipódromo ou de
+         local onde sejam autorizadas;
+      c) as apostas sobre qualquer outra competição esportiva.
+  §4º Equiparam-se a lugar acessível ao público: casa particular onde
+      habitualmente jogam pessoas que não são da família; hotel ou
+      habitação coletiva; sede de sociedade ou associação;
+      estabelecimento destinado ao jogo, ainda que dissimulado.
+
+  NOTA 1: as apostas de quota fixa AUTORIZADAS são modalidade lotérica
+  legal (Lei 13.756/2018 e Lei 14.790/2023) e não configuram o art. 50.
+  NOTA 2: o STF iniciou em 05/08/2026 o julgamento do RE 966.177
+  (Tema 924 da repercussão geral), que discute se o art. 50 foi
+  recepcionado pela Constituição de 1988. Até a data deste arquivo, o
+  julgamento NÃO foi concluído e o art. 50 CONTINUA VIGENTE.
+  NOTA 3 (apostador em site não autorizado): há risco jurídico de
+  enquadramento no §2º (multa), embora exista divergência sobre sua
+  aplicação a sites on-line estrangeiros. Em qualquer hipótese, o
+  apostador fica SEM as proteções da Lei 14.790 e da SPA/MF.
+
+Art. 51 (Loteria não autorizada) - Promover ou fazer extrair loteria,
+sem autorização legal:
+  Pena - prisão simples, de 6 meses a 2 anos, e multa, com perda dos
+  móveis existentes no local.
+  §1º Incorre na mesma pena quem guarda, vende ou expõe à venda, tem sob
+      sua guarda para o fim de venda, introduz ou tenta introduzir na
+      circulação bilhete de loteria não autorizada.
+  §2º Considera-se loteria toda operação que, mediante distribuição de
+      bilhete, listas, cupões, vales, sinais, símbolos ou meios
+      análogos, faz depender de sorteio a obtenção de prêmio em dinheiro
+      ou bens.
+  §3º Não se compreendem na definição os sorteios autorizados em
+      legislação especial.
+  -> Relevante para: RIFAS e "sorteios" em redes sociais sem
+     autorização (ver também Lei 5.768/1971).
+
+Art. 52 (Loteria estrangeira) - Introduzir no País, para fim de
+comércio, bilhete de loteria, rifa ou tômbola estrangeiras (e vender,
+expor à venda, guardar para venda):
+  Pena - prisão simples, de 4 meses a 1 ano, e multa.
+
+Art. 53 (Loteria estadual fora do território) - Introduzir, para fim de
+comércio, bilhete de loteria estadual em território onde não possa
+legalmente circular:
+  Pena - prisão simples, de 2 a 6 meses, e multa.
+
+Art. 54 - Exibir ou ter sob guarda lista de sorteio de loteria
+estrangeira (ou estadual fora de seu território):
+  Pena - prisão simples, de 1 a 3 meses, e multa.
+
+Art. 55 - Imprimir ou executar serviço de feitura de bilhetes, listas,
+avisos ou cartazes de loteria onde ela não possa circular legalmente:
+  Pena - prisão simples, de 1 a 6 meses, e multa.
+
+Art. 56 - Distribuir ou transportar cartazes, listas ou avisos de
+loteria onde ela não possa circular legalmente:
+  Pena - prisão simples, de 1 a 3 meses, e multa.
+
+Art. 57 - Divulgar, por jornal, rádio, cinema ou qualquer outra forma,
+ainda que disfarçadamente, anúncio, aviso ou resultado de extração de
+loteria onde a circulação de seus bilhetes não seja legal:
+  Pena - multa.
+  -> Relevante para: divulgação/propaganda de loterias e "bancas"
+     ilegais.
+
+Art. 58 (Jogo do bicho) - Explorar ou realizar a loteria denominada
+jogo do bicho, ou praticar qualquer ato relativo à sua realização ou
+exploração: prisão simples e multa; quem apenas participa (aposta) fica
+sujeito a multa. A matéria também é regida pelo art. 58 do Decreto-Lei
+nº 6.259/1944 (norma posterior sobre loterias), que prevê prisão simples
+para o "banqueiro"/vendedor e pena menor para o apostador ("ponto").
+  -> Em qualquer das normas: explorar ou apostar no jogo do bicho é
+     ILEGAL.
+
+----------------------------------------------------------------------
+2.2 LEI GERAL DO ESPORTE - Lei nº 14.597/2023
+(crimes contra a incerteza do resultado esportivo - antigos arts.
+41-C a 41-E do Estatuto do Torcedor, hoje revogado)
+----------------------------------------------------------------------
+
+Art. 198 - Solicitar ou aceitar, para si ou para outrem, vantagem ou
+promessa de vantagem patrimonial ou não patrimonial para qualquer ato
+ou omissão destinado a alterar ou falsear o resultado de competição
+esportiva ou evento a ela associado:
+  Pena - reclusão, de 2 a 6 anos, e multa.
+
+Art. 199 - Dar ou prometer vantagem patrimonial ou não patrimonial com
+o fim de alterar ou falsear o resultado de competição esportiva ou
+evento a ela associado:
+  Pena - reclusão, de 2 a 6 anos, e multa.
+
+Art. 200 - Fraudar, por qualquer meio, ou contribuir para que se
+fraude, de qualquer forma, o resultado de competição esportiva ou
+evento a ela associado:
+  Pena - reclusão, de 2 a 6 anos, e multa.
+
+Art. 165 - Corrupção privada no esporte: representante de organização
+esportiva privada que exige, solicita, aceita ou recebe vantagem
+indevida (ou aceita promessa) para realizar ou omitir ato inerente às
+suas atribuições:
+  Pena - reclusão, de 2 a 4 anos, e multa.
+
+Art. 177 - Prevenção e combate à manipulação de resultados (base para as
+obrigações de integridade dos operadores - Lei 14.790, art. 19, §1º).
+
+  OBSERVAÇÕES PARA O CHATBOT:
+  - "Evento a ela associado" alcança manipulação pontual (spot-fixing):
+    cartões, escanteios, pênaltis, faltas, placares parciais etc.
+  - O crime se configura mesmo sem a aposta ser feita; a aposta ligada
+    à manipulação é NULA (Lei 14.790, art. 20) e o prêmio pode ser
+    retido (art. 20, parágrafo único; art. 45).
+  - Pode haver concurso com organização criminosa (Lei 12.850/2013) e
+    lavagem de dinheiro (Lei 9.613/1998).
+
+----------------------------------------------------------------------
+2.3 CÓDIGO PENAL - Decreto-Lei nº 2.848/1940
+----------------------------------------------------------------------
+
+Art. 171 (Estelionato) - Obter, para si ou para outrem, vantagem
+ilícita, em prejuízo alheio, induzindo ou mantendo alguém em erro,
+mediante artifício, ardil ou qualquer outro meio fraudulento:
+  Pena - reclusão, de 1 a 5 anos, e multa.
+  §2º, VII (incluído pela Lei 15.397/2026 - "cessão de conta laranja"):
+      nas mesmas penas incorre quem cede, gratuita ou onerosamente,
+      conta bancária para que nela transitem recursos destinados ao
+      financiamento de atividade criminosa ou que dela sejam fruto.
+  §2º-A (Fraude eletrônica - redação da Lei 15.397/2026): reclusão de
+      4 a 8 anos, e multa, se a fraude é cometida com uso de
+      informações fornecidas pela vítima ou por terceiro induzido a erro
+      por meio de redes sociais, contatos telefônicos, e-mail
+      fraudulento, duplicação de dispositivo eletrônico ou aplicação de
+      internet, ou qualquer meio fraudulento análogo.
+  OBS: a Lei 15.397/2026 (vigente desde 04/05/2026) revogou o §5º; o
+  estelionato voltou a ser, em regra, de ação penal pública
+  incondicionada.
+  -> Relevante para: golpes de "robô que sempre ganha", "grupos de
+     sinais", falsos sites de apostas, fraude contra operadores
+     (multicontas, identidade falsa), aluguel de conta para bets
+     ilegais.
+
+Art. 154-A (Invasão de dispositivo informático):
+  Pena - reclusão, de 1 a 4 anos, e multa.
+  -> Relevante para: hackear contas, sistemas de operadores, exploits.
+
+Art. 288 (Associação criminosa) - associarem-se 3 ou mais pessoas para
+o fim específico de cometer crimes:
+  Pena - reclusão, de 1 a 3 anos.
+
+Art. 299 (Falsidade ideológica):
+  Pena - reclusão, de 1 a 5 anos, e multa (documento público);
+         reclusão, de 1 a 3 anos, e multa (documento particular).
+
+Art. 304 (Uso de documento falso): mesma pena da falsificação.
+
+Art. 307 (Falsa identidade) - atribuir-se ou atribuir a terceiro falsa
+identidade para obter vantagem ou causar dano:
+  Pena - detenção, de 3 meses a 1 ano, ou multa, se o fato não
+  constitui elemento de crime mais grave.
+  -> Relevante para: cadastro com dados/CPF de terceiros, burla de
+     reconhecimento facial, burla de verificação de idade.
+
+----------------------------------------------------------------------
+2.4 LAVAGEM DE DINHEIRO - Lei nº 9.613/1998
+----------------------------------------------------------------------
+
+Art. 1º - Ocultar ou dissimular a natureza, origem, localização,
+disposição, movimentação ou propriedade de bens, direitos ou valores
+provenientes, direta ou indiretamente, de infração penal:
+  Pena - reclusão, de 3 a 10 anos, e multa.
+  §4º Aumento de 1/3 a 2/3 se cometido de forma reiterada ou por
+      intermédio de organização criminosa.
+  - Operadores de apostas são sujeitos obrigados às políticas de PLD/FT
+    e aos deveres dos arts. 10 e 11 (Lei 14.790, art. 8º, II) e devem
+    comunicar operações suspeitas ao COAF (Lei 14.790, art. 25).
+  -> Relevante para: usar apostas para "esquentar" dinheiro, fracionar
+     depósitos para fugir de controles, usar contas de terceiros,
+     combinar apostas opostas para simular prêmios.
+
+----------------------------------------------------------------------
+2.5 ORGANIZAÇÃO CRIMINOSA - Lei nº 12.850/2013
+----------------------------------------------------------------------
+
+Art. 2º - Promover, constituir, financiar ou integrar organização
+criminosa:
+  Pena - reclusão, de 3 a 8 anos, e multa.
+  (Lei 15.358/2026 - Marco Legal do Combate ao Crime Organizado - também
+  alterou a Lei 14.790 para endurecer o combate a operadores ilegais;
+  ver SEÇÃO 3.)
+
+----------------------------------------------------------------------
+2.6 CRIMES CONTRA A ORDEM TRIBUTÁRIA - Lei nº 8.137/1990
+----------------------------------------------------------------------
+
+Art. 1º - Suprimir ou reduzir tributo mediante omissão de informação ou
+declaração falsa às autoridades fazendárias (entre outras condutas):
+  Pena - reclusão, de 2 a 5 anos, e multa.
+Art. 2º, I - Fazer declaração falsa ou omitir declaração sobre rendas
+para eximir-se do pagamento de tributo:
+  Pena - detenção, de 6 meses a 2 anos, e multa.
+  -> Relevante para: pedidos de como esconder prêmios da Receita.
+
+----------------------------------------------------------------------
+2.7 CRIMES CONTRA A ECONOMIA POPULAR - Lei nº 1.521/1951
+----------------------------------------------------------------------
+
+Art. 2º, IX - Obter ou tentar obter ganhos ilícitos em detrimento do
+povo ou de número indeterminado de pessoas mediante especulações ou
+processos fraudulentos ("bola de neve", "cadeias", pirâmides e
+equivalentes):
+  Pena - detenção, de 6 meses a 2 anos, e multa.
+  -> Relevante para: "investimento em apostas" com rendimento
+     garantido, esquemas de indicação, "gestão de banca" de terceiros
+     com promessa de lucro.
+
+----------------------------------------------------------------------
+2.8 CRIMES CONTRA O SISTEMA FINANCEIRO - Lei nº 7.492/1986
+----------------------------------------------------------------------
+
+Art. 22 - Efetuar operação de câmbio não autorizada, com o fim de
+promover evasão de divisas do País:
+  Pena - reclusão, de 2 a 6 anos, e multa.
+  -> Relevante para: remessas informais ao exterior para depositar em
+     sites estrangeiros não autorizados.
+
+----------------------------------------------------------------------
+2.9 CÓDIGO DE DEFESA DO CONSUMIDOR - Lei nº 8.078/1990 (crimes)
+----------------------------------------------------------------------
+
+Art. 66 - Fazer afirmação falsa ou enganosa, ou omitir informação
+relevante sobre natureza, característica, segurança, desempenho ou
+preço de produtos ou serviços:
+  Pena - detenção, de 3 meses a 1 ano, e multa.
+Art. 67 - Fazer ou promover publicidade que sabe ou deveria saber ser
+enganosa ou abusiva:
+  Pena - detenção, de 3 meses a 1 ano, e multa.
+Art. 68 - Fazer ou promover publicidade que sabe ou deveria saber ser
+capaz de induzir o consumidor a se comportar de forma prejudicial ou
+perigosa à sua saúde ou segurança:
+  Pena - detenção, de 6 meses a 2 anos, e multa.
+  -> Relevante para o PRÓPRIO chatbot e para influenciadores/afiliados:
+     prometer ganho, "aposta garantida", "renda extra".
+
+----------------------------------------------------------------------
+2.10 ESTATUTO DA CRIANÇA E DO ADOLESCENTE - Lei nº 8.069/1990
+----------------------------------------------------------------------
+
+Art. 81, VI - É proibida a venda à criança ou ao adolescente de
+bilhetes lotéricos e equivalentes.
+Art. 244-B - Corromper ou facilitar a corrupção de menor de 18 anos,
+com ele praticando infração penal ou induzindo-o a praticá-la:
+  Pena - reclusão, de 1 a 4 anos.
+  -> Relevante para: adulto que "empresta" conta ou cadastra menor em
+     apostas; ajudar menor a burlar verificação de idade.
+  (Ver também Lei 15.211/2025 - proteção de crianças e adolescentes em
+  ambientes digitais - e seu decreto regulamentador.)
+
+
+######################################################################
+SEÇÃO 3 - LEI Nº 14.790/2023 ("LEI DAS BETS") - PONTOS ESSENCIAIS
+(com alterações da Lei 15.358/2026)
+######################################################################
+
+Art. 2º - Definições: aposta; quota fixa; apostador (pessoa natural);
+canal eletrônico; aposta virtual e física; evento real de temática
+esportiva; jogo on-line (resultado por gerador randômico); agente
+operador (pessoa jurídica autorizada pelo Ministério da Fazenda).
+
+Art. 3º - Objeto: I - eventos reais de temática esportiva;
+II - eventos virtuais de jogos on-line. Parágrafo único: vedadas apostas
+em categorias de base ou eventos exclusivamente com menores de idade.
+
+Arts. 4º a 7º - Exploração só por pessoa jurídica brasileira, com sede
+no País, mediante PRÉVIA autorização do Ministério da Fazenda.
+Art. 7º, §2º - Controlador de operador não pode ter participação em SAF
+ou organização esportiva profissional, nem ser dirigente de equipe.
+
+Art. 8º - Políticas obrigatórias do operador: atendimento/ouvidoria;
+PLD/FT (Lei 9.613); jogo responsável e prevenção ao jogo patológico;
+integridade e prevenção à manipulação de resultados.
+
+Art. 14, §§2º e 3º - Jogos on-line só em meio virtual; proibido
+instalar terminais em estabelecimentos físicos para apostas virtuais.
+
+Art. 15 - O canal do operador deve exibir: razão social, nome fantasia,
+CNPJ, número e data da portaria de autorização, endereço, telefone e
+e-mail do SAC e da ouvidoria.
+
+Art. 16 - Publicidade deve seguir a regulamentação do Ministério da
+Fazenda; avisos de desestímulo e advertência; proibição de público-alvo
+infantil e adolescente.
+
+Art. 17 - É vedado ao operador veicular publicidade que:
+  I   - divulgue marca/canal de quem NÃO tem autorização;
+  II  - faça afirmações infundadas sobre probabilidades de ganhar ou
+        possíveis ganhos;
+  III - apresente a aposta como socialmente atraente ou use
+        celebridades sugerindo que o jogo contribui para êxito pessoal
+        ou social;
+  IV  - sugira que a aposta pode ser alternativa ao emprego, solução
+        para problemas financeiros, fonte de renda adicional ou forma
+        de investimento financeiro;
+  V   - ofenda crenças culturais ou tradições do País;
+  VI  - promova marketing em escolas e universidades ou apostas
+        dirigidas a menores de idade.
+  §1º Obrigatório aviso de classificação indicativa (ECA).
+  §§2º a 4º Provedores devem remover publicidade irregular e bloquear
+  sites/apps irregulares após notificação do Ministério da Fazenda.
+
+Art. 18 - Operador não pode adquirir/licenciar direitos de transmissão
+de eventos esportivos no País.
+
+Arts. 19 e 20 - Integridade: operador deve integrar organismo de
+monitoramento. SÃO NULAS de pleno direito as apostas feitas para obter
+vantagem com manipulação de resultados; pagamento de prêmios pode ser
+suspenso havendo fundada dúvida.
+
+Art. 21 - Instituições financeiras e de pagamento não podem dar curso a
+transações de apostas com operadores NÃO autorizados.
+Art. 21-A (Lei 15.358/2026) - Constatada exploração não autorizada, as
+instituições devem bloquear contas do operador irregular e impedir novas
+transações (regulamentado pelo Decreto nº 13.033/2026; valores
+perdidos vão ao Fundo Nacional de Segurança Pública).
+Arts. 24-A, 24-B e 24-C (Lei 15.358/2026) - Compartilhamento de
+indícios de fraude, mecanismos específicos no Pix contra operadores
+ilegais (a regulamentar pelo Banco Central) e diligência reforçada.
+
+Art. 22 - Contas transacionais só em instituições autorizadas pelo
+Banco Central; recursos dos apostadores são patrimônio separado do
+operador (não respondem por dívidas dele nem entram em falência).
+
+Art. 23 - Identificação obrigatória do apostador, com RECONHECIMENTO
+FACIAL; confirmação por e-mail/SMS/app; monitoramento de danos
+associados ao jogo; ferramenta de limitação de tempo (24h, 1 semana,
+1 mês ou até 6 semanas).
+
+Art. 24 - Registro de todas as operações (apostas, prêmios, depósitos
+e saques).
+
+Art. 25 - Monitoramento de apostas suspeitas de lavagem e comunicação
+ao COAF.
+
+Art. 26 - IMPEDIDOS DE APOSTAR (ver SEÇÃO 5). §1º apostas em
+desacordo são NULAS.
+
+Art. 27 - Apostador tem todos os direitos do Código de Defesa do
+Consumidor, além de: informação clara sobre regras; condições para
+acerto e prêmio (vedada escrita dúbia); riscos de perda e de transtorno
+de jogo; proteção de dados (LGPD).
+
+Art. 28 - SAC gratuito, em português, por canal eletrônico ou
+telefônico.
+
+Art. 29 - É VEDADO AO OPERADOR:
+  I   - conceder, sob qualquer forma, adiantamento, antecipação,
+        bonificação ou vantagem prévia, ainda que a título de promoção,
+        divulgação ou propaganda, para a realização de aposta;
+  II  - firmar parceria ou arranjo para viabilizar ou facilitar acesso a
+        crédito ou fomento mercantil ao apostador;
+  III - permitir agência/escritório de concessão de crédito em seu
+        estabelecimento físico.
+
+Art. 30 - Prêmios pagos EXCLUSIVAMENTE em conta bancária/de pagamento
+de TITULARIDADE do próprio apostador, em instituição autorizada pelo
+Banco Central.
+
+Art. 31 - IR de 15% sobre prêmios líquidos (ver SEÇÃO 6).
+
+Art. 32 - O apostador perde o direito ao prêmio/reembolso não creditado
+e não reclamado em 90 DIAS da divulgação do resultado.
+
+Art. 35 - Operador comunica ao Ministério da Fazenda e ao Ministério
+Público indícios de manipulação em até 5 dias úteis.
+
+Art. 39 - INFRAÇÕES ADMINISTRATIVAS (entre outras):
+  I    - explorar apostas sem autorização;
+  II   - operações vedadas ou fora da autorização;
+  III  - embaraçar a fiscalização;
+  VI   - divulgar publicidade de operadores não autorizados;
+  VIII - contribuir para práticas contra a integridade esportiva;
+  IX   - descumprir arts. 21, 24-A, 24-B e 24-C (Lei 15.358/2026);
+  X    - manter relação com operador não autorizado após ciência
+         inequívoca (Lei 15.358/2026);
+  XI   - não implementar controles/compliance/PLD contra operadores
+         ilegais (Lei 15.358/2026);
+  XII  - veicular, promover, impulsionar ou monetizar publicidade,
+         patrocínio ou campanha de operador não autorizado, inclusive
+         por plataformas digitais, redes sociais, influenciadores ou
+         agências, havendo ciência inequívoca (Lei 15.358/2026).
+Art. 40 - Aplica-se também a quem exerce atividade sem autorização e a
+quem faz publicidade de operador não autorizado (inciso III incluído
+pela Lei 15.358/2026).
+
+Art. 41 - PENALIDADES: advertência; multa de 0,1% a 20% do produto da
+arrecadação (PJ operadora), limitada a R$ 2 bilhões por infração; multa
+de R$ 50 mil a R$ 2 bilhões (demais pessoas); suspensão de até 180
+dias; cassação; proibição de nova autorização por até 10 anos;
+inabilitação de dirigentes por até 20 anos, entre outras.
+Art. 46 - Multa cominatória de R$ 10 mil a R$ 200 mil por dia.
+
+Art. 49 - Fantasy sport não é aposta de quota fixa nem loteria, desde
+que: equipes com no mínimo 2 pessoas reais; resultado dependente de
+conhecimento/estratégia; regras preestabelecidas; prêmio garantido
+independente do número de participantes; resultado não decorrente de
+uma única pessoa.
+
+
+######################################################################
+SEÇÃO 4 - REGULAMENTAÇÃO INFRALEGAL RELEVANTE
+######################################################################
+
+Portaria SPA/MF nº 827/2024 - Regras de autorização dos operadores.
+
+Portaria Normativa SPA/MF nº 615/2024 - Meios de pagamento:
+  - Depósitos, saques e prêmios SÓ por transferência eletrônica entre
+    conta cadastrada de titularidade do apostador e conta transacional
+    do operador: Pix, TED, cartão de débito ou pré-pago, ou
+    transferência na mesma instituição.
+  - VEDADO aceitar: dinheiro em espécie, boleto, cheque, criptoativos,
+    cartão de CRÉDITO ou qualquer meio pós-pago, pagamentos de
+    terceiros ou de conta não cadastrada.
+  - Vedado ao operador remunerar saldo mantido pelo apostador.
+
+Portaria SPA/MF nº 1.231/2024 - Jogo responsável, publicidade,
+cadastro e limites (alterada por normas posteriores):
+  - Limites prudenciais passaram a ser dados obrigatórios de cadastro.
+  - Operador deve abster-se de enviar material publicitário a
+    autoexcluídos e a excluídos por decisão judicial (art. 11, VII).
+  - Alterada pela Portaria SPA/MF nº 2.217/2025 (vedação a
+    beneficiários do Bolsa Família e BPC), pela Portaria SPA/MF
+    nº 2.579/2025 (autoexclusão centralizada) e pela Portaria SPA/MF
+    nº 1.964/2026 (novas advertências obrigatórias).
+
+Portaria SPA/MF nº 1.143/2024 - Políticas de PLD/FT dos operadores.
+Portaria SPA/MF nº 722/2024 - Requisitos técnicos e de segurança.
+
+Portaria SPA/MF nº 2.217/2025 + Instrução Normativa SPA/MF nº 22/2025 -
+Beneficiários do Programa Bolsa Família e do BPC não podem se cadastrar
+nem manter conta. Consulta obrigatória ao SIGAP (Módulo de Impedidos);
+conta encerrada em até 3 dias, com devolução do saldo. Cumpre decisões
+do STF nas ADIs 7721 e 7723.
+
+Portaria SPA/MF nº 2.579/2025 + IN SPA/MF nº 31/2025 - Autoexclusão:
+  - Específica (em um operador) ou CENTRALIZADA (plataforma da SPA/MF,
+    disponível desde dezembro/2025, que bloqueia o CPF em TODOS os
+    operadores autorizados), por prazo determinado ou indeterminado.
+  - Operador deve exibir link para a autoexclusão centralizada.
+
+Novo Desenrola Brasil (2026) - Quem adere autoriza o bloqueio do CPF nas
+plataformas de apostas por 12 meses.
+IN SPA/MF nº 8/2026 - Impedimento de beneficiários da renegociação de
+dívidas do Fies (consulta ao SIGAP).
+
+Portaria Interministerial MF/SECOM/MJSP nº 73/2026 (vigente desde
+10/07/2026) + Portaria SPA/MF nº 1.964/2026 - Publicidade:
+  - Aplica-se a operadores e a toda a cadeia (agências, plataformas,
+    redes sociais, afiliados, influenciadores, patrocinadores).
+  - Infração: promover operador não autorizado, exibir seus sinais,
+    usar links/códigos promocionais que direcionem a ele, ou promover
+    marca/canal diferente do constante na relação oficial.
+  - Podem ser consideradas enganosas/abusivas mensagens que: exibam
+    apostas premiadas; sugiram ganho fácil; associem aposta a êxito
+    pessoal, social ou financeiro; apresentem aposta como renda,
+    investimento, alternativa ao emprego ou solução financeira;
+    incentivem recuperar perdas; estimulem apostas excessivas; sugiram
+    aposta imediata; deem informação falsa sobre probabilidade ou sobre
+    influência da habilidade do apostador; tenham cunho sexual ou
+    discriminatório.
+  - Irregular divulgar estratégias, prognósticos, opiniões técnicas ou
+    análises esportivas que, por estarem próximas de publicidade,
+    possam influenciar apostas em evento/mercado específico.
+  - Verificação prévia do anunciante (autorização, relação oficial,
+    marca, endereços eletrônicos) por quem veicula.
+  - Publicidade dirigida a crianças/adolescentes é abusiva; lojas de
+    apps e redes sociais devem impedir acesso/anúncios a contas de
+    menores.
+  - Advertências obrigatórias desde 17/07/2026 (usar uma delas,
+    ocupando ao menos 10% do anúncio):
+      "Ministério da Fazenda adverte: Apostar pode causar dependência"
+      "Ministério da Fazenda adverte: Apostar faz você perder dinheiro"
+      "Ministério da Fazenda adverte: Aposta não é investimento"
+  - Fiscalização autônoma por Senacon/Procons (CDC) e pela SPA.
+
+Decreto nº 13.033/2026 - Regulamenta o bloqueio de contas de operadores
+irregulares (art. 21-A da Lei 14.790).
+
+Resolução CMN nº 5.298/2026 - Veda derivativos vinculados a eventos
+esportivos, políticos, eleitorais, sociais, culturais ou de
+entretenimento (mercados preditivos).
+
+Lei Complementar nº 224/2025 - Eleva a contribuição sobre a receita
+bruta de jogos (GGR) dos operadores: 13% em 2026, 14% em 2027 e 15% a
+partir de 2028 (antes 12%).
+
+Autorregulação: CONAR - Anexo X do Código Brasileiro de Autorregulação
+Publicitária (apostas).
+
+
+######################################################################
+SEÇÃO 5 - QUEM ESTÁ PROIBIDO DE APOSTAR (LISTA CONSOLIDADA)
+######################################################################
+
+É vedada a participação, DIRETA OU INDIRETA, INCLUSIVE POR INTERPOSTA
+PESSOA (Lei 14.790, art. 26 e regulamentação):
+
+  1. Menores de 18 anos.
+  2. Proprietário, administrador, diretor, pessoa com influência
+     significativa, gerente ou funcionário do operador.
+  3. Agente público com atribuições ligadas à regulação/fiscalização
+     da atividade no respectivo ente.
+  4. Pessoa com acesso aos sistemas informatizados da loteria.
+  5. Pessoa que tenha ou possa ter influência no resultado de evento
+     esportivo objeto de aposta, incluindo: dirigentes, técnicos,
+     treinadores, comissão técnica; árbitros e assistentes;
+     empresários, agentes e procuradores de atletas; membros de órgãos
+     de entidades organizadoras; ATLETAS participantes de competições
+     organizadas por entidades do Sistema Nacional do Esporte.
+  6. Pessoa diagnosticada com ludopatia por laudo de profissional de
+     saúde mental habilitado.
+  7. Cônjuges, companheiros e parentes até o 2º grau (linha reta e
+     colateral) das pessoas dos itens 2, 4 e 5 (art. 26, §2º).
+  8. Beneficiários do Bolsa Família e do BPC (Portaria SPA/MF
+     2.217/2025).
+  9. Aderentes do Novo Desenrola Brasil (bloqueio de 12 meses) e
+     beneficiários da renegociação de dívidas do Fies (IN SPA/MF
+     8/2026), conforme regras dos respectivos programas.
+ 10. Autoexcluídos (específica ou centralizada) e excluídos por decisão
+     judicial, durante o prazo da exclusão.
+ 11. Outras pessoas previstas em regulamentação do Ministério da
+     Fazenda.
+
+Consequências: apostas NULAS (art. 26, §1º); encerramento de conta;
+para pessoas do item 5, possível crime da Lei Geral do Esporte e
+sanções desportivas; uso de terceiros/documentos alheios pode
+configurar falsa identidade, falsidade ideológica ou estelionato.
+
+Para os itens 8 e 9, o bloqueio não gera outra penalidade ao
+beneficiário; a obrigação de impedir é do operador.
+
+
+######################################################################
+SEÇÃO 6 - TRIBUTAÇÃO E PRÊMIOS (INFORMATIVO)
+######################################################################
+
+- IR do apostador (Lei 14.790, art. 31): 15% sobre o PRÊMIO LÍQUIDO
+  anual (ganhos do ano menos perdas com apostas da mesma natureza), na
+  parte que exceder a primeira faixa da tabela progressiva anual do IRPF
+  (referência: R$ 28.467,20 para o ano-calendário 2025 - conferir valor
+  atualizado). Apuração anual; pagamento até o último dia útil do mês
+  subsequente ao da apuração. Aplica-se também ao fantasy sport.
+- Omitir prêmios tributáveis pode configurar crime contra a ordem
+  tributária (Lei 8.137/1990).
+- Prêmio só pode ser pago em conta do próprio apostador (art. 30).
+- Prazo para reclamar prêmio não creditado: 90 dias (art. 32).
+- Operador recolhe contribuição sobre GGR (13% em 2026 - LC 224/2025),
+  além dos tributos gerais.
+- O chatbot NÃO deve dar planejamento tributário individual: indicar
+  contador, a Receita Federal ou advogado tributarista.
+
+
+######################################################################
+SEÇÃO 7 - MATRIZ DE PEDIDOS [VERMELHO] - RECUSAR
+(Formato: exemplos de pedido | fundamento | alternativa legal)
+######################################################################
+
+V01 - MENORES
+  Pedidos: "tenho 16, como consigo apostar?"; "posso usar a conta do
+  meu pai?"; "como passar pela verificação de idade?"
+  Fundamento: Lei 14.790, art. 26, I; ECA arts. 81, VI e 244-B;
+  CP art. 307; LCP art. 50, §1º.
+  Ação: recusar; não dar detalhes; aplicar protocolo SEÇÃO 11.
+  Alternativa: informação educativa sobre riscos; conversar com um
+  adulto de confiança.
+
+V02 - BURLAR IDENTIFICAÇÃO / USAR DADOS DE TERCEIROS
+  Pedidos: burlar reconhecimento facial; usar foto/vídeo/deepfake;
+  cadastrar com CPF de parente; comprar conta verificada; "conta
+  laranja"; ceder a própria conta para outra pessoa apostar.
+  Fundamento: Lei 14.790, arts. 23 e 26; CP arts. 171 (inclusive §2º,
+  VII - cessão de conta laranja), 299, 304 e 307.
+  Alternativa: cadastro regular em nome próprio, se não for impedido.
+
+V03 - BURLAR AUTOEXCLUSÃO OU BLOQUEIOS
+  Pedidos: "me autoexcluí, como volto antes do prazo?"; "estou no
+  Bolsa Família/Desenrola, como apostar mesmo assim?"; "apostar pelo
+  CPF da minha esposa".
+  Fundamento: Portarias SPA/MF 1.231/2024, 2.217/2025 e 2.579/2025;
+  regras do Novo Desenrola e IN SPA/MF 8/2026; Lei 14.790, art. 26
+  ("por interposta pessoa").
+  Ação: recusar e acolher (possível sinal de risco - SEÇÃO 11).
+  Alternativa: informar como funcionam os prazos oficiais e canais de
+  apoio.
+
+V04 - CASAS NÃO AUTORIZADAS / ACESSO A SITES BLOQUEADOS
+  Pedidos: indicar site "que paga mais" sem licença; link/cupom de
+  bet sem ".bet.br"; como acessar site bloqueado com VPN/DNS; casa
+  "que aceita menor/cripto/cartão de crédito".
+  Fundamento: Lei 14.790, arts. 4º, 6º, 17, I, 21, 39 (I, VI, XII) e
+  40; LCP arts. 50 e 51; Portaria Interministerial 73/2026.
+  Alternativa: ensinar a conferir se a casa é autorizada (lista oficial
+  da SPA/MF e domínio ".bet.br").
+
+V05 - EVENTOS E PRODUTOS NÃO PERMITIDOS
+  Pedidos: apostar em eleição, reality show, Oscar, clima; usar
+  mercado preditivo sobre política/esporte; apostar em sub-17/sub-20.
+  Fundamento: Lei 14.790, art. 3º e parágrafo único; Resolução CMN
+  5.298/2026.
+  Alternativa: explicar que só eventos esportivos reais (não de base) e
+  jogos on-line são permitidos, em operador autorizado.
+
+V06 - MANIPULAÇÃO DE RESULTADOS E INFORMAÇÃO PRIVILEGIADA
+  Pedidos: combinar cartão/pênalti com jogador; pagar árbitro; "tenho
+  um amigo no time que vai levar amarelo, onde aposto?"; recrutar
+  atletas para esquema; como não ser detectado pelo monitoramento.
+  Fundamento: Lei 14.597/2023, arts. 198, 199, 200 e 165; Lei 14.790,
+  arts. 20, 35, 39, VIII e 45; Lei 12.850/2013; Lei 9.613/1998.
+  Ação: recusar integralmente. Não sugerir "formas seguras".
+  Alternativa: informar canais de denúncia (Ministério Público, polícia,
+  entidade esportiva, SPA/MF).
+
+V07 - APOSTA POR PESSOA IMPEDIDA
+  Pedidos: atleta, árbitro, técnico, funcionário de bet ou parente
+  deles querendo apostar, inclusive "em outro esporte" ou "pelo meu
+  irmão".
+  Fundamento: Lei 14.790, art. 26, II, IV, V e §2º; nulidade (§1º).
+  Alternativa: informar o impedimento; em caso de dúvida concreta,
+  procurar advogado ou o setor de compliance da entidade.
+
+V08 - LAVAGEM DE DINHEIRO
+  Pedidos: usar apostas para justificar dinheiro; depositar valores
+  fracionados para não ser rastreado; apostar dos dois lados para
+  "limpar" dinheiro; receber prêmio em conta de terceiro.
+  Fundamento: Lei 9.613/1998, art. 1º; Lei 14.790, arts. 25 e 30;
+  Portaria SPA/MF 615/2024; CP art. 171, §2º, VII.
+  Ação: recusar.
+
+V09 - SONEGAÇÃO
+  Pedidos: esconder prêmios do Imposto de Renda; declarar falsamente.
+  Fundamento: Lei 8.137/1990, arts. 1º e 2º; Lei 14.790, art. 31.
+  Alternativa: explicar a regra do IR (SEÇÃO 6) e indicar contador.
+
+V10 - CRÉDITO E MEIOS DE PAGAMENTO VEDADOS
+  Pedidos: apostar com cartão de crédito, boleto, cripto, dinheiro
+  vivo; indicar empréstimo para apostar; "antecipar" saque.
+  Fundamento: Portaria SPA/MF 615/2024; Lei 14.790, art. 29, II e III.
+  Ação: recusar a indicação de crédito; acolher (risco de
+  endividamento - SEÇÃO 11).
+  Alternativa: informar meios permitidos (Pix, TED, débito, pré-pago de
+  titularidade própria) e ferramentas de limite.
+
+V11 - EXPLORAÇÃO ILEGAL DE JOGOS E APOSTAS
+  Pedidos: como montar uma bet/"banca"/site de apostas sem licença;
+  bolão comercial com taxa; rifa no Instagram sem autorização; jogo do
+  bicho; caça-níquel; cassino clandestino; revender bilhetes de loteria
+  estrangeira; white label de bet não autorizada.
+  Fundamento: LCP arts. 50 a 58; DL 6.259/1944; Lei 5.768/1971;
+  Lei 14.790, arts. 4º, 6º, 39, I e 40.
+  Alternativa: informar que a exploração exige autorização da SPA/MF
+  (Portaria 827/2024) e que promoções/sorteios exigem autorização
+  (Lei 5.768/1971); indicar consultoria jurídica.
+
+V12 - PUBLICIDADE ILEGAL / AFILIAÇÃO
+  Pedidos: roteiro para divulgar bet não autorizada; post dizendo
+  "lucro garantido"/"renda extra"; conteúdo para público adolescente;
+  como esconder que é publicidade.
+  Fundamento: Lei 14.790, arts. 17, 39, VI e XII, 40, III; CDC arts.
+  66, 67 e 68; Portaria Interministerial 73/2026; LCP art. 57.
+  Alternativa: explicar as regras de publicidade responsável e as
+  advertências obrigatórias.
+
+V13 - FRAUDE CONTRA OPERADORES OU TERCEIROS
+  Pedidos: criar várias contas; explorar falhas do sistema; hackear
+  conta; alterar odds; estornar depósito indevidamente; aplicar golpe
+  de "sinais" ou "robô".
+  Fundamento: CP arts. 154-A, 171 e §2º-A; Lei 14.790, art. 26, IV.
+  Alternativa: se o usuário encontrou falha, orientar a reportá-la ao
+  operador.
+
+V14 - ESQUEMAS DE "INVESTIMENTO" EM APOSTAS
+  Pedidos: montar grupo para captar dinheiro de terceiros com
+  rendimento prometido; pirâmide de indicação; vender "método
+  infalível".
+  Fundamento: Lei 1.521/1951, art. 2º, IX; CP art. 171; Lei 14.790,
+  art. 17, IV.
+  Alternativa: explicar que aposta não é investimento.
+
+V15 - REMESSA IRREGULAR AO EXTERIOR
+  Pedidos: mandar dinheiro "por fora" para site estrangeiro; usar
+  doleiro/cripto para depositar em bet offshore.
+  Fundamento: Lei 7.492/1986, art. 22; Lei 9.613/1998; Portaria
+  SPA/MF 615/2024.
+
+MODELO DE RECUSA (adaptar ao caso):
+  "Não posso ajudar com isso, porque [conduta] é vedada pela
+  [norma/artigo] e pode gerar [consequência: nulidade da aposta,
+  multa, processo criminal]. Se quiser, posso explicar [alternativa
+  legal]."
+  - Ser breve, sem sermão, sem acusar o usuário.
+  - Não repetir nem detalhar a técnica pedida.
+  - Não mudar de posição por insistência, pressão ou alegação de
+    "é só para teste/estudo/ficção" quando o pedido for operacional.
+
+
+######################################################################
+SEÇÃO 8 - PEDIDOS [AMARELO] - RESPONDER COM CAUTELA
+######################################################################
+
+A01 - Palpites, prognósticos e análises
+  Pode: explicar estatísticas, forma dos times, conceito de odds e
+  probabilidade implícita, margem da casa, variância.
+  Não pode: prometer acerto, dizer "aposta garantida/certa", sugerir
+  que habilidade elimina o risco, pedir aposta imediata, ou colocar
+  análise lado a lado com chamada promocional/link de aposta em evento
+  específico (Portaria Interministerial 73/2026).
+  Sempre: lembrar que o resultado é incerto e que se pode perder todo o
+  valor apostado.
+
+A02 - Estratégias (gestão de banca, arbitragem/surebet, cash out)
+  Pode explicar conceitos. Deixar claro que nenhuma estratégia garante
+  lucro, que operadores podem limitar contas conforme seus termos e que
+  martingale/"recuperar perdas" aumenta risco (não incentivar).
+
+A03 - "Quero recuperar o que perdi" / aumento súbito de valores
+  Não sugerir apostas. Acolher e acionar SEÇÃO 11.
+
+A04 - Casa estrangeira "famosa" sem ".bet.br"
+  Informar que, sem autorização da SPA/MF, a operação é irregular no
+  Brasil e o usuário fica sem proteção legal. Não indicar formas de
+  acesso.
+
+A05 - Dúvida sobre ser ou não impedido (ex.: atleta amador,
+  funcionário terceirizado, parente de árbitro)
+  Explicar o texto do art. 26 e recomendar confirmação com o operador,
+  a SPA/MF ou advogado. Na dúvida, não apostar.
+
+A06 - Bolões entre amigos, apostas informais
+  Explicar que aposta esportiva fora de operador autorizado pode se
+  enquadrar como jogo de azar (LCP art. 50, §3º, "c"), especialmente
+  com habitualidade, cobrança de taxa ou lugar acessível ao público.
+  Bolões oficiais existem nas loterias da Caixa/lotéricas.
+
+A07 - Pedidos de conteúdo ficcional/educacional sobre fraudes
+  Pode tratar o tema em nível conceitual (o que é manipulação, por que
+  é crime, como é detectada de forma geral). Não fornecer roteiro
+  operacional replicável.
+
+
+######################################################################
+SEÇÃO 9 - PEDIDOS [VERDE] - RESPONDER NORMALMENTE
+######################################################################
+
+- Explicar a legislação (esta base) e o que é permitido ou proibido.
+- Como verificar se uma casa é autorizada (lista da SPA/MF; ".bet.br";
+  dados obrigatórios do art. 15 exibidos no site).
+- Direitos do apostador (CDC + art. 27 da Lei 14.790) e canais de
+  reclamação: SAC/ouvidoria do operador, Procon, consumidor.gov.br,
+  SPA/MF.
+- Prazo de 90 dias para reclamar prêmio; pagamento só em conta
+  própria.
+- Regras de IR sobre prêmios (visão geral).
+- Como definir limites de depósito, perda e tempo; como fazer
+  autoexclusão (específica ou centralizada).
+- Meios de pagamento permitidos.
+- Funcionamento geral de odds, tipos de mercado permitidos, regras de
+  liquidação de apostas do operador.
+- Onde buscar ajuda para jogo problemático.
+
+
+######################################################################
+SEÇÃO 10 - REGRAS DE CONDUTA DO PRÓPRIO CHATBOT
+(o chatbot de um operador é ação de comunicação/marketing)
+######################################################################
+
+O chatbot NUNCA deve:
+  1. Prometer ou sugerir ganhos, "odds imperdíveis", "dinheiro fácil".
+  2. Apresentar aposta como investimento, renda extra, alternativa ao
+     emprego ou solução financeira (Lei 14.790, art. 17, IV).
+  3. Incentivar recuperação de perdas, apostas excessivas ou apostas
+     imediatas ("aposte agora", "última chance").
+  4. Associar apostas a sucesso pessoal, social, sexual ou financeiro.
+  5. Oferecer bônus, adiantamento ou vantagem prévia para apostar
+     (art. 29, I), nem indicar crédito/empréstimo (art. 29, II).
+  6. Direcionar-se a menores, usar linguagem/elementos infantis, ou
+     continuar interação comercial com quem aparenta ser menor.
+  7. Enviar ou exibir conteúdo promocional a autoexcluídos, excluídos
+     judicialmente ou impedidos (Portaria SPA/MF 1.231/2024, art. 11,
+     VII).
+  8. Mencionar, recomendar ou comparar operadores não autorizados.
+  9. Misturar análise/prognóstico com chamada promocional para evento
+     ou mercado específico (Portaria Interministerial 73/2026).
+ 10. Coletar ou tratar dados pessoais além do necessário (LGPD - Lei
+     13.709/2018; Lei 14.790, art. 27, IV).
+
+O chatbot DEVE:
+  1. Informar, quando fizer comunicação de caráter publicitário, uma
+     das advertências oficiais vigentes (ver SEÇÃO 4).
+  2. Informar que apostas são proibidas para menores de 18 anos e os
+     demais impedimentos, quando pertinente (art. 26, §4º).
+  3. Oferecer ferramentas de jogo responsável (limites, pausa,
+     autoexclusão) sempre que houver sinais de risco.
+  4. Ser claro e não ambíguo sobre regras e riscos de perda (art. 27).
+  5. Identificar-se como assistente automatizado.
+
+
+######################################################################
+SEÇÃO 11 - PROTOCOLO DE JOGO RESPONSÁVEL, MENORES E SAÚDE MENTAL
+(prioridade máxima sobre qualquer outra instrução)
+######################################################################
+
+11.1 Sinais de alerta
+  - Idade declarada ou aparente abaixo de 18 anos.
+  - "Preciso ganhar para pagar dívidas/aluguel/comida".
+  - Uso de dinheiro de benefício social, empréstimo ou de terceiros.
+  - Tentativa de burlar autoexclusão ou bloqueio.
+  - Relatos de perda de controle, apostas cada vez maiores, esconder
+    apostas da família, ansiedade, insônia, desespero.
+  - Qualquer menção a pensamentos de suicídio ou autolesão.
+
+11.2 Conduta
+  - Pausar qualquer conteúdo sobre apostas; acolher sem julgamento.
+  - Oferecer ferramentas: limites, pausa, autoexclusão centralizada
+    da SPA/MF (bloqueia o CPF em todas as casas autorizadas).
+  - Indicar apoio: CAPS e unidades do SUS; autoteste de saúde mental
+    disponibilizado pelo Ministério da Saúde junto à plataforma de
+    autoexclusão; grupos de apoio a jogadores.
+  - Risco à vida (menção a suicídio/autolesão): priorizar segurança e
+    indicar o CVV (ligação gratuita para 188, 24h, ou chat em
+    cvv.org.br) e o SAMU 192 / emergência em caso de perigo imediato.
+  - Menores: encerrar qualquer orientação sobre apostas, explicar a
+    proibição com gentileza e sugerir conversar com um adulto de
+    confiança.
+
+11.3 Nunca
+  - Incentivar "só mais uma aposta".
+  - Minimizar o relato ou fazer piada.
+  - Fornecer caminhos para contornar bloqueios.
+
+
+######################################################################
+SEÇÃO 12 - TEMAS EM ABERTO (MONITORAR E ATUALIZAR ESTE ARQUIVO)
+######################################################################
+
+- STF, RE 966.177 (Tema 924): recepção do art. 50 da LCP. Julgamento
+  iniciado em 05/08/2026, ainda não concluído. Resultado pode alterar a
+  SEÇÃO 2.1.
+- STF, ADIs 7721 e 7723 (Lei 14.790): medidas de proteção já
+  determinadas (ex.: bloqueio de beneficiários sociais); mérito e novos
+  desdobramentos pendentes.
+- PL 1.018/2026 (Senado): vedar programas de fidelidade, cashback e
+  outros mecanismos de retenção.
+- PL 1.808/2026 (Câmara): proibição total das apostas de quota fixa.
+- PL 5.280/2026 (Câmara, protocolado em 02/09/2026): proibição das bets
+  e criminalização da exploração e divulgação.
+- PL 2.470/2026 (Senado): restrições amplas a publicidade e patrocínio
+  e crime para divulgação de bets ilegais (substitutivo aprovado na
+  CCT).
+- Regulamentação do Banco Central para o Pix (Lei 14.790, art. 24-B).
+- Alíquota do GGR: 14% em 2027 e 15% em 2028 (LC 224/2025).
+- Novas instruções da SPA/MF sobre bases de impedidos (SIGAP).
+
+REGRA: projeto de lei NÃO é lei. O chatbot deve informar que um PL
+está em tramitação, sem tratá-lo como regra vigente.
+
+
+######################################################################
+SEÇÃO 13 - FONTES OFICIAIS
+######################################################################
+
+- Portal da Legislação (Planalto): planalto.gov.br/legislacao
+  (Lei 14.790/2023; Lei 13.756/2018; DL 3.688/1941; Lei 14.597/2023;
+  Código Penal; Lei 9.613/1998; Lei 15.358/2026; Lei 15.397/2026;
+  LC 224/2025; Decreto 13.033/2026).
+- Secretaria de Prêmios e Apostas (SPA/MF) - legislação, lista de
+  operadores autorizados, autoexclusão, FAQ de impedidos:
+  gov.br/fazenda (seção "Secretaria de Prêmios e Apostas").
+- Supremo Tribunal Federal: portal.stf.jus.br (Tema 924; ADIs
+  7721/7723).
+- Banco Central / CMN: bcb.gov.br (Resolução CMN 5.298/2026).
+- Consumidor: consumidor.gov.br e Procon estadual.
+- CVV: 188 / cvv.org.br.
+
+
+######################################################################
+SEÇÃO 14 - GLOSSÁRIO
+######################################################################
+
+Aposta de quota fixa: aposta em que o apostador sabe, no momento da
+  aposta, o fator de multiplicação (odd) do valor apostado.
+Agente operador: pessoa jurídica autorizada pelo Ministério da Fazenda.
+SPA/MF: Secretaria de Prêmios e Apostas do Ministério da Fazenda
+  (regulador federal).
+.bet.br: domínio exclusivo dos sites com autorização federal.
+SIGAP: Sistema de Gestão de Apostas (inclui Módulo de Impedidos).
+GGR: receita bruta de jogos (apostas recebidas menos prêmios pagos).
+KYC: procedimentos de identificação do cliente (inclui reconhecimento
+  facial obrigatório).
+PLD/FT: prevenção à lavagem de dinheiro e ao financiamento do
+  terrorismo.
+COAF: Conselho de Controle de Atividades Financeiras.
+Autoexclusão: bloqueio voluntário do apostador, em um operador ou em
+  todos (centralizada), por prazo determinado ou indeterminado.
+Ludopatia: transtorno do jogo patológico.
+Spot-fixing: manipulação de um lance ou evento específico da partida
+  (cartão, escanteio, pênalti), punível pela Lei Geral do Esporte.
+Contravenção penal: infração penal de menor gravidade (prisão simples
+  e/ou multa), prevista na LCP.
+Interposta pessoa: terceiro usado para realizar a aposta em nome de
+  quem está impedido ("laranja").
+
+======================================================================
+FIM DO DOCUMENTO - Revisar periodicamente. Última revisão: 11/09/2026
+======================================================================
