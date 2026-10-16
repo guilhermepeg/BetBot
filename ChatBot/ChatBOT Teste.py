@@ -197,6 +197,39 @@ st.markdown("""
         box-shadow: 0 0 24px rgba(22,59,44,0.25) !important;
     }
 
+    /* Botão "+" de anexos e seu painel */
+    [data-testid="stPopover"] button {
+        background: #ffffff !important;
+        color: #163b2c !important;
+        border: 1px solid #163b2c !important;
+        border-radius: 50% !important;
+        font-size: 1.3rem !important;
+        font-weight: 700 !important;
+        padding: 0 !important;
+        min-height: 2.5rem !important;
+        width: 2.5rem !important;
+        justify-content: center !important;
+    }
+    [data-testid="stPopover"] button [data-testid="stIconMaterial"] { display: none !important; }
+    [data-testid="stPopoverBody"], [data-testid="stPopoverBody"] * {
+        background-color: #ffffff !important;
+        color: #163b2c !important;
+    }
+    [data-testid="stPopoverBody"] {
+        border: 1px solid rgba(22,59,44,0.35) !important;
+        box-shadow: 0 4px 18px rgba(22,59,44,0.2) !important;
+    }
+    [data-testid="stPopoverBody"] [data-testid="stFileUploaderDropzone"] {
+        border: 1px dashed rgba(22,59,44,0.55) !important;
+    }
+    [data-testid="stPopoverBody"] button {
+        border: 1px solid #163b2c !important;
+    }
+    [data-testid="stPopoverBody"] [data-testid="stTooltipHoverTarget"] button,
+    [data-testid="stPopoverBody"] [data-testid="stTooltipIcon"] button {
+        border: 0 !important;
+    }
+
     /* Metrics */
     [data-testid="stMetric"] label {
         font-family: 'Orbitron', monospace !important;
@@ -775,28 +808,28 @@ with tab_chat:
     upload_key = f"chat_uploads_{chat_key}_{attachment_version}"
     paste_key = f"chat_paste_{chat_key}_{attachment_version}"
     prompt_key = f"chat_prompt_{chat_key}_{attachment_version}"
-    uploaded_files = st.file_uploader(
-        "Anexe fotos ou arquivos para análise",
-        type=SUPPORTED_UPLOAD_TYPES,
-        accept_multiple_files=True,
-        key=upload_key,
-        max_upload_size=10,
-        help="Até 5 arquivos; no máximo 10 MB por arquivo e 20 MB no total.",
-    )
-    st.caption("Para colar uma imagem, clique na área abaixo e use Ctrl+V ou Command+V.")
-    pasted_image = paste_image_component(key=paste_key, default=None, height=88)
-    if isinstance(pasted_image, dict) and pasted_image.get("data_url"):
-        st.caption(f"Imagem colada: {pasted_image.get('name', 'imagem-colada')}")
-
     with st.form(key="chat_form", clear_on_submit=False):
-        cols = st.columns([5, 1])
-        user_input = cols[0].text_input(
+        cols = st.columns([1, 7, 2], vertical_alignment="center")
+        with cols[0].popover("＋", help="Anexar fotos ou arquivos", use_container_width=True):
+            uploaded_files = st.file_uploader(
+                "Anexe fotos ou arquivos para análise",
+                type=SUPPORTED_UPLOAD_TYPES,
+                accept_multiple_files=True,
+                key=upload_key,
+                max_upload_size=10,
+                help="Até 5 arquivos; no máximo 10 MB por arquivo e 20 MB no total.",
+            )
+            st.caption("Para colar uma imagem, clique na área abaixo e use Ctrl+V ou Command+V.")
+            pasted_image = paste_image_component(key=paste_key, default=None, height=88)
+            if isinstance(pasted_image, dict) and pasted_image.get("data_url"):
+                st.caption(f"Imagem colada: {pasted_image.get('name', 'imagem-colada')}")
+        user_input = cols[1].text_input(
             label="Mensagem",
             placeholder="Pergunte sobre apostas... ex: O que é handicap?",
             label_visibility="collapsed",
             key=prompt_key,
         )
-        submitted = cols[1].form_submit_button("Enviar 🎰")
+        submitted = cols[2].form_submit_button("Enviar 🎰")
 
     if submitted:
         attachment_count = len(uploaded_files or []) + (1 if pasted_image else 0)
