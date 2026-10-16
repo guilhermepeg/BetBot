@@ -23,10 +23,10 @@ st.markdown("""
 
     .stApp {
         background:
-            radial-gradient(ellipse 900px 360px at 50% 0%, rgba(255,174,0,0.25), transparent 72%),
-            radial-gradient(ellipse 700px 500px at 100% 100%, rgba(255,91,0,0.12), transparent 72%),
-            #594000 !important;
-        color: #fff4d1 !important;
+            radial-gradient(ellipse 900px 360px at 50% 0%, rgba(255,196,0,0.12), transparent 72%),
+            radial-gradient(ellipse 700px 500px at 100% 100%, rgba(255,109,0,0.06), transparent 72%),
+            #ffffff !important;
+        color: #302719 !important;
     }
 
     @keyframes fadeSlideIn {
@@ -45,34 +45,34 @@ st.markdown("""
         font-size: 0.75rem !important;
         font-weight: 700 !important;
         letter-spacing: 2px !important;
-        color: #ffe08a !important;
+        color: #765000 !important;
         text-transform: uppercase;
     }
     [data-testid="stTabs"] button[aria-selected="true"] {
-        color: #fff3c4 !important;
-        border-bottom: 2px solid #ffb300 !important;
-        text-shadow: 0 0 10px #ff8f00;
+        color: #a64b00 !important;
+        border-bottom: 2px solid #ff9d00 !important;
+        text-shadow: 0 0 8px rgba(255,143,0,0.25);
     }
 
     /* Chat messages */
     .user-msg {
-        background: rgba(255,152,0,0.16);
+        background: rgba(255,152,0,0.12);
         border-left: 3px solid #ff8f00;
         border-radius: 0 10px 10px 0;
         padding: 0.75rem 1rem;
         margin: 0.5rem 0;
-        color: #fff4d1;
+        color: #382300;
         box-shadow: 0 0 16px rgba(255,143,0,0.14);
         animation: fadeSlideIn 0.4s ease-out;
     }
 
     .bot-msg {
-        background: rgba(0,207,255,0.12);
+        background: rgba(0,207,255,0.1);
         border-left: 3px solid #00d4ff;
         border-radius: 0 10px 10px 0;
         padding: 0.75rem 1rem;
         margin: 0.5rem 0;
-        color: #e4faff;
+        color: #123245;
         box-shadow: 0 0 16px rgba(0,212,255,0.12);
         animation: fadeSlideIn 0.4s ease-out;
     }
@@ -86,29 +86,29 @@ st.markdown("""
         margin-bottom: 6px;
     }
 
-    .user-label { color: #ffc400; text-shadow: 0 0 8px rgba(255,196,0,0.7); }
-    .bot-label  { color: #00d4ff; text-shadow: 0 0 8px rgba(0,212,255,0.7); }
+    .user-label { color: #a65c00; text-shadow: 0 0 8px rgba(255,196,0,0.35); }
+    .bot-label  { color: #00708a; text-shadow: 0 0 8px rgba(0,140,180,0.3); }
 
     /* Input */
     .stTextInput > div > div > input {
-        background: rgba(48,31,0,0.65) !important;
-        color: #fff4d1 !important;
-        border: 1px solid rgba(255,190,0,0.55) !important;
+        background: #ffffff !important;
+        color: #302719 !important;
+        border: 1px solid rgba(166,92,0,0.45) !important;
         border-radius: 6px !important;
         font-family: 'Rajdhani', sans-serif !important;
         font-size: 1rem !important;
     }
-    .stTextInput > div > div > input::placeholder { color: rgba(255,224,138,0.65) !important; }
+    .stTextInput > div > div > input::placeholder { color: #8b7d68 !important; }
     .stTextInput > div > div > input:focus {
-        border-color: #ffd000 !important;
-        box-shadow: 0 0 14px rgba(255,190,0,0.4) !important;
+        border-color: #ff9d00 !important;
+        box-shadow: 0 0 14px rgba(255,157,0,0.25) !important;
     }
 
     /* Number input */
     .stNumberInput input {
-        background: rgba(48,31,0,0.65) !important;
-        color: #fff4d1 !important;
-        border: 1px solid rgba(255,190,0,0.55) !important;
+        background: #ffffff !important;
+        color: #302719 !important;
+        border: 1px solid rgba(166,92,0,0.45) !important;
         border-radius: 6px !important;
         font-family: 'Rajdhani', sans-serif !important;
     }
@@ -155,12 +155,12 @@ st.markdown("""
         font-family: 'Orbitron', monospace !important;
         font-size: 0.6rem !important;
         letter-spacing: 1.5px !important;
-        color: #ffe08a !important;
+        color: #765000 !important;
         text-transform: uppercase;
     }
     [data-testid="stMetric"] [data-testid="stMetricValue"] {
         font-family: 'Orbitron', monospace !important;
-        color: #ffd000 !important;
+        color: #995600 !important;
         text-shadow: 0 0 10px rgba(255,174,0,0.55);
     }
 
@@ -170,7 +170,7 @@ st.markdown("""
     /* Selectbox / multiselect */
     .stSelectbox label, .stMultiSelect label, .stNumberInput label, .stTextInput label {
         font-family: 'Rajdhani', sans-serif !important;
-        color: #ffe08a !important;
+        color: #765000 !important;
         font-weight: 600;
     }
 
@@ -178,7 +178,7 @@ st.markdown("""
     [data-testid="stNotification"], .stAlert {
         background: rgba(0,207,255,0.1) !important;
         border: 1px solid rgba(0,212,255,0.35) !important;
-        color: #e4faff !important;
+        color: #123245 !important;
     }
 
     /* Sidebar */
@@ -199,8 +199,8 @@ st.markdown("""
     /* Markdown section headers */
     [data-testid="stMarkdownContainer"] h3, [data-testid="stMarkdownContainer"] h4 {
         font-family: 'Orbitron', monospace !important;
-        color: #ffd000 !important;
-        text-shadow: 0 0 8px rgba(255,174,0,0.45);
+        color: #995600 !important;
+        text-shadow: 0 0 8px rgba(255,174,0,0.2);
         letter-spacing: 1px;
         border-bottom: 1px solid rgba(255,190,0,0.4);
         padding-bottom: 6px;
