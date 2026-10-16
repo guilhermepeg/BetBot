@@ -214,7 +214,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# --- Fixed full-width top banner: football-pitch particle bar (injected at page top) ---
+# --- Fixed full-width title banner ---
 components.html("""
 <!DOCTYPE html>
 <html>
@@ -226,125 +226,45 @@ components.html("""
 (function () {
   var BAR_ID = 'betbot-fixed-topbar';
   var STYLE_ID = 'betbot-fixed-topbar-style';
-  var BAR_HEIGHT = 170;
-  var TURF_HEIGHT = 96;
+  var BAR_HEIGHT = 78;
 
   function renderInto(doc, isFixed) {
+    var oldBar = doc.getElementById(BAR_ID);
+    if (oldBar) oldBar.remove();
+
     var bar = doc.createElement('div');
     bar.id = BAR_ID;
-    if (isFixed) {
-      bar.style.cssText =
-        'position:fixed; top:0; left:0; width:100vw; height:' + BAR_HEIGHT + 'px;' +
-        'z-index:999999; overflow:hidden; background:#fff; pointer-events:none;' +
-        'border-bottom:1px solid rgba(22,59,44,0.25);' +
-        'box-shadow:0 6px 34px rgba(22,59,44,0.12); font-family:Rajdhani,sans-serif;';
-    } else {
-      bar.style.cssText =
-        'position:relative; width:100%; height:' + BAR_HEIGHT + 'px;' +
-        'overflow:hidden; background:#fff; font-family:Rajdhani,sans-serif;';
-    }
-
+    bar.style.cssText =
+      'position:' + (isFixed ? 'fixed' : 'relative') + '; top:0; left:0; width:100%;' +
+      'height:' + BAR_HEIGHT + 'px; display:flex; align-items:center; justify-content:center;' +
+      'z-index:999999; overflow:hidden; background:#fff; pointer-events:none;' +
+      'border-bottom:1px solid rgba(22,59,44,0.25);' +
+      'box-shadow:0 4px 18px rgba(22,59,44,0.08);';
     bar.innerHTML =
-      '<style>' +
-      "@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@600;700&display=swap');" +
-      '#' + BAR_ID + ' .turf{position:absolute;top:0;left:0;width:100%;height:' + TURF_HEIGHT + 'px;' +
-        'background:repeating-linear-gradient(90deg,#14622a 0px,#14622a 42px,#1c8a3a 42px,#1c8a3a 84px);' +
-        'animation:betbotTurfScroll 7s linear infinite;}' +
-      '#' + BAR_ID + ' .turf:before{content:"";position:absolute;left:50%;top:0;bottom:0;width:2px;' +
-        'background:rgba(255,255,255,.5);transform:translateX(-50%);box-shadow:0 0 8px rgba(255,255,255,.35);}' +
-      '#' + BAR_ID + ' .turf:after{content:"";position:absolute;left:50%;top:50%;width:64px;height:64px;' +
-        'border:2px solid rgba(255,255,255,.45);border-radius:50%;transform:translate(-50%,-50%);' +
-        'box-shadow:0 0 10px rgba(255,255,255,.25);}' +
-      '@keyframes betbotTurfScroll{from{background-position:0 0;}to{background-position:168px 0;}}' +
-      '#' + BAR_ID + ' .shine{position:absolute;top:0;left:-40%;width:40%;height:' + TURF_HEIGHT + 'px;' +
-        'background:linear-gradient(120deg,transparent,rgba(255,255,255,.18),transparent);' +
-        'animation:betbotShine 4.5s linear infinite;}' +
-      '@keyframes betbotShine{0%{left:-40%;}100%{left:120%;}}' +
-      '#' + BAR_ID + ' canvas{position:absolute;top:0;left:0;width:100%;height:' + TURF_HEIGHT + 'px;}' +
-      '#' + BAR_ID + ' .hero{position:absolute;top:' + TURF_HEIGHT + 'px;left:0;width:100%;' +
-        'text-align:center;padding:10px 20px 12px;box-sizing:border-box;}' +
-      '#' + BAR_ID + ' .title{font-family:Orbitron,monospace;font-size:2.3rem;font-weight:900;' +
-        'letter-spacing:5px;margin:0;color:#163b2c;' +
-        'text-shadow:0 0 8px rgba(22,59,44,.2),0 0 25px rgba(22,59,44,.15);' +
-        'animation:betbotGlow 3s ease-in-out infinite;}' +
-      '@keyframes betbotGlow{0%,100%{text-shadow:0 0 8px rgba(22,59,44,.2),0 0 25px rgba(22,59,44,.15);}' +
-        '50%{text-shadow:0 0 18px rgba(22,59,44,.3),0 0 45px rgba(22,59,44,.2);}}' +
-      '</style>' +
-      '<div class="turf"><div class="shine"></div></div>' +
-      '<canvas></canvas>' +
-      '<div class="hero">' +
-      '  <div class="title">BETBOT AI</div>' +
-      '</div>';
+      '<span style="font-family:Orbitron,monospace;font-size:1.8rem;font-weight:900;' +
+      'letter-spacing:5px;color:#163b2c;">BETBOT AI</span>';
 
     doc.body.appendChild(bar);
-
-    var canvas = bar.querySelector('canvas');
-    var ctx = canvas.getContext('2d');
-    var winRef = isFixed ? window.parent : window;
-
-    function resize() {
-      canvas.width = winRef.innerWidth || 800;
-      canvas.height = TURF_HEIGHT;
-    }
-    resize();
-    if (winRef.__betbotResizeHandler) {
-      winRef.removeEventListener('resize', winRef.__betbotResizeHandler);
-    }
-    winRef.__betbotResizeHandler = resize;
-    winRef.addEventListener('resize', resize);
-
-    var particles = [];
-    function spawn() {
-      var n = Math.floor(Math.random() * 4) + 1;
-      for (var i = 0; i < n; i++) {
-        particles.push({
-          x: Math.random() * canvas.width,
-          y: -4,
-          r: Math.random() * 2.5 + 0.5,
-          vx: (Math.random() - 0.5) * 0.6,
-          vy: Math.random() * 1.7 + 0.5,
-          opacity: 1,
-          decay: Math.random() * 0.02 + 0.008,
-          hue: Math.floor(Math.random() * 40 + 110),
-        });
-      }
-    }
-    function draw() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      if (Math.random() < 0.55) spawn();
-      for (var i = particles.length - 1; i >= 0; i--) {
-        var p = particles[i];
-        p.x += p.vx; p.y += p.vy; p.opacity -= p.decay;
-        if (p.opacity <= 0 || p.y > canvas.height + 12) { particles.splice(i, 1); continue; }
-        ctx.save();
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = 'hsla(' + p.hue + ',100%,65%,' + p.opacity + ')';
-        ctx.shadowBlur = 12;
-        ctx.shadowColor = 'hsla(' + p.hue + ',100%,65%,' + p.opacity + ')';
-        ctx.fill();
-        ctx.restore();
-      }
-      winRef.__betbotAnim = winRef.requestAnimationFrame(draw);
-    }
-    draw();
   }
 
   try {
     var pDoc = window.parent.document;
-    var old = pDoc.getElementById(BAR_ID);
-    if (old) old.remove();
-    var oldStyle = pDoc.getElementById(STYLE_ID);
-    if (oldStyle) oldStyle.remove();
     if (window.parent.__betbotAnim) {
       window.parent.cancelAnimationFrame(window.parent.__betbotAnim);
+      window.parent.__betbotAnim = null;
     }
+    if (window.parent.__betbotResizeHandler) {
+      window.parent.removeEventListener('resize', window.parent.__betbotResizeHandler);
+      window.parent.__betbotResizeHandler = null;
+    }
+    var oldStyle = pDoc.getElementById(STYLE_ID);
+    if (oldStyle) oldStyle.remove();
 
     var style = pDoc.createElement('style');
     style.id = STYLE_ID;
     style.innerHTML =
-      '[data-testid="stAppViewContainer"] .block-container{padding-top:' + (BAR_HEIGHT + 24) + 'px !important;}' +
-      'section[data-testid="stSidebar"] div[data-testid="stSidebarUserContent"]{padding-top:' + (BAR_HEIGHT + 16) + 'px !important;}' +
+      '[data-testid="stAppViewContainer"] .block-container{padding-top:' + (BAR_HEIGHT + 12) + 'px !important;}' +
+      'section[data-testid="stSidebar"] div[data-testid="stSidebarUserContent"]{padding-top:' + (BAR_HEIGHT + 8) + 'px !important;}' +
       '[data-testid="stHeader"]{background:transparent !important;}';
     pDoc.head.appendChild(style);
 
