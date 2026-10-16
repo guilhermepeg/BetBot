@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: sans-serif;
+      color: #163b2c;
+    }
+
+    #paste-zone {
+      box-sizing: border-box;
+      min-height: 66px;
+      padding: 12px;
+      border: 1px dashed rgba(22, 59, 44, 0.55);
+      border-radius: 8px;
+      background: #ffffff;
+      cursor: text;
+      outline: none;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    #paste-zone:focus {
+      border-style: solid;
+      box-shadow: 0 0 0 2px rgba(22, 59, 44, 0.12);
+    }
+
+    #status {
+      min-height: 18px;
+      padding-top: 4px;
+      font-size: 12px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div id="paste-zone" contenteditable="true" role="textbox" aria-label="Cole uma imagem copiada">
+    Clique aqui e cole uma imagem com Ctrl+V ou Command+V
+  </div>
+  <div id="status" aria-live="polite"></div>
+  <script>
+    (function () {
+      var MAX_IMAGE_BYTES = 5 * 1024 * 1024;
+      var zone = document.getElementById("paste-zone");
+      var status = document.getElementById("status");
+
+      function sendValue(value) {
+        window.parent.postMessage({
+          isStreamlitMessage: true,
+          type: "streamlit:setComponentValue",
+          value: value
+        }, "*");
+      }
+
+      function handlePaste(event) {
+        var items = Array.from((event.clipboardData && event.clipboardData.items) || []);
+        var imageItem = items.find(function (item) {
+          return item.type.indexOf("image/") === 0;
+        });
+        if (!imageItem) {
+          if (event.clipboardData && event.clipboardData.getData("text")) {
+            event.preventDefault();
+            status.textContent = "Esta área aceita imagens. Para texto, use o campo da pergunta.";
+          }
+          return;
+        }
+
+        event.preventDefault();
+        var image = imageItem.getAsFile();
+        if (!image) {
+          status.textContent = "Não foi possível ler a imagem copiada.";
+          return;
+        }
+        if (image.size > MAX_IMAGE_BYTES) {
+          status.textContent = "A imagem deve ter no máximo 5 MB.";
+          return;
+        }
+        if (!["image/png", "image/jpeg", "image/gif", "image/webp"].includes(image.type)) {
+          status.textContent = "Formato de imagem não suportado.";
+          return;
+        }
+
+        var reader = new FileReader();
+        reader.onload = function () {
+          var dataUrl = reader.result;
+          sendValue({
+            id: Date.now().toString(36) + Math.random().toString(36).slice(2),
+            name: image.name || "imagem-colada." + image.type.split("/")[1],
+            media_type: image.type,
+            data_url: dataUrl
+          });
+          status.textContent = "Imagem pronta para enviar.";
+        };
+        reader.onerror = function () {
+          status.textContent = "Não foi possível ler a imagem copiada.";
+        };
+        reader.readAsDataURL(image);
+      }
+
+      zone.addEventListener("paste", handlePaste);
+      window.parent.postMessage({
+        isStreamlitMessage: true,
+        type: "streamlit:componentReady",
+        apiVersion: 1
+      }, "*");
+    })();
+  </script>
+</body>
+</html>
