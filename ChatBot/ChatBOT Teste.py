@@ -226,7 +226,7 @@ components.html("""
 (function () {
   var BAR_ID = 'betbot-fixed-topbar';
   var STYLE_ID = 'betbot-fixed-topbar-style';
-  var BAR_HEIGHT = 252;
+  var BAR_HEIGHT = 170;
   var TURF_HEIGHT = 96;
 
   function renderInto(doc, isFixed) {
@@ -269,38 +269,11 @@ components.html("""
         'animation:betbotGlow 3s ease-in-out infinite;}' +
       '@keyframes betbotGlow{0%,100%{text-shadow:0 0 8px rgba(22,59,44,.2),0 0 25px rgba(22,59,44,.15);}' +
         '50%{text-shadow:0 0 18px rgba(22,59,44,.3),0 0 45px rgba(22,59,44,.2);}}' +
-      '#' + BAR_ID + ' .subtitle{font-family:Rajdhani,sans-serif;color:#163b2c;font-size:.85rem;' +
-        'letter-spacing:4px;margin:6px 0 3px;text-transform:uppercase;}' +
-      '#' + BAR_ID + ' .tagline{font-family:Rajdhani,sans-serif;color:#163b2c;' +
-        'font-size:.7rem;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:10px;}' +
-      '#' + BAR_ID + ' .badges{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;pointer-events:auto;}' +
-      '#' + BAR_ID + ' .badge{font-family:Orbitron,monospace;font-size:.55rem;font-weight:700;' +
-        'letter-spacing:1.5px;padding:4px 12px;border-radius:20px;text-transform:uppercase;' +
-        'border:1px solid;cursor:default;animation:betbotBadgePulse 4s ease-in-out infinite;' +
-        'transition:transform .2s ease;}' +
-      '#' + BAR_ID + ' .badge:hover{transform:translateY(-3px) scale(1.07);}' +
-      '#' + BAR_ID + ' .b1{color:#163b2c;border-color:#163b2c;background:#fff;' +
-        'box-shadow:0 0 8px rgba(22,59,44,.15);}' +
-      '#' + BAR_ID + ' .b2{color:#163b2c;border-color:#163b2c;background:#fff;' +
-        'box-shadow:0 0 8px rgba(22,59,44,.15);animation-delay:.8s;}' +
-      '#' + BAR_ID + ' .b3{color:#163b2c;border-color:#163b2c;background:#fff;' +
-        'box-shadow:0 0 8px rgba(22,59,44,.15);animation-delay:1.6s;}' +
-      '#' + BAR_ID + ' .b4{color:#163b2c;border-color:#163b2c;background:#fff;' +
-        'box-shadow:0 0 8px rgba(22,59,44,.15);animation-delay:2.4s;}' +
-      '@keyframes betbotBadgePulse{0%,100%{opacity:.8;transform:scale(1);}50%{opacity:1;transform:scale(1.04);}}' +
       '</style>' +
       '<div class="turf"><div class="shine"></div></div>' +
       '<canvas></canvas>' +
       '<div class="hero">' +
-      '  <div class="title">⚡ BETBOT AI</div>' +
-      '  <div class="subtitle">Inteligência Artificial para Apostas Esportivas</div>' +
-      '  <div class="tagline">Encontre value bets &middot; Simule retornos &middot; Maximize seu ROI</div>' +
-      '  <div class="badges">' +
-      '    <span class="badge b1">🟢 Value Betting</span>' +
-      '    <span class="badge b2">🏆 Análise de Odds</span>' +
-      '    <span class="badge b3">⚡ Simulação Instant</span>' +
-      '    <span class="badge b4">🎯 Gestão de Banca</span>' +
-      '  </div>' +
+      '  <div class="title">BETBOT AI</div>' +
       '</div>';
 
     doc.body.appendChild(bar);
@@ -396,18 +369,18 @@ if "messages" not in st.session_state:
         {
             "role": "assistant",
             "content": (
-                "Olá! 👋🎰 Sou o **BetBot**, seu assistente de apostas esportivas com IA. "
+                "Olá! Sou o BetBot, seu assistente de apostas esportivas com IA. "
                 "Pode me perguntar sobre odds, mercados, estratégias, bankroll e muito mais. "
-                "Use também a aba **Simulação** para calcular seus retornos!"
+                "Use também a aba Simulação para calcular seus retornos!"
             ),
         }
     ]
 WELCOME_MESSAGE = {
     "role": "assistant",
     "content": (
-        "Olá! 👋🎰 Sou o **BetBot**, seu assistente de apostas esportivas com IA. "
+        "Olá! Sou o BetBot, seu assistente de apostas esportivas com IA. "
         "Pode me perguntar sobre odds, mercados, estratégias, bankroll e muito mais. "
-        "Use também a aba **Simulação** para calcular seus retornos!"
+        "Use também a aba Simulação para calcular seus retornos!"
     ),
 }
 
@@ -451,7 +424,7 @@ if "active_chat_id" not in st.session_state:
 st.session_state.messages = get_active_chat()["messages"]
 
 with st.sidebar:
-    st.markdown("## ⚡ BetBot AI")
+    st.markdown("## BetBot AI")
     if st.button("➕ Criar novo chat", use_container_width=True):
         chat = create_chat()
         st.session_state.chats.insert(0, chat)
@@ -459,7 +432,7 @@ with st.sidebar:
         st.session_state.messages = chat["messages"]
         st.rerun()
 
-    st.markdown("### 💬 Seus chats")
+    st.markdown("### Seus chats")
     for chat in st.session_state.chats:
         is_active = chat["id"] == st.session_state.active_chat_id
         label = f"{'▶ ' if is_active else ''}{chat.get('title', 'Novo chat')}"
@@ -500,14 +473,17 @@ estratégias de apostas, bônus/promoções de casas de apostas, e apostas em ge
 outros esportes).
 
 Regras:
-- Responda sempre em português do Brasil, de forma clara, direta e didática, podendo usar
-  emojis com moderação e markdown (negrito, listas) para organizar a explicação.
+- Responda sempre em português do Brasil, de forma clara, direta e didática, preferencialmente
+  em texto corrido, com parágrafos curtos. Não use listas, bullet points, tópicos ou títulos,
+  a menos que o usuário peça esse formato explicitamente.
+- Evite emojis; use no máximo um e somente quando realmente acrescentar algo. Na maioria das
+  respostas, não use emojis.
 - O usuário pode fazer perguntas amplas, vagas ou genéricas — interprete a intenção e responda
   da forma mais útil possível dentro do seu escopo, mesmo sem palavras-chave exatas.
 - Se a pergunta não tiver relação alguma com apostas esportivas (ex: receitas, programação,
   política, saúde etc.), NÃO responda ao conteúdo. Em vez disso, informe educadamente que
   esse não é o seu propósito e redirecione o usuário para temas de apostas esportivas.
-- Sempre que fizer sentido, mencione que a aba "📊 Simulação" pode ser usada para calcular
+- Sempre que fizer sentido, mencione que a aba "Simulação" pode ser usada para calcular
   retornos de apostas simples ou múltiplas.
 - Nunca incentive apostas irresponsáveis; quando relevante, reforce jogo responsável.
 - Não forneça "dicas certeiras" de apostas nem garanta resultados de jogos futuros.
@@ -516,6 +492,7 @@ Regras:
 - Não afirme que apostas esportivas foram proibidas nem apresente supostas restrições legais
     como fatos. Se perguntarem diretamente sobre legislação, esclareça brevemente que o BetBot
     não presta consultoria jurídica e não invente informações sobre o tema.
+- Mantenha sempre uma postura neutra e imparcial em relação a times, jogadores e eventos esportivos.
 """
 
 def _get_client():
