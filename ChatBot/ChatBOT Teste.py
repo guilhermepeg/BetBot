@@ -11,7 +11,7 @@ st.set_page_config(
     layout="centered",
 )
 
-# --- CSS: dark gold betting theme ---
+# --- CSS: white and dark green theme ---
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap');
@@ -22,11 +22,11 @@ st.markdown("""
     }
 
     .stApp {
-        background:
-            radial-gradient(ellipse 900px 360px at 50% 0%, rgba(255,196,0,0.12), transparent 72%),
-            radial-gradient(ellipse 700px 500px at 100% 100%, rgba(255,109,0,0.06), transparent 72%),
-            #ffffff !important;
-        color: #302719 !important;
+        background: #ffffff !important;
+        color: #163b2c !important;
+    }
+    .stApp, .stApp * {
+        color: #163b2c !important;
     }
 
     @keyframes fadeSlideIn {
@@ -35,8 +35,8 @@ st.markdown("""
     }
 
     @keyframes btnPulse {
-        0%, 100% { box-shadow: 0 0 10px rgba(255,190,0,0.28); }
-        50%      { box-shadow: 0 0 22px rgba(255,116,0,0.58); }
+        0%, 100% { box-shadow: 0 0 10px rgba(22,59,44,0.15); }
+        50%      { box-shadow: 0 0 22px rgba(22,59,44,0.3); }
     }
 
     /* Tabs */
@@ -45,35 +45,35 @@ st.markdown("""
         font-size: 0.75rem !important;
         font-weight: 700 !important;
         letter-spacing: 2px !important;
-        color: #765000 !important;
+        color: #163b2c !important;
         text-transform: uppercase;
     }
     [data-testid="stTabs"] button[aria-selected="true"] {
-        color: #a64b00 !important;
-        border-bottom: 2px solid #ff9d00 !important;
-        text-shadow: 0 0 8px rgba(255,143,0,0.25);
+        color: #163b2c !important;
+        border-bottom: 2px solid #163b2c !important;
+        text-shadow: 0 0 8px rgba(22,59,44,0.2);
     }
 
     /* Chat messages */
     .user-msg {
-        background: rgba(255,152,0,0.12);
-        border-left: 3px solid #ff8f00;
+        background: #ffffff;
+        border-left: 3px solid #163b2c;
         border-radius: 0 10px 10px 0;
         padding: 0.75rem 1rem;
         margin: 0.5rem 0;
-        color: #382300;
-        box-shadow: 0 0 16px rgba(255,143,0,0.14);
+        color: #163b2c;
+        box-shadow: 0 0 16px rgba(22,59,44,0.12);
         animation: fadeSlideIn 0.4s ease-out;
     }
 
     .bot-msg {
-        background: rgba(0,207,255,0.1);
-        border-left: 3px solid #00d4ff;
+        background: #ffffff;
+        border-left: 3px solid #163b2c;
         border-radius: 0 10px 10px 0;
         padding: 0.75rem 1rem;
         margin: 0.5rem 0;
-        color: #123245;
-        box-shadow: 0 0 16px rgba(0,212,255,0.12);
+        color: #163b2c;
+        box-shadow: 0 0 16px rgba(22,59,44,0.12);
         animation: fadeSlideIn 0.4s ease-out;
     }
 
@@ -86,68 +86,67 @@ st.markdown("""
         margin-bottom: 6px;
     }
 
-    .user-label { color: #a65c00; text-shadow: 0 0 8px rgba(255,196,0,0.35); }
-    .bot-label  { color: #00708a; text-shadow: 0 0 8px rgba(0,140,180,0.3); }
+    .user-label, .bot-label { color: #163b2c; text-shadow: none; }
 
     /* Input */
     .stTextInput > div > div > input {
         background: #ffffff !important;
-        color: #302719 !important;
-        border: 1px solid rgba(166,92,0,0.45) !important;
+        color: #163b2c !important;
+        border: 1px solid rgba(22,59,44,0.45) !important;
         border-radius: 6px !important;
         font-family: 'Rajdhani', sans-serif !important;
         font-size: 1rem !important;
     }
-    .stTextInput > div > div > input::placeholder { color: #8b7d68 !important; }
+    .stTextInput > div > div > input::placeholder { color: #163b2c !important; }
     .stTextInput > div > div > input:focus {
-        border-color: #ff9d00 !important;
-        box-shadow: 0 0 14px rgba(255,157,0,0.25) !important;
+        border-color: #163b2c !important;
+        box-shadow: 0 0 14px rgba(22,59,44,0.2) !important;
     }
 
     /* Number input */
     .stNumberInput input {
         background: #ffffff !important;
-        color: #302719 !important;
-        border: 1px solid rgba(166,92,0,0.45) !important;
+        color: #163b2c !important;
+        border: 1px solid rgba(22,59,44,0.45) !important;
         border-radius: 6px !important;
         font-family: 'Rajdhani', sans-serif !important;
     }
 
     /* Button */
     .stButton > button {
-        background: linear-gradient(135deg, #ffc400, #ff7b00) !important;
-        color: #382300 !important;
+        background: #ffffff !important;
+        color: #163b2c !important;
         font-family: 'Orbitron', monospace !important;
         font-size: 0.7rem !important;
         font-weight: 700 !important;
         letter-spacing: 2px !important;
-        border: 1px solid #ffd54f !important;
+        border: 1px solid #163b2c !important;
         border-radius: 6px !important;
         padding: 0.5rem 1.4rem !important;
         text-transform: uppercase;
-        box-shadow: 0 0 12px rgba(255,143,0,0.35);
+        box-shadow: 0 0 12px rgba(22,59,44,0.18);
         transition: all 0.15s ease;
         animation: btnPulse 2.8s ease-in-out infinite;
     }
     .stButton > button:hover {
-        background: linear-gradient(135deg, #ffe45c, #ff9100) !important;
-        box-shadow: 0 0 22px rgba(255,143,0,0.65) !important;
-        color: #241600 !important;
+        background: #f0f5f2 !important;
+        box-shadow: 0 0 22px rgba(22,59,44,0.25) !important;
+        color: #163b2c !important;
     }
 
     /* Form submit button */
     [data-testid="stFormSubmitButton"] button {
-        background: linear-gradient(135deg, #00d4ff, #0077ff) !important;
-        color: #071d36 !important;
+        background: #ffffff !important;
+        color: #163b2c !important;
         font-family: 'Orbitron', monospace !important;
         font-size: 0.65rem !important;
         letter-spacing: 1.5px !important;
-        border: 1px solid #70e8ff !important;
-        box-shadow: 0 0 14px rgba(0,212,255,0.35) !important;
+        border: 1px solid #163b2c !important;
+        box-shadow: 0 0 14px rgba(22,59,44,0.18) !important;
     }
     [data-testid="stFormSubmitButton"] button:hover {
-        background: linear-gradient(135deg, #59e5ff, #328cff) !important;
-        box-shadow: 0 0 24px rgba(0,212,255,0.65) !important;
+        background: #f0f5f2 !important;
+        box-shadow: 0 0 24px rgba(22,59,44,0.25) !important;
     }
 
     /* Metrics */
@@ -155,62 +154,62 @@ st.markdown("""
         font-family: 'Orbitron', monospace !important;
         font-size: 0.6rem !important;
         letter-spacing: 1.5px !important;
-        color: #765000 !important;
+        color: #163b2c !important;
         text-transform: uppercase;
     }
     [data-testid="stMetric"] [data-testid="stMetricValue"] {
         font-family: 'Orbitron', monospace !important;
-        color: #995600 !important;
-        text-shadow: 0 0 10px rgba(255,174,0,0.55);
+        color: #163b2c !important;
+        text-shadow: none;
     }
 
     /* Divider */
-    hr { border-color: rgba(255,190,0,0.28) !important; }
+    hr { border-color: rgba(22,59,44,0.2) !important; }
 
     /* Selectbox / multiselect */
     .stSelectbox label, .stMultiSelect label, .stNumberInput label, .stTextInput label {
         font-family: 'Rajdhani', sans-serif !important;
-        color: #765000 !important;
+        color: #163b2c !important;
         font-weight: 600;
     }
 
     /* Info box */
     [data-testid="stNotification"], .stAlert {
-        background: rgba(0,207,255,0.1) !important;
-        border: 1px solid rgba(0,212,255,0.35) !important;
-        color: #123245 !important;
+        background: #f0f5f2 !important;
+        border: 1px solid rgba(22,59,44,0.25) !important;
+        color: #163b2c !important;
     }
 
     /* Sidebar */
     section[data-testid="stSidebar"] {
-        background: #382800 !important;
-        border-right: 1px solid rgba(255,190,0,0.3) !important;
+        background: #ffffff !important;
+        border-right: 1px solid rgba(22,59,44,0.2) !important;
     }
     section[data-testid="stSidebar"] * {
-        color: #fff0c2 !important;
+        color: #163b2c !important;
     }
     section[data-testid="stSidebar"] h2, section[data-testid="stSidebar"] h3 {
         font-family: 'Orbitron', monospace !important;
-        color: #ffd000 !important;
-        text-shadow: 0 0 8px rgba(255,174,0,0.55);
+        color: #163b2c !important;
+        text-shadow: none;
         font-size: 0.85rem !important;
     }
 
     /* Markdown section headers */
     [data-testid="stMarkdownContainer"] h3, [data-testid="stMarkdownContainer"] h4 {
         font-family: 'Orbitron', monospace !important;
-        color: #995600 !important;
-        text-shadow: 0 0 8px rgba(255,174,0,0.2);
+        color: #163b2c !important;
+        text-shadow: none;
         letter-spacing: 1px;
-        border-bottom: 1px solid rgba(255,190,0,0.4);
+        border-bottom: 1px solid rgba(22,59,44,0.25);
         padding-bottom: 6px;
     }
 
     /* Tab highlight underline */
     [data-testid="stTabs"] button { transition: color 0.2s ease, text-shadow 0.2s ease; }
     [data-baseweb="tab-highlight"] {
-        background: linear-gradient(90deg, #ffd000, #ff6d00) !important;
-        box-shadow: 0 0 12px rgba(255,143,0,0.65);
+        background: #163b2c !important;
+        box-shadow: 0 0 12px rgba(22,59,44,0.25);
     }
 </style>
 """, unsafe_allow_html=True)
@@ -236,13 +235,13 @@ components.html("""
     if (isFixed) {
       bar.style.cssText =
         'position:fixed; top:0; left:0; width:100vw; height:' + BAR_HEIGHT + 'px;' +
-        'z-index:999999; overflow:hidden; background:#382800; pointer-events:none;' +
-        'border-bottom:1px solid rgba(255,190,0,0.55);' +
-        'box-shadow:0 6px 34px rgba(255,143,0,0.35); font-family:Rajdhani,sans-serif;';
+        'z-index:999999; overflow:hidden; background:#fff; pointer-events:none;' +
+        'border-bottom:1px solid rgba(22,59,44,0.25);' +
+        'box-shadow:0 6px 34px rgba(22,59,44,0.12); font-family:Rajdhani,sans-serif;';
     } else {
       bar.style.cssText =
         'position:relative; width:100%; height:' + BAR_HEIGHT + 'px;' +
-        'overflow:hidden; background:#382800; font-family:Rajdhani,sans-serif;';
+        'overflow:hidden; background:#fff; font-family:Rajdhani,sans-serif;';
     }
 
     bar.innerHTML =
@@ -265,14 +264,14 @@ components.html("""
       '#' + BAR_ID + ' .hero{position:absolute;top:' + TURF_HEIGHT + 'px;left:0;width:100%;' +
         'text-align:center;padding:10px 20px 12px;box-sizing:border-box;}' +
       '#' + BAR_ID + ' .title{font-family:Orbitron,monospace;font-size:2.3rem;font-weight:900;' +
-        'letter-spacing:5px;margin:0;color:#ffd000;' +
-        'text-shadow:0 0 8px #ffd000,0 0 25px #ff8f00,0 0 55px #ff5e00;' +
+        'letter-spacing:5px;margin:0;color:#163b2c;' +
+        'text-shadow:0 0 8px rgba(22,59,44,.2),0 0 25px rgba(22,59,44,.15);' +
         'animation:betbotGlow 3s ease-in-out infinite;}' +
-      '@keyframes betbotGlow{0%,100%{text-shadow:0 0 8px #ffd000,0 0 25px #ff8f00,0 0 55px #ff5e00;}' +
-        '50%{text-shadow:0 0 18px #ffe45c,0 0 45px #ff8f00,0 0 90px #ff5e00,0 0 120px #ffd000;}}' +
-      '#' + BAR_ID + ' .subtitle{font-family:Rajdhani,sans-serif;color:#ffe08a;font-size:.85rem;' +
+      '@keyframes betbotGlow{0%,100%{text-shadow:0 0 8px rgba(22,59,44,.2),0 0 25px rgba(22,59,44,.15);}' +
+        '50%{text-shadow:0 0 18px rgba(22,59,44,.3),0 0 45px rgba(22,59,44,.2);}}' +
+      '#' + BAR_ID + ' .subtitle{font-family:Rajdhani,sans-serif;color:#163b2c;font-size:.85rem;' +
         'letter-spacing:4px;margin:6px 0 3px;text-transform:uppercase;}' +
-      '#' + BAR_ID + ' .tagline{font-family:Rajdhani,sans-serif;color:rgba(255,224,138,.75);' +
+      '#' + BAR_ID + ' .tagline{font-family:Rajdhani,sans-serif;color:#163b2c;' +
         'font-size:.7rem;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:10px;}' +
       '#' + BAR_ID + ' .badges{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;pointer-events:auto;}' +
       '#' + BAR_ID + ' .badge{font-family:Orbitron,monospace;font-size:.55rem;font-weight:700;' +
@@ -280,14 +279,14 @@ components.html("""
         'border:1px solid;cursor:default;animation:betbotBadgePulse 4s ease-in-out infinite;' +
         'transition:transform .2s ease;}' +
       '#' + BAR_ID + ' .badge:hover{transform:translateY(-3px) scale(1.07);}' +
-      '#' + BAR_ID + ' .b1{color:#ffd000;border-color:#ffd000;background:rgba(255,208,0,.1);' +
-        'box-shadow:0 0 8px rgba(255,208,0,.3);}' +
-      '#' + BAR_ID + ' .b2{color:#f5c518;border-color:#f5c518;background:rgba(245,197,24,.08);' +
-        'box-shadow:0 0 8px rgba(245,197,24,.25);animation-delay:.8s;}' +
-      '#' + BAR_ID + ' .b3{color:#00cfff;border-color:#00cfff;background:rgba(0,207,255,.08);' +
-        'box-shadow:0 0 8px rgba(0,207,255,.25);animation-delay:1.6s;}' +
-      '#' + BAR_ID + ' .b4{color:#ff6b6b;border-color:#ff6b6b;background:rgba(255,107,107,.08);' +
-        'box-shadow:0 0 8px rgba(255,107,107,.2);animation-delay:2.4s;}' +
+      '#' + BAR_ID + ' .b1{color:#163b2c;border-color:#163b2c;background:#fff;' +
+        'box-shadow:0 0 8px rgba(22,59,44,.15);}' +
+      '#' + BAR_ID + ' .b2{color:#163b2c;border-color:#163b2c;background:#fff;' +
+        'box-shadow:0 0 8px rgba(22,59,44,.15);animation-delay:.8s;}' +
+      '#' + BAR_ID + ' .b3{color:#163b2c;border-color:#163b2c;background:#fff;' +
+        'box-shadow:0 0 8px rgba(22,59,44,.15);animation-delay:1.6s;}' +
+      '#' + BAR_ID + ' .b4{color:#163b2c;border-color:#163b2c;background:#fff;' +
+        'box-shadow:0 0 8px rgba(22,59,44,.15);animation-delay:2.4s;}' +
       '@keyframes betbotBadgePulse{0%,100%{opacity:.8;transform:scale(1);}50%{opacity:1;transform:scale(1.04);}}' +
       '</style>' +
       '<div class="turf"><div class="shine"></div></div>' +
@@ -333,7 +332,7 @@ components.html("""
           vy: Math.random() * 1.7 + 0.5,
           opacity: 1,
           decay: Math.random() * 0.02 + 0.008,
-          hue: Math.floor(Math.random() * 55 + 95),
+          hue: Math.floor(Math.random() * 40 + 110),
         });
       }
     }
@@ -478,9 +477,9 @@ with st.sidebar:
         st.rerun()
 
     st.markdown(
-        "<div style='text-align:center; font-family:Orbitron,monospace; color:#ffd000; "
+        "<div style='text-align:center; font-family:Orbitron,monospace; color:#163b2c; "
         "font-size:0.6rem; letter-spacing:2px; margin-top:1rem; "
-        "text-shadow:0 0 8px rgba(255,174,0,0.6);'>"
+        "text-shadow:none;'>"
         "BETBOT AI · POWERED BY AI</div>",
         unsafe_allow_html=True,
     )
@@ -753,7 +752,7 @@ with tab_sim:
             ev_total = sum(s["prob"] * s["net"] for s in scenario_data)
             total_staked = sum(b["stake"] for b in st.session_state.sim_bets)
 
-            ev_color_span = '<span style="color:#ff6b6b">negativo ⚠️</span>' if ev_total < 0 else '<span style="color:#00ff88">positivo ✅</span>'
+            ev_color_span = '<span style="color:#163b2c">negativo ⚠️</span>' if ev_total < 0 else '<span style="color:#163b2c">positivo ✅</span>'
 
             st.markdown(
                 f"<div class='bot-msg'>"
@@ -767,20 +766,20 @@ with tab_sim:
 
             st.markdown("")
             for s in scenario_data:
-                net_color  = "#00ff88" if s["net"] >= 0 else "#ff6b6b"
+                net_color  = "#163b2c"
                 net_sign   = "+" if s["net"] >= 0 else ""
                 bar_width  = max(4, int(s["prob"] * 100 * 2))   # escala visual
                 st.markdown(
-                    f"<div style='background:rgba(0,255,136,0.04);border-left:3px solid rgba(0,255,136,0.25);"
+                    f"<div style='background:#ffffff;border-left:3px solid rgba(22,59,44,0.25);"
                     f"border-radius:0 8px 8px 0;padding:10px 14px;margin:6px 0;'>"
-                    f"<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;color:#d0f0d0;margin-bottom:6px;'>"
+                    f"<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;color:#163b2c;margin-bottom:6px;'>"
                     f"{s['scenario']}</div>"
                     f"<div style='display:flex;align-items:center;gap:14px;flex-wrap:wrap;'>"
-                    f"<span style='font-family:Orbitron,monospace;font-size:0.7rem;color:#7fff7f;"
-                    f"letter-spacing:1px;'>PROB <b style='color:#00ff88'>{s['prob']*100:.2f}%</b></span>"
+                    f"<span style='font-family:Orbitron,monospace;font-size:0.7rem;color:#163b2c;"
+                    f"letter-spacing:1px;'>PROB <b style='color:#163b2c'>{s['prob']*100:.2f}%</b></span>"
                     f"<div style='flex:1;min-width:80px;background:rgba(255,255,255,0.06);"
                     f"border-radius:4px;height:8px;'>"
-                    f"<div style='width:{bar_width}%;background:linear-gradient(90deg,#00ff88,#00cfff);"
+                    f"<div style='width:{bar_width}%;background:linear-gradient(90deg,#163b2c,#4b8068);"
                     f"height:8px;border-radius:4px;'></div></div>"
                     f"<span style='font-family:Orbitron,monospace;font-size:0.7rem;"
                     f"color:{net_color};letter-spacing:1px;'>LÍQUIDO <b>{net_sign}R$ {s['net']:.2f}</b></span>"
@@ -872,7 +871,7 @@ with tab_multi:
             f"<div class='msg-label bot-label'>🎰 BetBot — Resumo da Múltipla</div>"
             f"Seleções: <b>{n_legs}</b> · Stake: <b>R$ {multi_stake:.2f}</b><br>"
             f"Retorno sem boost: <b>R$ {base_return:.2f}</b> · "
-            f"Retorno com boost: <b style='color:#00ff88'>R$ {boosted_return:.2f}</b> "
+            f"Retorno com boost: <b style='color:#163b2c'>R$ {boosted_return:.2f}</b> "
             f"(+R$ {boosted_return - base_return:.2f})"
             f"</div>",
             unsafe_allow_html=True
@@ -932,18 +931,18 @@ with tab_multi:
             # Barras verticais: altura proporcional à probabilidade do cenário
             bars_html = (
                 "<div style='display:flex;align-items:flex-end;gap:10px;height:220px;"
-                "overflow-x:auto;padding:16px 6px 8px;border-bottom:1px solid rgba(0,255,136,0.15);'>"
+                "overflow-x:auto;padding:16px 6px 8px;border-bottom:1px solid rgba(22,59,44,0.2);'>"
             )
             for idx, s in enumerate(display_data, start=1):
                 bar_h = max(4, int((s["prob"] / max_prob) * 170))
-                color = "#00ff88" if s["won"] else "#ff6b6b"
+                color = "#163b2c"
                 bars_html += (
                     f"<div style='display:flex;flex-direction:column;align-items:center;min-width:46px;' title='{s['label']}'>"
                     f"<div style='font-family:Orbitron,monospace;font-size:0.6rem;color:{color};margin-bottom:4px;white-space:nowrap;'>"
                     f"{s['prob']*100:.1f}%</div>"
                     f"<div style='width:26px;height:{bar_h}px;background:linear-gradient(180deg,{color},rgba(0,0,0,0.05));"
                     f"border-radius:4px 4px 0 0;box-shadow:0 0 8px {color}55;'></div>"
-                    f"<div style='font-family:Orbitron,monospace;font-size:0.6rem;color:#7fff7f;margin-top:6px;'>#{idx}</div>"
+                    f"<div style='font-family:Orbitron,monospace;font-size:0.6rem;color:#163b2c;margin-top:6px;'>#{idx}</div>"
                     f"</div>"
                 )
             bars_html += "</div>"
@@ -951,12 +950,12 @@ with tab_multi:
 
             st.markdown("")
             for idx, s in enumerate(display_data, start=1):
-                net_color = "#00ff88" if s["won"] else "#ff6b6b"
+                net_color = "#163b2c"
                 net_sign = "+" if s["net"] >= 0 else ""
                 st.markdown(
-                    f"<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;color:#d0f0d0;margin:2px 0;'>"
-                    f"<b style='color:#7fff7f'>#{idx}</b> {s['label']} — "
-                    f"<span style='color:#7fff7f'>{s['prob']*100:.2f}%</span> — "
+                    f"<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;color:#163b2c;margin:2px 0;'>"
+                    f"<b style='color:#163b2c'>#{idx}</b> {s['label']} — "
+                    f"<span style='color:#163b2c'>{s['prob']*100:.2f}%</span> — "
                     f"<span style='color:{net_color}'>{net_sign}R$ {s['net']:.2f}</span>"
                     f"</div>",
                     unsafe_allow_html=True
@@ -1041,7 +1040,7 @@ with tab_history:
         st.markdown("#### 🗂️ Lançamentos")
         for index, bet in enumerate(st.session_state.bet_history):
             net = bet["gross_return"] - bet["stake"]
-            net_color = "#00ff88" if net >= 0 else "#ff6b6b"
+            net_color = "#163b2c"
             col1, col2, col3, col4, col5 = st.columns([3, 2, 2, 2, 1])
             col1.markdown(f"**{bet['name']}**")
             col2.markdown(date.fromisoformat(bet["date"]).strftime("%d/%m/%Y"))
