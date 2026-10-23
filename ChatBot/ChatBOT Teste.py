@@ -292,6 +292,33 @@ st.markdown("""
         background: #163b2c !important;
         box-shadow: 0 0 12px rgba(22,59,44,0.25);
     }
+
+    /* Simulações: interface clara, controles pretos. */
+    .stApp, [data-testid="stAppViewContainer"], [data-testid="stMain"],
+    [data-testid="stForm"], [data-testid="stMetric"],
+    [data-baseweb="input"], [data-baseweb="input"] > div {
+        background-color: #ffffff !important;
+    }
+    .stApp [data-testid="stForm"] input,
+    .stApp [data-testid="stForm"] label,
+    .stApp [data-testid="stMetric"] *,
+    .stApp [data-testid="stForm"] p {
+        color: #000000 !important;
+    }
+    .stApp [data-testid="stFormSubmitButton"] button,
+    .stApp [data-testid="stFormSubmitButton"] button:hover,
+    .stApp .st-key-sim_calculate button,
+    .stApp .st-key-sim_calculate button:hover {
+        background: #000000 !important;
+        border-color: #000000 !important;
+        color: #ffffff !important;
+        box-shadow: none !important;
+        animation: none !important;
+    }
+    .stApp [data-testid="stFormSubmitButton"] button *,
+    .stApp .st-key-sim_calculate button * {
+        color: #ffffff !important;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -463,6 +490,9 @@ with st.sidebar:
 
 if "sim_bets" not in st.session_state:
     st.session_state.sim_bets = []
+
+if "sim_scenarios_visible" not in st.session_state:
+    st.session_state.sim_scenarios_visible = False
 
 if "multi_bets" not in st.session_state:
     st.session_state.multi_bets = []
@@ -909,19 +939,27 @@ with tab_sim:
         c1, c2, c3, c4 = st.columns([3, 2, 2, 2])
         sel_name  = c1.text_input("Seleção", placeholder="Ex: Flamengo vence")
         sel_odd   = c2.number_input(
-            "Odd", min_value=1.01, max_value=1000.0, value=2.00, step=0.01, format="%.2f",
+            "Odd", min_value=0.0, max_value=1000.0, value=0.0, step=0.01, format="%.2f",
             help="Odds maiores podem pagar mais, mas geralmente indicam uma chance implícita menor. Essa referência não comprova a chance real.",
         )
-        sel_stake = c3.number_input("Valor apostado (R$)", min_value=0.01, value=10.0, step=1.0, format="%.2f")
+        sel_stake = c3.number_input("Valor apostado (R$)", min_value=0.0, value=0.0, step=1.0, format="%.2f")
         sel_add   = c4.form_submit_button("Adicionar")
 
-    if sel_add and sel_name.strip():
-        st.session_state.sim_bets.append({
+    if sel_add:
+        if not sel_name.strip():
+            st.error("Informe o nome da seleção.")
+        elif sel_odd <= 1.0:
+            st.error("Informe uma odd maior que 1,00 para simular a aposta.")
+        elif sel_stake <= 0:
+            st.error("Informe um valor apostado maior que zero.")
+        else:
+            st.session_state.sim_bets.append({
             "name":  sel_name.strip(),
             "odd":   sel_odd,
             "stake": sel_stake,
-        })
-        st.rerun()
+            })
+            st.session_state.sim_scenarios_visible = False
+            st.rerun()
 
     # --- Lista de seleções ---
     if st.session_state.sim_bets:
@@ -933,6 +971,7 @@ with tab_sim:
             col_c.markdown(f"Valor apostado: `R$ {bet['stake']:.2f}`")
             if col_d.button("✕", key=f"del_{i}"):
                 st.session_state.sim_bets.pop(i)
+                st.session_state.sim_scenarios_visible = False
                 st.rerun()
 
         st.divider()
@@ -957,7 +996,10 @@ with tab_sim:
             "Essa referência não é uma probabilidade real comprovada nem uma previsão."
         )
 
-        if st.button("Calcular todos os cenários"):
+        if st.button("Calcular todos os cenários", key="sim_calculate"):
+            st.session_state.sim_scenarios_visible = True
+
+        if st.session_state.sim_scenarios_visible:
             import itertools
 
             n = len(st.session_state.sim_bets)
@@ -1009,20 +1051,20 @@ with tab_sim:
 
             st.markdown("")
             for s in scenario_data:
-                net_color  = "#163b2c"
+                net_color  = "#000000"
                 net_sign   = "+" if s["net"] >= 0 else ""
                 bar_width  = max(4, int(s["prob"] * 100 * 2))   # escala visual
                 st.markdown(
-                    f"<div style='background:#ffffff;border-left:3px solid rgba(22,59,44,0.25);"
+                    f"<div style='background:#ffffff;border-left:3px solid rgba(0,0,0,0.25);"
                     f"border-radius:0 8px 8px 0;padding:10px 14px;margin:6px 0;'>"
                     f"<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;color:#163b2c;margin-bottom:6px;'>"
                     f"{s['scenario']}</div>"
                     f"<div style='display:flex;align-items:center;gap:14px;flex-wrap:wrap;'>"
                     f"<span style='font-family:Orbitron,monospace;font-size:0.7rem;color:#163b2c;"
                     f"letter-spacing:1px;'>REFERÊNCIA PELAS ODDS <b style='color:#163b2c'>{s['prob']*100:.2f}%</b></span>"
-                    f"<div style='flex:1;min-width:80px;background:rgba(255,255,255,0.06);"
+                    f"<div style='flex:1;min-width:80px;background:#eeeeee;"
                     f"border-radius:4px;height:8px;'>"
-                    f"<div style='width:{bar_width}%;background:linear-gradient(90deg,#163b2c,#4b8068);"
+                    f"<div style='width:{bar_width}%;background:#000000;"
                     f"height:8px;border-radius:4px;'></div></div>"
                     f"<span style='font-family:Orbitron,monospace;font-size:0.7rem;"
                     f"color:{net_color};letter-spacing:1px;'>LUCRO/PREJUÍZO <b>{net_sign}R$ {s['net']:.2f}</b></span>"
@@ -1033,6 +1075,7 @@ with tab_sim:
         st.divider()
         if st.button("Limpar simulação"):
             st.session_state.sim_bets = []
+            st.session_state.sim_scenarios_visible = False
             st.rerun()
     else:
         st.info("Nenhuma seleção adicionada ainda. Use o formulário acima para começar.")
