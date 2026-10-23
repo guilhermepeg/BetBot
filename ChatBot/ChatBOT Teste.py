@@ -4,6 +4,10 @@ import anthropic
 import base64
 import binascii
 import io
+import json
+import numpy as np
+import pandas as pd
+import altair as alt
 import os
 from knowledge_base import build_system_prompt
 from datetime import date, datetime
@@ -491,8 +495,8 @@ with st.sidebar:
 if "sim_bets" not in st.session_state:
     st.session_state.sim_bets = []
 
-if "sim_scenarios_visible" not in st.session_state:
-    st.session_state.sim_scenarios_visible = False
+if "sim_ai_messages" not in st.session_state:
+    st.session_state.sim_ai_messages = []
 
 if "multi_bets" not in st.session_state:
     st.session_state.multi_bets = []
@@ -787,6 +791,71 @@ def get_bot_response(history: list) -> str:
     except Exception as e:
         return f"Ocorreu um erro ao consultar a IA: `{e}`"
 
+
+def extract_simulation_bets(instruction: str, current_bets: list) -> dict:
+    """Interpreta texto em apostas; nunca executa código ou ações da resposta da IA."""
+    client = _get_client()
+    if client is None:
+        raise ValueError("Configure ANTHROPIC_API_KEY para utilizar a simulação por texto.")
+    context = [{"name": b["name"], "odd": b["odd"], "stake": b["stake"]} for b in current_bets]
+    response = client.messages.create(
+        model="claude-haiku-4-5-20251001",
+        max_tokens=900,
+        temperature=0,
+        system=(
+            "Você extrai apostas descritas pelo usuário para uma ferramenta educacional. "
+            'Responda SOMENTE JSON válido no formato {"bets":[{"name":"...",'
+            '"odd":2.1,"stake":25.0}],"reply":"..."}. '
+            "Inclua apenas seleções explicitamente solicitadas e cujos nomes, odds e "
+            "valores apostados estejam informados. Não invente odds ou valores. "
+            "Não confunda probabilidades percentuais com odds decimais; "
+            "não inclua valores de apostas previamente existentes, a menos que "
+            "o usuário peça explicitamente para adicioná-las de novo. "
+            "Se faltarem dados, bets deve ser [] e reply deve pedir os dados ausentes. "
+            "Aceite múltiplas seleções quando todas estiverem completas. "
+            "Não acrescente sugestões de apostas."
+        ),
+        messages=[{"role": "user", "content":
+                   "Apostas já existentes (apenas contexto): " + json.dumps(context, ensure_ascii=False)
+                   + "\nNova mensagem: " + instruction}],
+    )
+    content = "".join(block.text for block in response.content if block.type == "text").strip()
+    try:
+        parsed = json.loads(content)
+    except json.JSONDecodeError as exc:
+        raise ValueError("A IA não retornou dados estruturados válidos. Reformule a solicitação.") from exc
+    if not isinstance(parsed, dict) or not isinstance(parsed.get("bets"), list):
+        raise ValueError("Formato de apostas inválido retornado pela IA.")
+    if len(parsed["bets"]) > 20:
+        raise ValueError("Adicione no máximo 20 seleções por mensagem.")
+    validated = []
+    for item in parsed["bets"]:
+        if not isinstance(item, dict):
+            raise ValueError("Uma das seleções não tem formato válido.")
+        try:
+            name = item["name"]
+            odd = float(item["odd"])
+            stake = float(item["stake"])
+        except (KeyError, TypeError, ValueError) as exc:
+            raise ValueError("Confira a odd e o valor apostado de cada seleção.") from exc
+        if (not isinstance(name, str) or not name.strip() or len(name) > 120
+                or not np.isfinite(odd) or not 1 < odd <= 1000
+                or not np.isfinite(stake) or stake <= 0 or stake > 10**9):
+            raise ValueError("Seleção inválida: informe nome, odd maior que 1 e valor positivo.")
+        validated.append({"name": name.strip(), "odd": odd, "stake": stake})
+    return {"bets": validated, "reply": str(parsed.get("reply", ""))[:500]}
+
+
+def simulate_bet_returns(bets: list, iterations: int, seed: int = 2026) -> np.ndarray:
+    """Retornos líquidos de apostas simples e independentes, sob p=1/odd."""
+    rng = np.random.default_rng(seed)
+    returns = np.zeros(iterations, dtype=float)
+    for bet in bets:
+        wins = rng.random(iterations) < (1.0 / bet["odd"])
+        returns += np.where(wins, bet["stake"] * (bet["odd"] - 1), -bet["stake"])
+    return returns
+
+
 # ============================
 # TABS
 # ============================
@@ -933,6 +1002,29 @@ with tab_sim:
     )
     st.divider()
 
+    st.markdown("#### Adicionar apostas pelo chat")
+    st.caption("Exemplo: Simule R$ 20 no Flamengo vencer com odd 2,10 e R$ 15 no empate com odd 3,20.")
+    for message in st.session_state.sim_ai_messages[-12:]:
+        with st.chat_message(message["role"]):
+            st.write(message["content"])
+    with st.form("sim_ai_form", clear_on_submit=True):
+        sim_text = st.text_input("Descreva a simulação", placeholder="Ex: R$ 50 no time A, odd 2,50", key="sim_ai_text")
+        sim_submit = st.form_submit_button("Adicionar pelo chat")
+    if sim_submit and sim_text.strip():
+        st.session_state.sim_ai_messages.append({"role": "user", "content": sim_text.strip()})
+        try:
+            with st.spinner("Interpretando seleções..."):
+                extracted = extract_simulation_bets(sim_text.strip(), st.session_state.sim_bets)
+            if extracted["bets"]:
+                st.session_state.sim_bets.extend(extracted["bets"])
+                reply = f"{len(extracted['bets'])} seleção(ões) adicionada(s) à simulação."
+            else:
+                reply = extracted["reply"] or "Informe o nome, a odd e o valor de cada aposta."
+        except (ValueError, anthropic.APIError) as exc:
+            reply = f"Não foi possível adicionar a aposta: {exc}"
+        st.session_state.sim_ai_messages.append({"role": "assistant", "content": reply})
+        st.rerun()
+
     # --- Formulário para adicionar aposta ---
     with st.form(key="sim_form", clear_on_submit=True):
         st.markdown("#### Adicionar seleção")
@@ -958,7 +1050,6 @@ with tab_sim:
             "odd":   sel_odd,
             "stake": sel_stake,
             })
-            st.session_state.sim_scenarios_visible = False
             st.rerun()
 
     # --- Lista de seleções ---
@@ -971,7 +1062,6 @@ with tab_sim:
             col_c.markdown(f"Valor apostado: `R$ {bet['stake']:.2f}`")
             if col_d.button("✕", key=f"del_{i}"):
                 st.session_state.sim_bets.pop(i)
-                st.session_state.sim_scenarios_visible = False
                 st.rerun()
 
         st.divider()
@@ -989,93 +1079,60 @@ with tab_sim:
 
         st.divider()
 
-        # --- Distribuição de cenários ---
-        st.markdown("#### Distribuição de Cenários")
-        st.markdown(
-            "Veja uma referência de chance calculada pelas odds e o lucro ou prejuízo em cada cenário. "
-            "Essa referência não é uma probabilidade real comprovada nem uma previsão."
+        # Monte Carlo: resultados líquidos, sem enumeração exaustiva.
+        st.markdown("#### Monte Carlo — distribuição de retornos")
+        iterations = st.select_slider(
+            "Número de simulações", options=[1000, 5000, 10000, 50000, 100000],
+            value=10000, key="sim_iterations",
         )
+        total_staked = sum(b["stake"] for b in st.session_state.sim_bets)
+        # Valores esperados teóricos para o modelo de probabilidades implícitas.
+        expected = sum(
+            b["stake"] * ((1 / b["odd"]) * (b["odd"] - 1)
+                          - (1 - 1 / b["odd"]))
+            for b in st.session_state.sim_bets
+        )
+        returns = simulate_bet_returns(st.session_state.sim_bets, iterations)
+        m1, m2, m3, m4 = st.columns(4)
+        m1.metric("Valor esperado (lucro líquido)", f"R$ {expected:.2f}")
+        m2.metric("Média simulada", f"R$ {returns.mean():.2f}")
+        m3.metric("Probabilidade de prejuízo", f"{(returns < 0).mean() * 100:.1f}%")
+        m4.metric("Total apostado", f"R$ {total_staked:.2f}")
 
-        if st.button("Calcular todos os cenários", key="sim_calculate"):
-            st.session_state.sim_scenarios_visible = True
-
-        if st.session_state.sim_scenarios_visible:
-            import itertools
-
-            n = len(st.session_state.sim_bets)
-            outcomes = list(itertools.product([True, False], repeat=n))
-
-            scenario_data = []
-            for outcome in outcomes:
-                # Label do cenário
-                labels = []
-                for j, won in enumerate(outcome):
-                    bet = st.session_state.sim_bets[j]
-                    short = bet["name"][:18] + ("…" if len(bet["name"]) > 18 else "")
-                    labels.append(f"Acerto: {short}" if won else f"Erro: {short}")
-                scenario_label = " | ".join(labels)
-
-                # Probabilidade do cenário (produto das probs individuais)
-                prob = 1.0
-                for j, won in enumerate(outcome):
-                    p = 1 / st.session_state.sim_bets[j]["odd"]
-                    prob *= p if won else (1 - p)
-
-                # Resultado: soma dos lucros e prejuízos de cada aposta
-                net = 0.0
-                for j, won in enumerate(outcome):
-                    bet = st.session_state.sim_bets[j]
-                    if won:
-                        net += bet["stake"] * (bet["odd"] - 1)   # lucro
-                    else:
-                        net -= bet["stake"]                        # perda
-
-                scenario_data.append({
-                    "scenario": scenario_label,
-                    "prob":     prob,
-                    "net":      net,
-                })
-
-            # Ordenar pela referência calculada pelas odds
-            scenario_data.sort(key=lambda x: x["prob"], reverse=True)
-
-            total_staked = sum(b["stake"] for b in st.session_state.sim_bets)
-
-            st.markdown(
-                f"<div class='bot-msg'>"
-                f"<div class='msg-label bot-label'>Resumo dos cenários</div>"
-                f"Total apostado: <b>R$ {total_staked:.2f}</b>"
-                f"</div>",
-                unsafe_allow_html=True
-            )
-
-            st.markdown("")
-            for s in scenario_data:
-                net_color  = "#000000"
-                net_sign   = "+" if s["net"] >= 0 else ""
-                bar_width  = max(4, int(s["prob"] * 100 * 2))   # escala visual
-                st.markdown(
-                    f"<div style='background:#ffffff;border-left:3px solid rgba(0,0,0,0.25);"
-                    f"border-radius:0 8px 8px 0;padding:10px 14px;margin:6px 0;'>"
-                    f"<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;color:#163b2c;margin-bottom:6px;'>"
-                    f"{s['scenario']}</div>"
-                    f"<div style='display:flex;align-items:center;gap:14px;flex-wrap:wrap;'>"
-                    f"<span style='font-family:Orbitron,monospace;font-size:0.7rem;color:#163b2c;"
-                    f"letter-spacing:1px;'>REFERÊNCIA PELAS ODDS <b style='color:#163b2c'>{s['prob']*100:.2f}%</b></span>"
-                    f"<div style='flex:1;min-width:80px;background:#eeeeee;"
-                    f"border-radius:4px;height:8px;'>"
-                    f"<div style='width:{bar_width}%;background:#000000;"
-                    f"height:8px;border-radius:4px;'></div></div>"
-                    f"<span style='font-family:Orbitron,monospace;font-size:0.7rem;"
-                    f"color:{net_color};letter-spacing:1px;'>LUCRO/PREJUÍZO <b>{net_sign}R$ {s['net']:.2f}</b></span>"
-                    f"</div></div>",
-                    unsafe_allow_html=True
-                )
+        # Histograma com densidade normalizada (área total aproximadamente 1).
+        # Resultado de apostas é discreto; a suavização contínua seria enganosa.
+        if returns.min() == returns.max():
+            st.info(f"Todos os resultados simulados foram R$ {returns[0]:.2f}.")
+        else:
+            counts, edges = np.histogram(returns, bins="auto", density=True)
+            density_df = pd.DataFrame({
+                "inicio": edges[:-1], "fim": edges[1:], "densidade": counts
+            })
+            chart = alt.Chart(density_df).mark_bar(color="#111111", opacity=0.85).encode(
+                x=alt.X("inicio:Q", bin=alt.Bin(binned=True), title="Lucro/prejuízo líquido (R$)"),
+                x2="fim:Q",
+                y=alt.Y("densidade:Q", title="Densidade de probabilidade"),
+                tooltip=[
+                    alt.Tooltip("inicio:Q", title="De (R$)", format=".2f"),
+                    alt.Tooltip("fim:Q", title="Até (R$)", format=".2f"),
+                    alt.Tooltip("densidade:Q", title="Densidade", format=".5f"),
+                ],
+            ).properties(height=320)
+            reference = alt.Chart(pd.DataFrame({"x": [expected]})).mark_rule(
+                color="#666666", strokeDash=[6, 4], size=2
+            ).encode(x="x:Q")
+            st.altair_chart(chart + reference, use_container_width=True)
+        st.caption(
+            "Modelo educacional: cada aposta é independente e sua chance de acerto é "
+            "aproximada por 1/odd. Odds incluem margem da casa; essa chance não é "
+            "uma probabilidade real comprovada. O valor esperado teórico neste "
+            "modelo é zero por construção, não uma promessa de retorno sem perdas. "
+            "Bets correlacionadas exigem outro modelo."
+        )
 
         st.divider()
         if st.button("Limpar simulação"):
             st.session_state.sim_bets = []
-            st.session_state.sim_scenarios_visible = False
             st.rerun()
     else:
         st.info("Nenhuma seleção adicionada ainda. Use o formulário acima para começar.")
