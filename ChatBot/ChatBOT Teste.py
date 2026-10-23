@@ -745,11 +745,14 @@ def get_bot_response(history: list) -> str:
     try:
         response = client.messages.create(
             model="claude-haiku-4-5-20251001",
-            max_tokens=700,
+            max_tokens=1500,
             system=SYSTEM_PROMPT,
             messages=api_messages,
         )
-        return response.content[0].text
+        text = response.content[0].text
+        if response.stop_reason == "max_tokens":
+            text += "\n\n*(resposta interrompida por limite de tamanho; peça para continuar)*"
+        return text
     except anthropic.AuthenticationError:
         return "Chave de API inválida. Verifique o valor de `ANTHROPIC_API_KEY` em `.streamlit/secrets.toml`."
     except anthropic.RateLimitError:
