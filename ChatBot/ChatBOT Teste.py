@@ -922,6 +922,8 @@ with tab_sim:
             "stake": sel_stake,
         })
         st.rerun()
+    elif sel_add:
+        st.warning("Preencha o nome da seleção.")
 
     # --- Lista de seleções ---
     if st.session_state.sim_bets:
@@ -1074,6 +1076,8 @@ with tab_multi:
             "odd":    multi_odd,
         })
         st.rerun()
+    elif multi_add:
+        st.warning("Preencha o evento e o nome da seleção.")
 
     if st.session_state.multi_bets:
         st.markdown("#### Seleções da múltipla")
@@ -1241,6 +1245,8 @@ with tab_history:
         )
         add_history = st.form_submit_button("Salvar resultado")
 
+    if add_history and not history_name.strip():
+        st.warning("Preencha o nome da aposta.")
     if add_history and history_name.strip():
         st.session_state.bet_history.append({
             "name": history_name.strip(),
