@@ -816,7 +816,6 @@ def extract_simulation_bets(instruction: str, current_bets: list) -> dict:
     response = client.messages.create(
         model="claude-haiku-4-5-20251001",
         max_tokens=900,
-        temperature=0,
         system=(
             "Você extrai apostas descritas pelo usuário para uma ferramenta educacional. "
             'Responda SOMENTE JSON válido no formato {"bets":[{"name":"...",'
