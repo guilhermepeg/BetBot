@@ -1,3 +1,4 @@
+import html as _html
 import streamlit as st
 import streamlit.components.v1 as components
 import anthropic
@@ -831,21 +832,20 @@ with tab_chat:
     with chat_container:
         for msg in st.session_state.messages:
             if msg["role"] == "user":
+                safe_content = _html.escape(msg["content"]).replace("\n", "<br>")
                 st.markdown(
                     f'<div class="user-msg">'
                     f'<div class="msg-label user-label">Você</div>'
-                    f'{msg["content"]}'
+                    f'{safe_content}'
                     f'</div>',
                     unsafe_allow_html=True,
                 )
             else:
                 st.markdown(
-                    f'<div class="bot-msg">'
-                    f'<div class="msg-label bot-label">BetBot</div>'
-                    f'{msg["content"]}'
-                    f'</div>',
+                    '<div class="bot-msg"><div class="msg-label bot-label">BetBot</div></div>',
                     unsafe_allow_html=True,
                 )
+                st.markdown(msg["content"])
             if msg.get("attachments"):
                 st.caption("Anexos: " + ", ".join(item["name"] for item in msg["attachments"]))
                 for attachment in msg["attachments"]:
@@ -1044,11 +1044,12 @@ with tab_sim:
                 net_color  = "#163b2c"
                 net_sign   = "+" if s["net"] >= 0 else ""
                 bar_width  = max(4, int(s["prob"] * 100 * 2))   # escala visual
+                safe_scenario = _html.escape(s["scenario"])
                 st.markdown(
                     f"<div style='background:#ffffff;border-left:3px solid rgba(22,59,44,0.25);"
                     f"border-radius:0 8px 8px 0;padding:10px 14px;margin:6px 0;'>"
                     f"<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;color:#163b2c;margin-bottom:6px;'>"
-                    f"{s['scenario']}</div>"
+                    f"{safe_scenario}</div>"
                     f"<div style='display:flex;align-items:center;gap:14px;flex-wrap:wrap;'>"
                     f"<span style='font-family:Orbitron,monospace;font-size:0.7rem;color:#163b2c;"
                     f"letter-spacing:1px;'>REFERÊNCIA PELAS ODDS <b style='color:#163b2c'>{s['prob']*100:.2f}%</b></span>"
@@ -1221,8 +1222,9 @@ with tab_multi:
             for idx, s in enumerate(display_data, start=1):
                 bar_h = max(4, int((s["prob"] / max_prob) * 170))
                 color = "#163b2c"
+                safe_label_attr = _html.escape(s["label"], quote=True)
                 bars_html += (
-                    f"<div style='display:flex;flex-direction:column;align-items:center;min-width:46px;' title='{s['label']}'>"
+                    f"<div style='display:flex;flex-direction:column;align-items:center;min-width:46px;' title='{safe_label_attr}'>"
                     f"<div style='font-family:Orbitron,monospace;font-size:0.6rem;color:{color};margin-bottom:4px;white-space:nowrap;'>"
                     f"{s['prob']*100:.1f}%</div>"
                     f"<div style='width:26px;height:{bar_h}px;background:linear-gradient(180deg,{color},rgba(0,0,0,0.05));"
@@ -1237,9 +1239,10 @@ with tab_multi:
             for idx, s in enumerate(display_data, start=1):
                 net_color = "#163b2c"
                 net_sign = "+" if s["net"] >= 0 else ""
+                safe_label = _html.escape(s["label"])
                 st.markdown(
                     f"<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;color:#163b2c;margin:2px 0;'>"
-                    f"<b style='color:#163b2c'>#{idx}</b> {s['label']} — "
+                    f"<b style='color:#163b2c'>#{idx}</b> {safe_label} — "
                     f"<span style='color:#163b2c'>Referência pelas odds: {s['prob']*100:.2f}%</span> — "
                     f"<span style='color:{net_color}'>Lucro/prejuízo: {net_sign}R$ {s['net']:.2f}</span>"
                     f"</div>",
