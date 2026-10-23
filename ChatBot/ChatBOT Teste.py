@@ -9,6 +9,46 @@ import os
 from datetime import date, datetime
 from uuid import uuid4
 
+@st.cache_resource
+def _get_supabase_client():
+    url = os.getenv("SUPABASE_URL") or (st.secrets.get("SUPABASE_URL") if hasattr(st, "secrets") else None)
+    key = os.getenv("SUPABASE_SERVICE_KEY") or (st.secrets.get("SUPABASE_SERVICE_KEY") if hasattr(st, "secrets") else None)
+    if not url or not key:
+        return None
+    try:
+        from supabase import create_client  # type: ignore
+        return create_client(url, key)
+    except Exception:
+        return None
+
+
+def _supabase_load(user_code: str) -> dict:
+    client = _get_supabase_client()
+    if not client or not user_code:
+        return {}
+    try:
+        res = client.table("user_data").select("chats,bet_history").eq("user_id", user_code).execute()
+        if res.data:
+            return res.data[0]
+    except Exception:
+        pass
+    return {}
+
+
+def _supabase_save(user_code: str, chats: list, bet_history: list) -> None:
+    client = _get_supabase_client()
+    if not client or not user_code:
+        return
+    try:
+        client.table("user_data").upsert({
+            "user_id":     user_code,
+            "chats":       chats,
+            "bet_history": bet_history,
+        }).execute()
+    except Exception:
+        pass
+
+
 paste_image_component = components.declare_component(
     "betbot_clipboard_image",
     path=os.path.join(os.path.dirname(os.path.abspath(__file__)), "clipboard_image_component"),
@@ -415,10 +455,28 @@ def select_chat(chat_id: str) -> None:
     st.session_state.messages = get_active_chat()["messages"]
 
 
-if "chats" not in st.session_state:
-    st.session_state.chats = [create_chat()]
-if "bet_history" not in st.session_state:
-    st.session_state.bet_history = []
+if "supabase_user_code" not in st.session_state:
+    st.session_state.supabase_user_code = ""
+if "supabase_loaded" not in st.session_state:
+    st.session_state.supabase_loaded = False
+
+if "chats" not in st.session_state or not st.session_state.supabase_loaded:
+    if st.session_state.supabase_user_code and not st.session_state.supabase_loaded:
+        remote = _supabase_load(st.session_state.supabase_user_code)
+        if remote.get("chats"):
+            st.session_state.chats = remote["chats"]
+        elif "chats" not in st.session_state:
+            st.session_state.chats = [create_chat()]
+        if remote.get("bet_history"):
+            st.session_state.bet_history = remote["bet_history"]
+        elif "bet_history" not in st.session_state:
+            st.session_state.bet_history = []
+        st.session_state.supabase_loaded = True
+    else:
+        if "chats" not in st.session_state:
+            st.session_state.chats = [create_chat()]
+        if "bet_history" not in st.session_state:
+            st.session_state.bet_history = []
 
 if "active_chat_id" not in st.session_state:
     st.session_state.active_chat_id = st.session_state.chats[0]["id"]
@@ -453,6 +511,21 @@ with st.sidebar:
         st.session_state.messages = active_chat["messages"]
         st.session_state.chat_attachment_version += 1
         st.rerun()
+
+    st.divider()
+    new_code = st.text_input(
+        "Seu código de acesso",
+        value=st.session_state.supabase_user_code,
+        placeholder="Ex: bettor123",
+        key="input_user_code",
+    )
+    if new_code != st.session_state.supabase_user_code:
+        st.session_state.supabase_user_code = new_code
+        st.session_state.supabase_loaded = False
+        st.rerun()
+
+    if _get_supabase_client() is None:
+        st.caption("Histórico não será salvo ao recarregar.")
 
     st.markdown(
         "<div style='text-align:center; font-family:Orbitron,monospace; color:#163b2c; "
@@ -919,6 +992,11 @@ with tab_chat:
                     active_chat["title"] = user_input.strip()[:40] or attachments[0]["name"][:40]
                 st.session_state.chats.sort(key=lambda chat: chat["updated_at"], reverse=True)
                 st.session_state.chat_attachment_version += 1
+                _supabase_save(
+                    st.session_state.supabase_user_code,
+                    st.session_state.chats,
+                    st.session_state.bet_history,
+                )
                 st.rerun()
 
 # ============================
@@ -1408,6 +1486,11 @@ with tab_history:
             "gross_return": history_return,
         })
         st.session_state.bet_history.sort(key=lambda bet: bet["date"], reverse=True)
+        _supabase_save(
+            st.session_state.supabase_user_code,
+            st.session_state.chats,
+            st.session_state.bet_history,
+        )
         st.rerun()
 
     if st.session_state.bet_history:
@@ -1469,10 +1552,20 @@ with tab_history:
             )
             if col5.button("✕", key=f"delete_history_{index}"):
                 st.session_state.bet_history.pop(index)
+                _supabase_save(
+                    st.session_state.supabase_user_code,
+                    st.session_state.chats,
+                    st.session_state.bet_history,
+                )
                 st.rerun()
 
         if st.button("Limpar histórico de bets"):
             st.session_state.bet_history = []
+            _supabase_save(
+                st.session_state.supabase_user_code,
+                st.session_state.chats,
+                st.session_state.bet_history,
+            )
             st.rerun()
     else:
         st.info("Nenhuma bet registrada. Adicione um resultado encerrado para acompanhar seu desempenho.")
