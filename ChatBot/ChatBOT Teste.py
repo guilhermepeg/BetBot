@@ -4,6 +4,7 @@ import anthropic
 import base64
 import binascii
 import io
+import html
 import json
 import numpy as np
 import pandas as pd
@@ -714,8 +715,10 @@ def process_pasted_image(pasted_image: dict) -> dict:
 
 def build_api_messages(history: list) -> list:
     api_messages = []
-    for message in history:
-        attachments = message.get("attachments", [])
+    latest_user_index = next((i for i in range(len(history) - 1, -1, -1)
+                              if history[i]["role"] == "user"), None)
+    for i, message in enumerate(history):
+        attachments = message.get("attachments", []) if i == latest_user_index else []
         content = message["content"]
         if attachments:
             blocks = []
@@ -779,11 +782,14 @@ def get_bot_response(history: list) -> str:
     try:
         response = client.messages.create(
             model="claude-haiku-4-5-20251001",
-            max_tokens=700,
+            max_tokens=1500,
             system=build_system_prompt(SYSTEM_PROMPT),
             messages=api_messages,
         )
-        return response.content[0].text
+        reply = "".join(block.text for block in response.content if block.type == "text")
+        if response.stop_reason == "max_tokens":
+            reply += "\n\n[Resposta interrompida pelo limite de tamanho. Peça para continuar.]"
+        return reply
     except anthropic.AuthenticationError:
         return "Chave de API inválida. Verifique o valor de `ANTHROPIC_API_KEY` em `.streamlit/secrets.toml`."
     except anthropic.RateLimitError:
@@ -903,7 +909,7 @@ with tab_chat:
                 st.markdown(
                     f'<div class="user-msg">'
                     f'<div class="msg-label user-label">Você</div>'
-                    f'{msg["content"]}'
+                    f'{html.escape(msg["content"])}'
                     f'</div>',
                     unsafe_allow_html=True,
                 )
@@ -1166,7 +1172,9 @@ with tab_multi:
         )
         multi_add  = st.form_submit_button("Adicionar")
 
-    if multi_add and multi_event.strip() and multi_name.strip():
+    if multi_add and (not multi_event.strip() or not multi_name.strip()):
+        st.warning("Informe o evento e o nome da seleção antes de adicionar.")
+    elif multi_add:
         st.session_state.multi_bets.append({
             "event":  multi_event.strip(),
             "market": multi_market,
@@ -1244,7 +1252,10 @@ with tab_multi:
             "As chances dos cenários são referências calculadas pelas odds, não previsões."
         )
 
-        if st.button("Calcular distribuição de cenários", key="multi_scenarios_btn"):
+        calculate_multi = st.button("Calcular distribuição de cenários", key="multi_scenarios_btn")
+        if calculate_multi and n_legs > 10:
+            st.warning("Limite de 10 seleções para gerar cenários. Remova algumas seleções.")
+        elif calculate_multi:
             import itertools
 
             outcomes = list(itertools.product([True, False], repeat=n_legs))
@@ -1341,7 +1352,9 @@ with tab_history:
         )
         add_history = st.form_submit_button("Salvar resultado")
 
-    if add_history and history_name.strip():
+    if add_history and not history_name.strip():
+        st.warning("Informe o nome da aposta antes de salvar o resultado.")
+    elif add_history:
         st.session_state.bet_history.append({
             "name": history_name.strip(),
             "date": history_date.isoformat(),
@@ -1368,11 +1381,15 @@ with tab_history:
         m1.metric("Total apostado", f"R$ {total_staked:.2f}")
         m2.metric("Resultado líquido", f"R$ {net_result:.2f}")
         m3.metric("ROI realizado", f"{roi * 100:.2f}%")
-        m4.metric("Projeção anual", f"R$ {projected_annual_bet_result:.2f}")
-        st.caption(
-            f"Projeção baseada no ROI do histórico e no ritmo de apostas dos últimos {tracking_days} dia(s). "
-            "Não representa garantia de resultado."
-        )
+        if tracking_days >= 30:
+            m4.metric("Projeção anual", f"R$ {projected_annual_bet_result:.2f}")
+            st.caption(
+                f"Projeção baseada no ROI do histórico e no ritmo de apostas dos últimos {tracking_days} dia(s). "
+                "Não representa garantia de resultado."
+            )
+        else:
+            m4.metric("Projeção anual", "Indisponível")
+            st.caption(f"Projeção anual disponível após 30 dias de histórico (atual: {tracking_days} dia(s)).")
 
         st.markdown("#### Comparação com CDI")
         cdi_rate = st.number_input(
