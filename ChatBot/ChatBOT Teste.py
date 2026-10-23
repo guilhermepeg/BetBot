@@ -245,8 +245,17 @@ st.markdown("""
     }
     [data-testid="stMetric"] [data-testid="stMetricValue"] {
         font-family: 'Orbitron', monospace !important;
+        font-size: clamp(0.85rem, 1.7vw, 1.3rem) !important;
+        letter-spacing: 0 !important;
+        line-height: 1.25 !important;
+        overflow-wrap: anywhere !important;
         color: #163b2c !important;
         text-shadow: none;
+    }
+    [data-testid="stMetric"] [data-testid="stMetricValue"] > div {
+        font-size: inherit !important;
+        white-space: normal !important;
+        overflow-wrap: anywhere !important;
     }
 
     /* Divider */
