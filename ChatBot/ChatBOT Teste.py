@@ -35,8 +35,7 @@ MAX_ATTACHMENT_COUNT = 5
 MAX_EXTRACTED_TEXT_CHARS = 80_000
 
 st.set_page_config(
-    page_title="🎰 BetBot AI",
-    page_icon="🎰",
+    page_title="BetBot AI",
     layout="centered",
 )
 
@@ -428,7 +427,7 @@ if "chat_attachment_version" not in st.session_state:
 
 with st.sidebar:
     st.markdown("## BetBot AI")
-    if st.button("➕ Criar novo chat", use_container_width=True):
+    if st.button("Criar novo chat", use_container_width=True):
         chat = create_chat()
         st.session_state.chats.insert(0, chat)
         st.session_state.active_chat_id = chat["id"]
@@ -438,13 +437,13 @@ with st.sidebar:
     st.markdown("### Seus chats")
     for chat in st.session_state.chats:
         is_active = chat["id"] == st.session_state.active_chat_id
-        label = f"{'▶ ' if is_active else ''}{chat.get('title', 'Novo chat')}"
+        label = f"{'[Ativo] ' if is_active else ''}{chat.get('title', 'Novo chat')}"
         if st.button(label, key=f"chat_{chat['id']}", use_container_width=True):
             select_chat(chat["id"])
             st.rerun()
 
     st.divider()
-    if st.button("🗑️ Limpar chat atual", use_container_width=True):
+    if st.button("Limpar chat atual", use_container_width=True):
         active_chat = get_active_chat()
         active_chat["messages"] = [WELCOME_MESSAGE.copy()]
         active_chat["title"] = "Novo chat"
@@ -480,8 +479,8 @@ Regras:
 - Responda sempre em português do Brasil, de forma clara, direta e didática, preferencialmente
   em texto corrido, com parágrafos curtos. Não use listas, bullet points, tópicos ou títulos,
   a menos que o usuário peça esse formato explicitamente.
-- Evite emojis; use no máximo um e somente quando realmente acrescentar algo. Na maioria das
-  respostas, não use emojis.
+- Não use emojis nas respostas, exceto quando forem estritamente necessários para a clareza
+  ou compreensão.
 - O usuário pode fazer perguntas amplas, vagas ou genéricas — interprete a intenção e responda
   da forma mais útil possível dentro do seu escopo, mesmo sem palavras-chave exatas.
 - Se a pergunta não tiver relação alguma com apostas esportivas (ex: receitas, programação,
@@ -706,7 +705,7 @@ def get_bot_response(history: list) -> str:
     client = _get_client()
     if client is None:
         return (
-            "⚠️ **Chave de API não configurada.**\n\n"
+            "**Chave de API não configurada.**\n\n"
             "Configure `ANTHROPIC_API_KEY` nos secrets da hospedagem para ativar as respostas. "
             "Obtenha a chave em [console.anthropic.com](https://console.anthropic.com/settings/keys)."
         )
@@ -726,17 +725,17 @@ def get_bot_response(history: list) -> str:
         )
         return response.content[0].text
     except anthropic.AuthenticationError:
-        return "⚠️ Chave de API inválida. Verifique o valor de `ANTHROPIC_API_KEY` em `.streamlit/secrets.toml`."
+        return "Chave de API inválida. Verifique o valor de `ANTHROPIC_API_KEY` em `.streamlit/secrets.toml`."
     except anthropic.RateLimitError:
-        return "⚠️ Limite de requisições atingido. Aguarde um instante e tente novamente."
+        return "Limite de requisições atingido. Aguarde um instante e tente novamente."
     except Exception as e:
-        return f"⚠️ Ocorreu um erro ao consultar a IA: `{e}`"
+        return f"Ocorreu um erro ao consultar a IA: `{e}`"
 
 # ============================
 # TABS
 # ============================
 tab_chat, tab_sim, tab_multi, tab_history = st.tabs(
-    ["💬 Chat", "📊 Simulação", "🎯 Bet Múltipla", "📜 Histórico de Bets"]
+    ["Chat", "Simulação", "Bet Múltipla", "Histórico de Bets"]
 )
 
 # Bônus progressivo por nº de seleções (estilo "Acumulador Bônus" do bet365)
@@ -778,7 +777,7 @@ with tab_chat:
             if msg["role"] == "user":
                 st.markdown(
                     f'<div class="user-msg">'
-                    f'<div class="msg-label user-label">👤 Você</div>'
+                    f'<div class="msg-label user-label">Você</div>'
                     f'{msg["content"]}'
                     f'</div>',
                     unsafe_allow_html=True,
@@ -786,7 +785,7 @@ with tab_chat:
             else:
                 st.markdown(
                     f'<div class="bot-msg">'
-                    f'<div class="msg-label bot-label">🎰 BetBot</div>'
+                    f'<div class="msg-label bot-label">BetBot</div>'
                     f'{msg["content"]}'
                     f'</div>',
                     unsafe_allow_html=True,
@@ -829,7 +828,7 @@ with tab_chat:
             label_visibility="collapsed",
             key=prompt_key,
         )
-        submitted = cols[2].form_submit_button("Enviar 🎰")
+        submitted = cols[2].form_submit_button("Enviar")
 
     if submitted:
         attachment_count = len(uploaded_files or []) + (1 if pasted_image else 0)
@@ -870,7 +869,7 @@ with tab_chat:
 # TAB SIMULAÇÃO
 # ============================
 with tab_sim:
-    st.markdown("### 📊 Simulador de Apostas")
+    st.markdown("### Simulador de Apostas")
     st.markdown(
         "Adicione suas apostas abaixo para simular o retorno esperado. "
         "Suporta apostas simples e múltiplas (acumulador)."
@@ -879,12 +878,12 @@ with tab_sim:
 
     # --- Formulário para adicionar aposta ---
     with st.form(key="sim_form", clear_on_submit=True):
-        st.markdown("#### ➕ Adicionar seleção")
+        st.markdown("#### Adicionar seleção")
         c1, c2, c3, c4 = st.columns([3, 2, 2, 2])
         sel_name  = c1.text_input("Seleção", placeholder="Ex: Flamengo vence")
         sel_odd   = c2.number_input("Odd", min_value=1.01, max_value=1000.0, value=2.00, step=0.01, format="%.2f")
         sel_stake = c3.number_input("Valor (R$)", min_value=0.01, value=10.0, step=1.0, format="%.2f")
-        sel_add   = c4.form_submit_button("Adicionar ➕")
+        sel_add   = c4.form_submit_button("Adicionar")
 
     if sel_add and sel_name.strip():
         st.session_state.sim_bets.append({
@@ -896,7 +895,7 @@ with tab_sim:
 
     # --- Lista de seleções ---
     if st.session_state.sim_bets:
-        st.markdown("#### 🗂️ Seleções adicionadas")
+        st.markdown("#### Seleções adicionadas")
         for i, bet in enumerate(st.session_state.sim_bets):
             col_a, col_b, col_c, col_d = st.columns([4, 2, 2, 1])
             col_a.markdown(f"**{bet['name']}**")
@@ -909,7 +908,7 @@ with tab_sim:
         st.divider()
 
         # --- Resultados individuais ---
-        st.markdown("#### 📈 Resumo por Aposta")
+        st.markdown("#### Resumo por Aposta")
         for bet in st.session_state.sim_bets:
             implied_p = 1 / bet["odd"]
             pot_return = bet["stake"] * bet["odd"]
@@ -924,13 +923,13 @@ with tab_sim:
         st.divider()
 
         # --- Distribuição de cenários ---
-        st.markdown("#### 🎲 Distribuição de Cenários")
+        st.markdown("#### Distribuição de Cenários")
         st.markdown(
             "Clique no botão abaixo para ver **todos os cenários possíveis**, "
             "suas probabilidades e o retorno líquido de cada um."
         )
 
-        if st.button("🔍 Calcular todos os cenários"):
+        if st.button("Calcular todos os cenários"):
             import itertools
 
             n = len(st.session_state.sim_bets)
@@ -943,7 +942,7 @@ with tab_sim:
                 for j, won in enumerate(outcome):
                     bet = st.session_state.sim_bets[j]
                     short = bet["name"][:18] + ("…" if len(bet["name"]) > 18 else "")
-                    labels.append(f"✅ {short}" if won else f"❌ {short}")
+                    labels.append(f"Acerto: {short}" if won else f"Erro: {short}")
                 scenario_label = " | ".join(labels)
 
                 # Probabilidade do cenário (produto das probs individuais)
@@ -974,11 +973,11 @@ with tab_sim:
             ev_total = sum(s["prob"] * s["net"] for s in scenario_data)
             total_staked = sum(b["stake"] for b in st.session_state.sim_bets)
 
-            ev_color_span = '<span style="color:#163b2c">negativo ⚠️</span>' if ev_total < 0 else '<span style="color:#163b2c">positivo ✅</span>'
+            ev_color_span = '<span style="color:#163b2c">negativo</span>' if ev_total < 0 else '<span style="color:#163b2c">positivo</span>'
 
             st.markdown(
                 f"<div class='bot-msg'>"
-                f"<div class='msg-label bot-label'>🎰 BetBot — Valor Esperado Total</div>"
+                f"<div class='msg-label bot-label'>BetBot — Valor Esperado Total</div>"
                 f"Total apostado: <b>R$ {total_staked:.2f}</b> · "
                 f"EV esperado no longo prazo: <b>R$ {ev_total:.2f}</b> "
                 f"({ev_color_span})"
@@ -1010,29 +1009,29 @@ with tab_sim:
                 )
 
         st.divider()
-        if st.button("🗑️ Limpar simulação"):
+        if st.button("Limpar simulação"):
             st.session_state.sim_bets = []
             st.rerun()
     else:
-        st.info("Nenhuma seleção adicionada ainda. Use o formulário acima para começar! 🎰")
+        st.info("Nenhuma seleção adicionada ainda. Use o formulário acima para começar.")
 
 # ============================
 # TAB BET MÚLTIPLA
 # ============================
 with tab_multi:
-    st.markdown("### 🎯 Bet Múltipla — estilo bet365")
+    st.markdown("### Bet Múltipla — estilo bet365")
     st.markdown(
         "Monte sua aposta múltipla (acumulador) combinando seleções de um ou mais eventos. "
         "A odd final pode ser **impulsionada automaticamente** dependendo da composição escolhida:\n\n"
-        "- 🚀 **Bônus de Acumulador**: quanto mais seleções na múltipla, maior o bônus sobre a odd combinada "
+        "- **Bônus de Acumulador**: quanto mais seleções na múltipla, maior o bônus sobre a odd combinada "
         "(a partir de 4 seleções).\n"
-        "- 🧩 **Bônus Bet Builder**: combinar 2 ou mais mercados do **mesmo evento** (ex: resultado final + "
+        "- **Bônus Bet Builder**: combinar 2 ou mais mercados do **mesmo evento** (ex: resultado final + "
         "ambas marcam do mesmo jogo) gera um bônus extra por correlação."
     )
     st.divider()
 
     with st.form(key="multi_form", clear_on_submit=True):
-        st.markdown("#### ➕ Adicionar seleção à múltipla")
+        st.markdown("#### Adicionar seleção à múltipla")
         m1, m2, m3, m4 = st.columns([3, 2, 3, 2])
         multi_event  = m1.text_input("Evento", placeholder="Ex: Flamengo x Palmeiras")
         multi_market = m2.selectbox(
@@ -1041,7 +1040,7 @@ with tab_multi:
         )
         multi_name = m3.text_input("Seleção", placeholder="Ex: Flamengo vence")
         multi_odd  = m4.number_input("Odd", min_value=1.01, max_value=1000.0, value=1.80, step=0.01, format="%.2f")
-        multi_add  = st.form_submit_button("Adicionar ➕")
+        multi_add  = st.form_submit_button("Adicionar")
 
     if multi_add and multi_event.strip() and multi_name.strip():
         st.session_state.multi_bets.append({
@@ -1053,7 +1052,7 @@ with tab_multi:
         st.rerun()
 
     if st.session_state.multi_bets:
-        st.markdown("#### 🗂️ Seleções da múltipla")
+        st.markdown("#### Seleções da múltipla")
         for i, leg in enumerate(st.session_state.multi_bets):
             col_a, col_b, col_c, col_d = st.columns([3, 3, 2, 1])
             col_a.markdown(f"**{leg['event']}**")
@@ -1081,7 +1080,7 @@ with tab_multi:
         base_return = multi_stake * base_odd
         boosted_return = multi_stake * boosted_odd
 
-        st.markdown("#### 🚀 Odd impulsionada")
+        st.markdown("#### Odd impulsionada")
         b1, b2, b3, b4 = st.columns(4)
         b1.metric("Odd combinada", f"{base_odd:.2f}")
         b2.metric("Bônus acumulador", f"+{acca_bonus*100:.0f}%")
@@ -1090,7 +1089,7 @@ with tab_multi:
 
         st.markdown(
             f"<div class='bot-msg'>"
-            f"<div class='msg-label bot-label'>🎰 BetBot — Resumo da Múltipla</div>"
+            f"<div class='msg-label bot-label'>BetBot — Resumo da Múltipla</div>"
             f"Seleções: <b>{n_legs}</b> · Stake: <b>R$ {multi_stake:.2f}</b><br>"
             f"Retorno sem boost: <b>R$ {base_return:.2f}</b> · "
             f"Retorno com boost: <b style='color:#163b2c'>R$ {boosted_return:.2f}</b> "
@@ -1105,7 +1104,7 @@ with tab_multi:
         st.divider()
 
         # --- Probabilidade e distribuição de cenários ---
-        st.markdown("#### 🎲 Probabilidade e Distribuição de Cenários")
+        st.markdown("#### Probabilidade e Distribuição de Cenários")
         combined_prob = 1.0
         for leg in st.session_state.multi_bets:
             combined_prob *= (1 / leg["odd"])
@@ -1116,7 +1115,7 @@ with tab_multi:
             "(combinações de acerto/erro de cada evento) em barras verticais."
         )
 
-        if st.button("🔍 Calcular distribuição de cenários", key="multi_scenarios_btn"):
+        if st.button("Calcular distribuição de cenários", key="multi_scenarios_btn"):
             import itertools
 
             outcomes = list(itertools.product([True, False], repeat=n_legs))
@@ -1129,7 +1128,7 @@ with tab_multi:
                     p = 1 / leg["odd"]
                     prob *= p if won else (1 - p)
                     short = leg["name"][:16] + ("…" if len(leg["name"]) > 16 else "")
-                    labels.append(f"✅ {short}" if won else f"❌ {short}")
+                    labels.append(f"Acerto: {short}" if won else f"Erro: {short}")
                 all_won = all(outcome)
                 net = (boosted_return - multi_stake) if all_won else -multi_stake
                 scenario_data.append({
@@ -1184,23 +1183,23 @@ with tab_multi:
                 )
 
         st.divider()
-        if st.button("🗑️ Limpar múltipla"):
+        if st.button("Limpar múltipla"):
             st.session_state.multi_bets = []
             st.rerun()
     else:
-        st.info("Nenhuma seleção adicionada ainda. Use o formulário acima para montar sua múltipla! 🎯")
+        st.info("Nenhuma seleção adicionada ainda. Use o formulário acima para montar sua múltipla.")
 
 # ============================
 # TAB HISTÓRICO DE BETS
 # ============================
 with tab_history:
-    st.markdown("### 📜 Histórico de Bets")
+    st.markdown("### Histórico de Bets")
     st.markdown(
         "Registre apostas já encerradas. Informe o retorno **bruto** recebido; em caso de perda, use `R$ 0,00`."
     )
 
     with st.form(key="bet_history_form", clear_on_submit=True):
-        st.markdown("#### ➕ Registrar resultado")
+        st.markdown("#### Registrar resultado")
         h1, h2, h3, h4 = st.columns([3, 2, 2, 2])
         history_name = h1.text_input("Aposta", placeholder="Ex: Flamengo vence")
         history_date = h2.date_input("Data", value=date.today(), format="DD/MM/YYYY")
@@ -1234,7 +1233,7 @@ with tab_history:
         projected_annual_bet_result = projected_annual_stake * roi
 
         st.divider()
-        st.markdown("#### 📈 Desempenho das bets")
+        st.markdown("#### Desempenho das bets")
         m1, m2, m3, m4 = st.columns(4)
         m1.metric("Total apostado", f"R$ {total_staked:.2f}")
         m2.metric("Resultado líquido", f"R$ {net_result:.2f}")
@@ -1245,7 +1244,7 @@ with tab_history:
             "Não representa garantia de resultado."
         )
 
-        st.markdown("#### 🏦 Comparação com CDI")
+        st.markdown("#### Comparação com CDI")
         cdi_rate = st.number_input(
             "CDI anual estimado (%)", min_value=0.0, max_value=100.0, value=14.15, step=0.01, format="%.2f"
         ) / 100
@@ -1259,7 +1258,7 @@ with tab_history:
             "O CDI usa somente o dinheiro apostado em cada registro. Retornos e lucros das bets não entram no capital simulado."
         )
 
-        st.markdown("#### 🗂️ Lançamentos")
+        st.markdown("#### Lançamentos")
         for index, bet in enumerate(st.session_state.bet_history):
             net = bet["gross_return"] - bet["stake"]
             net_color = "#163b2c"
@@ -1275,7 +1274,7 @@ with tab_history:
                 st.session_state.bet_history.pop(index)
                 st.rerun()
 
-        if st.button("🗑️ Limpar histórico de bets"):
+        if st.button("Limpar histórico de bets"):
             st.session_state.bet_history = []
             st.rerun()
     else:
