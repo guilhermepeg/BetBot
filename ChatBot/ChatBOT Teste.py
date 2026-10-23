@@ -936,20 +936,43 @@ with tab_sim:
     # --- Formulário para adicionar aposta ---
     with st.form(key="sim_form", clear_on_submit=True):
         st.markdown("#### Adicionar seleção")
-        c1, c2, c3, c4 = st.columns([3, 2, 2, 2])
+        c1, c2, c3 = st.columns([3, 2, 2])
         sel_name  = c1.text_input("Seleção", placeholder="Ex: Flamengo vence")
         sel_odd   = c2.number_input(
             "Odd", min_value=1.01, max_value=1000.0, value=2.00, step=0.01, format="%.2f",
-            help="Odds maiores podem pagar mais, mas geralmente indicam uma chance implícita menor. Essa referência não comprova a chance real.",
+            help="Odds maiores podem pagar mais, mas geralmente indicam uma chance implícita menor.",
         )
         sel_stake = c3.number_input("Valor apostado (R$)", min_value=0.01, value=10.0, step=1.0, format="%.2f")
-        sel_add   = c4.form_submit_button("Adicionar")
+        e1, e2, e3 = st.columns([2, 3, 2])
+        sel_p_pct = e1.number_input(
+            "Sua estimativa de chance (%)",
+            min_value=0.0, max_value=100.0, value=0.0, step=1.0, format="%.1f",
+            help="Opcional. Preencha para calcular o valor esperado desta aposta.",
+        )
+        sel_other_odds_str = e2.text_input(
+            "Odds dos outros resultados do mercado",
+            placeholder="Ex: 2.50, 3.10 (opcional, para calcular a margem)",
+            help="Opcional. Informe as odds dos demais resultados, separadas por vírgula.",
+        )
+        sel_add = e3.form_submit_button("Adicionar")
 
     if sel_add and sel_name.strip():
+        other_odds: list[float] = []
+        for tok in sel_other_odds_str.split(","):
+            tok = tok.strip()
+            if tok:
+                try:
+                    v = float(tok.replace(",", "."))
+                    if v > 1.0:
+                        other_odds.append(v)
+                except ValueError:
+                    pass
         st.session_state.sim_bets.append({
-            "name":  sel_name.strip(),
-            "odd":   sel_odd,
-            "stake": sel_stake,
+            "name":       sel_name.strip(),
+            "odd":        sel_odd,
+            "stake":      sel_stake,
+            "p_estimate": sel_p_pct / 100.0 if sel_p_pct > 0 else None,
+            "other_odds": other_odds,
         })
         st.rerun()
     elif sel_add:
@@ -979,6 +1002,20 @@ with tab_sim:
             col2.metric("Valor apostado", f"R$ {bet['stake']:.2f}")
             col3.metric("Retorno total se acertar", f"R$ {pot_return:.2f}")
             col4.metric("Lucro se acertar", f"R$ {pot_profit:.2f}")
+            p_est = bet.get("p_estimate")
+            if p_est is not None:
+                ev = p_est * pot_profit - (1 - p_est) * bet["stake"]
+                direcao = "ganharia" if ev >= 0 else "perderia"
+                st.caption(
+                    f"Valor esperado (chance estimada {p_est*100:.1f}%): R$ {ev:+.2f} — "
+                    f"em média, repetindo essa aposta muitas vezes, você {direcao} "
+                    f"R$ {abs(ev):.2f} por aposta."
+                )
+            other_odds = bet.get("other_odds", [])
+            if other_odds:
+                all_odds = [bet["odd"]] + other_odds
+                margin = sum(1.0 / o for o in all_odds) - 1.0
+                st.caption(f"Margem embutida no mercado (odds informadas): {margin*100:.2f}%.")
 
         st.divider()
 
