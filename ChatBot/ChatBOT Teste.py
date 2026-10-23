@@ -993,75 +993,77 @@ with tab_sim:
             import itertools
 
             n = len(st.session_state.sim_bets)
-            outcomes = list(itertools.product([True, False], repeat=n))
+            if n > 10:
+                st.warning(
+                    f"Com {n} seleções seriam geradas {2**n:,} combinações. "
+                    "O limite é 10 seleções para esta visualização. "
+                    "Remova algumas seleções e tente novamente."
+                )
+            else:
+                outcomes = list(itertools.product([True, False], repeat=n))
 
-            scenario_data = []
-            for outcome in outcomes:
-                # Label do cenário
-                labels = []
-                for j, won in enumerate(outcome):
-                    bet = st.session_state.sim_bets[j]
-                    short = bet["name"][:18] + ("…" if len(bet["name"]) > 18 else "")
-                    labels.append(f"Acerto: {short}" if won else f"Erro: {short}")
-                scenario_label = " | ".join(labels)
+                scenario_data = []
+                for outcome in outcomes:
+                    labels = []
+                    for j, won in enumerate(outcome):
+                        bet = st.session_state.sim_bets[j]
+                        short = bet["name"][:18] + ("…" if len(bet["name"]) > 18 else "")
+                        labels.append(f"Acerto: {short}" if won else f"Erro: {short}")
+                    scenario_label = " | ".join(labels)
 
-                # Probabilidade do cenário (produto das probs individuais)
-                prob = 1.0
-                for j, won in enumerate(outcome):
-                    p = 1 / st.session_state.sim_bets[j]["odd"]
-                    prob *= p if won else (1 - p)
+                    prob = 1.0
+                    for j, won in enumerate(outcome):
+                        p = 1 / st.session_state.sim_bets[j]["odd"]
+                        prob *= p if won else (1 - p)
 
-                # Resultado: soma dos lucros e prejuízos de cada aposta
-                net = 0.0
-                for j, won in enumerate(outcome):
-                    bet = st.session_state.sim_bets[j]
-                    if won:
-                        net += bet["stake"] * (bet["odd"] - 1)   # lucro
-                    else:
-                        net -= bet["stake"]                        # perda
+                    net = 0.0
+                    for j, won in enumerate(outcome):
+                        bet = st.session_state.sim_bets[j]
+                        if won:
+                            net += bet["stake"] * (bet["odd"] - 1)
+                        else:
+                            net -= bet["stake"]
 
-                scenario_data.append({
-                    "scenario": scenario_label,
-                    "prob":     prob,
-                    "net":      net,
-                })
+                    scenario_data.append({
+                        "scenario": scenario_label,
+                        "prob":     prob,
+                        "net":      net,
+                    })
 
-            # Ordenar pela referência calculada pelas odds
-            scenario_data.sort(key=lambda x: x["prob"], reverse=True)
+                scenario_data.sort(key=lambda x: x["prob"], reverse=True)
 
-            total_staked = sum(b["stake"] for b in st.session_state.sim_bets)
+                total_staked = sum(b["stake"] for b in st.session_state.sim_bets)
 
-            st.markdown(
-                f"<div class='bot-msg'>"
-                f"<div class='msg-label bot-label'>Resumo dos cenários</div>"
-                f"Total apostado: <b>R$ {total_staked:.2f}</b>"
-                f"</div>",
-                unsafe_allow_html=True
-            )
-
-            st.markdown("")
-            for s in scenario_data:
-                net_color  = "#163b2c"
-                net_sign   = "+" if s["net"] >= 0 else ""
-                bar_width  = max(4, int(s["prob"] * 100 * 2))   # escala visual
-                safe_scenario = _html.escape(s["scenario"])
                 st.markdown(
-                    f"<div style='background:#ffffff;border-left:3px solid rgba(22,59,44,0.25);"
-                    f"border-radius:0 8px 8px 0;padding:10px 14px;margin:6px 0;'>"
-                    f"<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;color:#163b2c;margin-bottom:6px;'>"
-                    f"{safe_scenario}</div>"
-                    f"<div style='display:flex;align-items:center;gap:14px;flex-wrap:wrap;'>"
-                    f"<span style='font-family:Orbitron,monospace;font-size:0.7rem;color:#163b2c;"
-                    f"letter-spacing:1px;'>REFERÊNCIA PELAS ODDS <b style='color:#163b2c'>{s['prob']*100:.2f}%</b></span>"
-                    f"<div style='flex:1;min-width:80px;background:rgba(255,255,255,0.06);"
-                    f"border-radius:4px;height:8px;'>"
-                    f"<div style='width:{bar_width}%;background:linear-gradient(90deg,#163b2c,#4b8068);"
-                    f"height:8px;border-radius:4px;'></div></div>"
-                    f"<span style='font-family:Orbitron,monospace;font-size:0.7rem;"
-                    f"color:{net_color};letter-spacing:1px;'>LUCRO/PREJUÍZO <b>{net_sign}R$ {s['net']:.2f}</b></span>"
-                    f"</div></div>",
+                    f"<div class='bot-msg'>"
+                    f"<div class='msg-label bot-label'>Resumo dos cenários</div>"
+                    f"Total apostado: <b>R$ {total_staked:.2f}</b>"
+                    f"</div>",
                     unsafe_allow_html=True
                 )
+
+                st.markdown("")
+                for s in scenario_data:
+                    net_sign   = "+" if s["net"] >= 0 else ""
+                    bar_width  = max(4, int(s["prob"] * 100 * 2))
+                    safe_scenario = _html.escape(s["scenario"])
+                    st.markdown(
+                        f"<div style='background:#ffffff;border-left:3px solid rgba(22,59,44,0.25);"
+                        f"border-radius:0 8px 8px 0;padding:10px 14px;margin:6px 0;'>"
+                        f"<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;color:#163b2c;margin-bottom:6px;'>"
+                        f"{safe_scenario}</div>"
+                        f"<div style='display:flex;align-items:center;gap:14px;flex-wrap:wrap;'>"
+                        f"<span style='font-family:Orbitron,monospace;font-size:0.7rem;color:#163b2c;"
+                        f"letter-spacing:1px;'>REFERÊNCIA PELAS ODDS <b style='color:#163b2c'>{s['prob']*100:.2f}%</b></span>"
+                        f"<div style='flex:1;min-width:80px;background:rgba(255,255,255,0.06);"
+                        f"border-radius:4px;height:8px;'>"
+                        f"<div style='width:{bar_width}%;background:linear-gradient(90deg,#163b2c,#4b8068);"
+                        f"height:8px;border-radius:4px;'></div></div>"
+                        f"<span style='font-family:Orbitron,monospace;font-size:0.7rem;"
+                        f"color:#163b2c;letter-spacing:1px;'>LUCRO/PREJUÍZO <b>{net_sign}R$ {s['net']:.2f}</b></span>"
+                        f"</div></div>",
+                        unsafe_allow_html=True
+                    )
 
         st.divider()
         if st.button("Limpar simulação"):
@@ -1182,72 +1184,89 @@ with tab_multi:
         if st.button("Calcular distribuição de cenários", key="multi_scenarios_btn"):
             import itertools
 
-            outcomes = list(itertools.product([True, False], repeat=n_legs))
-            scenario_data = []
-            for outcome in outcomes:
-                labels = []
-                prob = 1.0
-                for j, won in enumerate(outcome):
-                    leg = st.session_state.multi_bets[j]
-                    p = 1 / leg["odd"]
-                    prob *= p if won else (1 - p)
-                    short = leg["name"][:16] + ("…" if len(leg["name"]) > 16 else "")
-                    labels.append(f"Acerto: {short}" if won else f"Erro: {short}")
-                all_won = all(outcome)
-                net = (boosted_return - multi_stake) if all_won else -multi_stake
-                scenario_data.append({
-                    "label": " | ".join(labels),
-                    "prob":  prob,
-                    "net":   net,
-                    "won":   all_won,
-                })
-
-            scenario_data.sort(key=lambda x: x["prob"], reverse=True)
-
-            max_display = 16
-            display_data = scenario_data[:max_display]
-            if len(scenario_data) > max_display:
-                st.caption(
-                    f"Mostrando os {max_display} cenários com maiores referências pelas odds, "
-                    f"de {len(scenario_data)} combinações totais."
+            if n_legs > 10:
+                st.warning(
+                    f"Com {n_legs} seleções seriam geradas {2**n_legs:,} combinações. "
+                    "Mostrando apenas os cenários principais (todas acertam / alguma erra)."
                 )
-
-            max_prob = max(s["prob"] for s in display_data) if display_data else 1.0
-
-            # Barras verticais: altura proporcional à probabilidade do cenário
-            bars_html = (
-                "<div style='display:flex;align-items:flex-end;gap:10px;height:220px;"
-                "overflow-x:auto;padding:16px 6px 8px;border-bottom:1px solid rgba(22,59,44,0.2);'>"
-            )
-            for idx, s in enumerate(display_data, start=1):
-                bar_h = max(4, int((s["prob"] / max_prob) * 170))
-                color = "#163b2c"
-                safe_label_attr = _html.escape(s["label"], quote=True)
-                bars_html += (
-                    f"<div style='display:flex;flex-direction:column;align-items:center;min-width:46px;' title='{safe_label_attr}'>"
-                    f"<div style='font-family:Orbitron,monospace;font-size:0.6rem;color:{color};margin-bottom:4px;white-space:nowrap;'>"
-                    f"{s['prob']*100:.1f}%</div>"
-                    f"<div style='width:26px;height:{bar_h}px;background:linear-gradient(180deg,{color},rgba(0,0,0,0.05));"
-                    f"border-radius:4px 4px 0 0;box-shadow:0 0 8px {color}55;'></div>"
-                    f"<div style='font-family:Orbitron,monospace;font-size:0.6rem;color:#163b2c;margin-top:6px;'>#{idx}</div>"
-                    f"</div>"
+                p_all_win = combined_prob
+                net_all_win = boosted_return - multi_stake
+                r1, r2 = st.columns(2)
+                r1.metric(
+                    "Todas acertam — referência pelas odds",
+                    f"{p_all_win*100:.2f}%",
+                    f"+R$ {net_all_win:.2f}",
                 )
-            bars_html += "</div>"
-            st.markdown(bars_html, unsafe_allow_html=True)
-
-            st.markdown("")
-            for idx, s in enumerate(display_data, start=1):
-                net_color = "#163b2c"
-                net_sign = "+" if s["net"] >= 0 else ""
-                safe_label = _html.escape(s["label"])
-                st.markdown(
-                    f"<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;color:#163b2c;margin:2px 0;'>"
-                    f"<b style='color:#163b2c'>#{idx}</b> {safe_label} — "
-                    f"<span style='color:#163b2c'>Referência pelas odds: {s['prob']*100:.2f}%</span> — "
-                    f"<span style='color:{net_color}'>Lucro/prejuízo: {net_sign}R$ {s['net']:.2f}</span>"
-                    f"</div>",
-                    unsafe_allow_html=True
+                r2.metric(
+                    "Alguma erra — referência pelas odds",
+                    f"{(1 - p_all_win)*100:.2f}%",
+                    f"-R$ {multi_stake:.2f}",
                 )
+            else:
+                outcomes = list(itertools.product([True, False], repeat=n_legs))
+                scenario_data = []
+                for outcome in outcomes:
+                    labels = []
+                    prob = 1.0
+                    for j, won in enumerate(outcome):
+                        leg = st.session_state.multi_bets[j]
+                        p = 1 / leg["odd"]
+                        prob *= p if won else (1 - p)
+                        short = leg["name"][:16] + ("…" if len(leg["name"]) > 16 else "")
+                        labels.append(f"Acerto: {short}" if won else f"Erro: {short}")
+                    all_won = all(outcome)
+                    net = (boosted_return - multi_stake) if all_won else -multi_stake
+                    scenario_data.append({
+                        "label": " | ".join(labels),
+                        "prob":  prob,
+                        "net":   net,
+                        "won":   all_won,
+                    })
+
+                scenario_data.sort(key=lambda x: x["prob"], reverse=True)
+
+                max_display = 16
+                display_data = scenario_data[:max_display]
+                if len(scenario_data) > max_display:
+                    st.caption(
+                        f"Mostrando os {max_display} cenários com maiores referências pelas odds, "
+                        f"de {len(scenario_data)} combinações totais."
+                    )
+
+                max_prob = max(s["prob"] for s in display_data) if display_data else 1.0
+
+                bars_html = (
+                    "<div style='display:flex;align-items:flex-end;gap:10px;height:220px;"
+                    "overflow-x:auto;padding:16px 6px 8px;border-bottom:1px solid rgba(22,59,44,0.2);'>"
+                )
+                for idx, s in enumerate(display_data, start=1):
+                    bar_h = max(4, int((s["prob"] / max_prob) * 170))
+                    color = "#163b2c"
+                    safe_label_attr = _html.escape(s["label"], quote=True)
+                    bars_html += (
+                        f"<div style='display:flex;flex-direction:column;align-items:center;min-width:46px;' title='{safe_label_attr}'>"
+                        f"<div style='font-family:Orbitron,monospace;font-size:0.6rem;color:{color};margin-bottom:4px;white-space:nowrap;'>"
+                        f"{s['prob']*100:.1f}%</div>"
+                        f"<div style='width:26px;height:{bar_h}px;background:linear-gradient(180deg,{color},rgba(0,0,0,0.05));"
+                        f"border-radius:4px 4px 0 0;box-shadow:0 0 8px {color}55;'></div>"
+                        f"<div style='font-family:Orbitron,monospace;font-size:0.6rem;color:#163b2c;margin-top:6px;'>#{idx}</div>"
+                        f"</div>"
+                    )
+                bars_html += "</div>"
+                st.markdown(bars_html, unsafe_allow_html=True)
+
+                st.markdown("")
+                for idx, s in enumerate(display_data, start=1):
+                    net_sign = "+" if s["net"] >= 0 else ""
+                    safe_label = _html.escape(s["label"])
+                    st.markdown(
+                        f"<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;color:#163b2c;margin:2px 0;'>"
+                        f"<b style='color:#163b2c'>#{idx}</b> {safe_label} — "
+                        f"<span style='color:#163b2c'>Referência pelas odds: {s['prob']*100:.2f}%</span> — "
+                        f"<span style='color:#163b2c'>Lucro/prejuízo: {net_sign}R$ {s['net']:.2f}</span>"
+                        f"</div>",
+                        unsafe_allow_html=True
+                    )
 
         st.divider()
         if st.button("Limpar múltipla"):
