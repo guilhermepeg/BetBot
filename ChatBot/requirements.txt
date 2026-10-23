@@ -4,3 +4,5 @@ supabase
 python-docx
 openpyxl
 python-pptx
+numpy
+pandas

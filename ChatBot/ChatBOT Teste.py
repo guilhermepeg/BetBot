@@ -1109,6 +1109,70 @@ with tab_sim:
     else:
         st.info("Nenhuma seleção adicionada ainda. Use o formulário acima para começar.")
 
+    # --- Simulação Monte Carlo ---
+    st.divider()
+    st.markdown("### Simulação de várias apostas")
+    st.markdown(
+        "Veja o que pode acontecer repetindo a mesma aposta muitas vezes. "
+        "O resultado depende da chance que você informar, não das odds."
+    )
+    with st.form(key="monte_carlo_form", clear_on_submit=False):
+        mc1, mc2, mc3 = st.columns(3)
+        mc_odd    = mc1.number_input("Odd", min_value=1.01, max_value=1000.0, value=2.00, step=0.01, format="%.2f")
+        mc_stake  = mc2.number_input("Valor por aposta (R$)", min_value=0.01, value=10.0, step=1.0, format="%.2f")
+        mc_p_pct  = mc3.number_input("Chance estimada de acerto (%)", min_value=0.1, max_value=99.9, value=45.0, step=1.0, format="%.1f")
+        mc4, mc5, mc6 = st.columns(3)
+        mc_n_bets    = mc4.number_input("Número de apostas", min_value=1, max_value=1000, value=100, step=10)
+        mc_bankroll  = mc5.number_input("Banca inicial (R$)", min_value=1.0, value=100.0, step=10.0, format="%.2f")
+        mc_n_sim     = mc6.number_input("Número de simulações", min_value=1, max_value=5000, value=1000, step=100)
+        mc_seed = st.number_input(
+            "Semente aleatória (0 = aleatório)", min_value=0, max_value=99999, value=42, step=1,
+            help="Use um valor fixo para reproduzir o mesmo resultado.",
+        )
+        mc_run = st.form_submit_button("Simular")
+
+    if mc_run:
+        import numpy as np
+        import pandas as pd
+
+        seed = int(mc_seed) if mc_seed > 0 else None
+        rng = np.random.default_rng(seed)
+        p         = mc_p_pct / 100.0
+        lucro_win = float(mc_stake) * (float(mc_odd) - 1.0)
+        perda_lose = float(mc_stake)
+        n_sims    = int(mc_n_sim)
+        n_bets    = int(mc_n_bets)
+
+        all_finals: list[float] = []
+        example_trajs: list[list[float]] = []
+
+        for sim_i in range(n_sims):
+            wins = rng.random(n_bets) < p
+            changes = np.where(wins, lucro_win, -perda_lose)
+            traj = float(mc_bankroll) + np.cumsum(changes)
+            all_finals.append(float(traj[-1]))
+            if sim_i < 20:
+                example_trajs.append([float(mc_bankroll)] + traj.tolist())
+
+        arr = np.array(all_finals)
+        mean_f   = float(np.mean(arr))
+        median_f = float(np.median(arr))
+        pct_below = float(np.mean(arr < float(mc_bankroll))) * 100.0
+        pct_broke = float(np.mean(arr <= 0.0)) * 100.0
+
+        r1, r2, r3, r4 = st.columns(4)
+        r1.metric("Banca final média",         f"R$ {mean_f:.2f}")
+        r2.metric("Banca final mediana",       f"R$ {median_f:.2f}")
+        r3.metric("Termina abaixo da banca",   f"{pct_below:.1f}%")
+        r4.metric("Quebra (banca ≤ R$ 0,00)", f"{pct_broke:.1f}%")
+        st.caption("Resultado de simulação com a chance que você informou. Não é previsão.")
+
+        st.markdown("#### 20 trajetórias de exemplo")
+        traj_df = pd.DataFrame(
+            {f"Sim {i+1}": traj for i, traj in enumerate(example_trajs)}
+        )
+        st.line_chart(traj_df)
+
 # ============================
 # TAB BET MÚLTIPLA
 # ============================
