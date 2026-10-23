@@ -815,29 +815,50 @@ def extract_simulation_bets(instruction: str, current_bets: list) -> dict:
     context = [{"name": b["name"], "odd": b["odd"], "stake": b["stake"]} for b in current_bets]
     response = client.messages.create(
         model="claude-haiku-4-5-20251001",
-        max_tokens=900,
+        max_tokens=1500,
         system=(
-            "Você extrai apostas descritas pelo usuário para uma ferramenta educacional. "
-            'Responda SOMENTE JSON válido no formato {"bets":[{"name":"...",'
-            '"odd":2.1,"stake":25.0}],"reply":"..."}. '
-            "Inclua apenas seleções explicitamente solicitadas e cujos nomes, odds e "
-            "valores apostados estejam informados. Não invente odds ou valores. "
-            "Não confunda probabilidades percentuais com odds decimais; "
-            "não inclua valores de apostas previamente existentes, a menos que "
-            "o usuário peça explicitamente para adicioná-las de novo. "
-            "Se faltarem dados, bets deve ser [] e reply deve pedir os dados ausentes. "
-            "Aceite múltiplas seleções quando todas estiverem completas. "
-            "Não acrescente sugestões de apostas."
+            "Extraia seleções de apostas exclusivamente descritas na nova mensagem. "
+            "Associe referências como 'primeira' e 'segunda' na ordem mencionada. "
+            "Não invente nome, odd ou valor. Aceite números decimais com vírgula "
+            "ou ponto, mas retorne números JSON. Se faltar algum campo, "
+            "retorne bets vazia e explique em reply o dado que falta. "
+            "Não recadastre apostas existentes, salvo pedido expresso."
         ),
+        tools=[{
+            "name": "adicionar_simulacoes",
+            "description": "Transforma pedido em seleções para o simulador.",
+            "input_schema": {
+                "type": "object",
+                "properties": {
+                    "bets": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "name": {"type": "string"},
+                                "odd": {"type": "number"},
+                                "stake": {"type": "number"}
+                            },
+                            "required": ["name", "odd", "stake"]
+                        }
+                    },
+                    "reply": {"type": "string"}
+                },
+                "required": ["bets", "reply"]
+            }
+        }],
+        tool_choice={"type": "tool", "name": "adicionar_simulacoes"},
         messages=[{"role": "user", "content":
-                   "Apostas já existentes (apenas contexto): " + json.dumps(context, ensure_ascii=False)
+                   "Apostas já existentes (contexto): " + json.dumps(context, ensure_ascii=False)
                    + "\nNova mensagem: " + instruction}],
     )
-    content = "".join(block.text for block in response.content if block.type == "text").strip()
-    try:
-        parsed = json.loads(content)
-    except json.JSONDecodeError as exc:
-        raise ValueError("A IA não retornou dados estruturados válidos. Reformule a solicitação.") from exc
+    parsed = next(
+        (block.input for block in response.content
+         if block.type == "tool_use" and block.name == "adicionar_simulacoes"),
+        None,
+    )
+    if parsed is None:
+        raise ValueError("A API não forneceu os dados da simulação. Tente novamente.")
     if not isinstance(parsed, dict) or not isinstance(parsed.get("bets"), list):
         raise ValueError("Formato de apostas inválido retornado pela IA.")
     if len(parsed["bets"]) > 20:
