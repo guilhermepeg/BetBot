@@ -1168,7 +1168,7 @@ with tab_sim:
                     alt.Tooltip("fim:Q", title="Até (R$)", format=".2f"),
                     alt.Tooltip("densidade:Q", title="Densidade", format=".5f"),
                 ],
-            ).properties(height=320, background="#ffffff")
+            ).properties(height=320)
             reference = alt.Chart(pd.DataFrame({"x": [expected]})).mark_rule(
                 color="#666666", strokeDash=[6, 4], size=2
             ).encode(x="x:Q")
