@@ -370,8 +370,8 @@ if "messages" not in st.session_state:
             "role": "assistant",
             "content": (
                 "Olá! Sou o BetBot, seu assistente de apostas esportivas com IA. "
-                "Pode me perguntar sobre odds, mercados, estratégias, bankroll e muito mais. "
-                "Use também a aba Simulação para calcular seus retornos!"
+                "Posso explicar como as apostas funcionam e ajudar a entender quanto você pode "
+                "receber ou perder. Use a aba Simulação para visualizar alguns cenários."
             ),
         }
     ]
@@ -379,8 +379,8 @@ WELCOME_MESSAGE = {
     "role": "assistant",
     "content": (
         "Olá! Sou o BetBot, seu assistente de apostas esportivas com IA. "
-        "Pode me perguntar sobre odds, mercados, estratégias, bankroll e muito mais. "
-        "Use também a aba Simulação para calcular seus retornos!"
+        "Posso explicar como as apostas funcionam e ajudar a entender quanto você pode "
+        "receber ou perder. Use a aba Simulação para visualizar alguns cenários."
     ),
 }
 
@@ -476,18 +476,43 @@ estratégias de apostas, bônus/promoções de casas de apostas, e apostas em ge
 outros esportes).
 
 Regras:
-- Responda sempre em português do Brasil, de forma clara, direta e didática, preferencialmente
-  em texto corrido, com parágrafos curtos. Não use listas, bullet points, tópicos ou títulos,
-  a menos que o usuário peça esse formato explicitamente.
+- Responda em português do Brasil, com palavras simples, explicações intuitivas e parágrafos
+  curtos. Prefira expressões do dia a dia, como "ganhar dinheiro", e explique termos técnicos
+  quando forem necessários. Evite listas longas, salvo quando o usuário pedir.
 - Não use emojis nas respostas, exceto quando forem estritamente necessários para a clareza
   ou compreensão.
+- Ao explicar odds, comece pela ideia intuitiva: odds maiores oferecem um pagamento potencial
+  maior, mas geralmente indicam uma probabilidade implícita menor de acerto. Explique que essa
+  probabilidade é uma referência calculada pela odd, não uma chance real comprovada. Antes de
+  apresentar fórmulas, use exemplos em reais e diferencie o retorno total (inclui o valor
+  apostado) do lucro (o que sobra depois de descontar o valor apostado). Por exemplo, R$ 10
+  numa odd 2,00 podem resultar em R$ 20 no total, sendo R$ 10 de lucro; numa odd 4,00, o
+  retorno total pode ser R$ 40, sendo R$ 30 de lucro, se a aposta vencer.
+- Se perguntarem como funcionam as apostas esportivas, comece explicando o básico: a pessoa
+  escolhe um resultado, define quanto quer apostar e recebe um pagamento conforme a odd se
+  acertar; se errar, pode perder o valor apostado. Não comece com uma lista extensa de mercados.
+  Explique mercados específicos apenas quando perguntarem.
+- Se a pessoa disser "quero aprender sobre bets", comece com uma explicação para iniciantes,
+  sem fórmulas. Fale sobre escolher um resultado, entender a odd, apostar apenas um valor que
+  possa perder e não tentar recuperar perdas aumentando as apostas. Termine exatamente com:
+  "Quer aprofundar e entender a parte matemática e estatística?". Se a pessoa aceitar, aprofunde
+  com fórmulas e exemplos simples, explicando cada termo.
+- Explique value bet de forma intuitiva: é uma aposta em que a probabilidade estimada pela
+  própria pessoa é maior que a probabilidade implícita na odd oferecida. Por exemplo, numa odd
+  2,00, a referência implícita é 50%; se a pessoa estima a chance em 60%, pode considerar que há
+  valor naquela aposta. Deixe claro que estimativas podem estar erradas e que isso não garante lucro.
+- Quando for relevante, inclua naturalmente o aviso: "Fique atento: não existe garantia de
+  ganhar dinheiro com apostas, e você pode perder o valor apostado". Não repita esse alerta
+  em toda resposta.
 - O usuário pode fazer perguntas amplas, vagas ou genéricas — interprete a intenção e responda
   da forma mais útil possível dentro do seu escopo, mesmo sem palavras-chave exatas.
 - Se a pergunta não tiver relação alguma com apostas esportivas (ex: receitas, programação,
   política, saúde etc.), NÃO responda ao conteúdo. Em vez disso, informe educadamente que
   esse não é o seu propósito e redirecione o usuário para temas de apostas esportivas.
 - Sempre que fizer sentido, mencione que a aba "Simulação" pode ser usada para calcular
-  retornos de apostas simples ou múltiplas.
+  pagamentos totais e lucros possíveis em apostas simples ou múltiplas. Avise que as
+  probabilidades mostradas nessa aba são referências derivadas das odds, não probabilidades
+  reais comprovadas nem previsões garantidas.
 - Nunca incentive apostas irresponsáveis; quando relevante, reforce jogo responsável.
 - Não forneça "dicas certeiras" de apostas nem garanta resultados de jogos futuros.
 - Em perguntas educacionais sobre odds, probabilidades, mercados ou simulações, não introduza
@@ -824,7 +849,7 @@ with tab_chat:
                 st.caption(f"Imagem colada: {pasted_image.get('name', 'imagem-colada')}")
         user_input = cols[1].text_input(
             label="Mensagem",
-            placeholder="Pergunte sobre apostas... ex: O que é handicap?",
+            placeholder="Pergunte sobre apostas... ex: Como uma aposta funciona?",
             label_visibility="collapsed",
             key=prompt_key,
         )
@@ -871,8 +896,9 @@ with tab_chat:
 with tab_sim:
     st.markdown("### Simulador de Apostas")
     st.markdown(
-        "Adicione suas apostas abaixo para simular o retorno esperado. "
-        "Suporta apostas simples e múltiplas (acumulador)."
+        "Adicione apostas para ver quanto poderia receber no total ou ganhar de lucro se acertar. "
+        "O retorno total inclui o valor apostado; o lucro é o que sobra depois de descontá-lo. "
+        "Os cenários usam as odds como referência, não são previsões nem probabilidades reais comprovadas."
     )
     st.divider()
 
@@ -881,8 +907,11 @@ with tab_sim:
         st.markdown("#### Adicionar seleção")
         c1, c2, c3, c4 = st.columns([3, 2, 2, 2])
         sel_name  = c1.text_input("Seleção", placeholder="Ex: Flamengo vence")
-        sel_odd   = c2.number_input("Odd", min_value=1.01, max_value=1000.0, value=2.00, step=0.01, format="%.2f")
-        sel_stake = c3.number_input("Valor (R$)", min_value=0.01, value=10.0, step=1.0, format="%.2f")
+        sel_odd   = c2.number_input(
+            "Odd", min_value=1.01, max_value=1000.0, value=2.00, step=0.01, format="%.2f",
+            help="Odds maiores podem pagar mais, mas geralmente indicam uma chance implícita menor. Essa referência não comprova a chance real.",
+        )
+        sel_stake = c3.number_input("Valor apostado (R$)", min_value=0.01, value=10.0, step=1.0, format="%.2f")
         sel_add   = c4.form_submit_button("Adicionar")
 
     if sel_add and sel_name.strip():
@@ -900,7 +929,7 @@ with tab_sim:
             col_a, col_b, col_c, col_d = st.columns([4, 2, 2, 1])
             col_a.markdown(f"**{bet['name']}**")
             col_b.markdown(f"Odd: `{bet['odd']:.2f}`")
-            col_c.markdown(f"Stake: `R$ {bet['stake']:.2f}`")
+            col_c.markdown(f"Valor apostado: `R$ {bet['stake']:.2f}`")
             if col_d.button("✕", key=f"del_{i}"):
                 st.session_state.sim_bets.pop(i)
                 st.rerun()
@@ -910,23 +939,21 @@ with tab_sim:
         # --- Resultados individuais ---
         st.markdown("#### Resumo por Aposta")
         for bet in st.session_state.sim_bets:
-            implied_p = 1 / bet["odd"]
             pot_return = bet["stake"] * bet["odd"]
             pot_profit = pot_return - bet["stake"]
-            ev_ind = (implied_p * pot_profit) - ((1 - implied_p) * bet["stake"])
             col1, col2, col3, col4 = st.columns(4)
             col1.metric(bet["name"], f"Odd {bet['odd']:.2f}")
-            col2.metric("Stake", f"R$ {bet['stake']:.2f}")
-            col3.metric("Retorno Potencial", f"R$ {pot_return:.2f}")
-            col4.metric("EV", f"R$ {ev_ind:.2f}")
+            col2.metric("Valor apostado", f"R$ {bet['stake']:.2f}")
+            col3.metric("Retorno total se acertar", f"R$ {pot_return:.2f}")
+            col4.metric("Lucro se acertar", f"R$ {pot_profit:.2f}")
 
         st.divider()
 
         # --- Distribuição de cenários ---
         st.markdown("#### Distribuição de Cenários")
         st.markdown(
-            "Clique no botão abaixo para ver **todos os cenários possíveis**, "
-            "suas probabilidades e o retorno líquido de cada um."
+            "Veja uma referência de chance calculada pelas odds e o lucro ou prejuízo em cada cenário. "
+            "Essa referência não é uma probabilidade real comprovada nem uma previsão."
         )
 
         if st.button("Calcular todos os cenários"):
@@ -951,7 +978,7 @@ with tab_sim:
                     p = 1 / st.session_state.sim_bets[j]["odd"]
                     prob *= p if won else (1 - p)
 
-                # Retorno líquido: soma dos lucros/perdas de cada aposta
+                # Resultado: soma dos lucros e prejuízos de cada aposta
                 net = 0.0
                 for j, won in enumerate(outcome):
                     bet = st.session_state.sim_bets[j]
@@ -966,21 +993,15 @@ with tab_sim:
                     "net":      net,
                 })
 
-            # Ordenar por probabilidade decrescente
+            # Ordenar pela referência calculada pelas odds
             scenario_data.sort(key=lambda x: x["prob"], reverse=True)
 
-            # EV total
-            ev_total = sum(s["prob"] * s["net"] for s in scenario_data)
             total_staked = sum(b["stake"] for b in st.session_state.sim_bets)
-
-            ev_color_span = '<span style="color:#163b2c">negativo</span>' if ev_total < 0 else '<span style="color:#163b2c">positivo</span>'
 
             st.markdown(
                 f"<div class='bot-msg'>"
-                f"<div class='msg-label bot-label'>BetBot — Valor Esperado Total</div>"
-                f"Total apostado: <b>R$ {total_staked:.2f}</b> · "
-                f"EV esperado no longo prazo: <b>R$ {ev_total:.2f}</b> "
-                f"({ev_color_span})"
+                f"<div class='msg-label bot-label'>Resumo dos cenários</div>"
+                f"Total apostado: <b>R$ {total_staked:.2f}</b>"
                 f"</div>",
                 unsafe_allow_html=True
             )
@@ -997,13 +1018,13 @@ with tab_sim:
                     f"{s['scenario']}</div>"
                     f"<div style='display:flex;align-items:center;gap:14px;flex-wrap:wrap;'>"
                     f"<span style='font-family:Orbitron,monospace;font-size:0.7rem;color:#163b2c;"
-                    f"letter-spacing:1px;'>PROB <b style='color:#163b2c'>{s['prob']*100:.2f}%</b></span>"
+                    f"letter-spacing:1px;'>REFERÊNCIA PELAS ODDS <b style='color:#163b2c'>{s['prob']*100:.2f}%</b></span>"
                     f"<div style='flex:1;min-width:80px;background:rgba(255,255,255,0.06);"
                     f"border-radius:4px;height:8px;'>"
                     f"<div style='width:{bar_width}%;background:linear-gradient(90deg,#163b2c,#4b8068);"
                     f"height:8px;border-radius:4px;'></div></div>"
                     f"<span style='font-family:Orbitron,monospace;font-size:0.7rem;"
-                    f"color:{net_color};letter-spacing:1px;'>LÍQUIDO <b>{net_sign}R$ {s['net']:.2f}</b></span>"
+                    f"color:{net_color};letter-spacing:1px;'>LUCRO/PREJUÍZO <b>{net_sign}R$ {s['net']:.2f}</b></span>"
                     f"</div></div>",
                     unsafe_allow_html=True
                 )
@@ -1021,12 +1042,11 @@ with tab_sim:
 with tab_multi:
     st.markdown("### Bet Múltipla — estilo bet365")
     st.markdown(
-        "Monte sua aposta múltipla (acumulador) combinando seleções de um ou mais eventos. "
-        "A odd final pode ser **impulsionada automaticamente** dependendo da composição escolhida:\n\n"
-        "- **Bônus de Acumulador**: quanto mais seleções na múltipla, maior o bônus sobre a odd combinada "
-        "(a partir de 4 seleções).\n"
-        "- **Bônus Bet Builder**: combinar 2 ou mais mercados do **mesmo evento** (ex: resultado final + "
-        "ambas marcam do mesmo jogo) gera um bônus extra por correlação."
+        "Numa múltipla, você junta várias escolhas na mesma aposta. Para ganhar, todas precisam "
+        "acertar. Quanto maior a odd, maior pode ser o pagamento, mas geralmente menor é a chance "
+        "implícita de acerto. Essa chance é apenas uma referência, não uma previsão comprovada. "
+        "O retorno total inclui o valor apostado; o lucro é o retorno menos esse valor. "
+        "Os bônus exibidos são uma simulação e podem variar conforme as regras da casa."
     )
     st.divider()
 
@@ -1039,7 +1059,10 @@ with tab_multi:
             ["Resultado Final", "Ambas Marcam", "Total de Gols", "Handicap Asiático", "Cartões", "Escanteios", "Outro"],
         )
         multi_name = m3.text_input("Seleção", placeholder="Ex: Flamengo vence")
-        multi_odd  = m4.number_input("Odd", min_value=1.01, max_value=1000.0, value=1.80, step=0.01, format="%.2f")
+        multi_odd  = m4.number_input(
+            "Odd", min_value=1.01, max_value=1000.0, value=1.80, step=0.01, format="%.2f",
+            help="Odds maiores podem pagar mais, mas geralmente indicam uma chance implícita menor. Essa referência não comprova a chance real.",
+        )
         multi_add  = st.form_submit_button("Adicionar")
 
     if multi_add and multi_event.strip() and multi_name.strip():
@@ -1064,7 +1087,7 @@ with tab_multi:
 
         st.divider()
         multi_stake = st.number_input(
-            "Valor da aposta (R$)", min_value=0.01, value=10.0, step=1.0, format="%.2f", key="multi_stake"
+            "Valor apostado (R$)", min_value=0.01, value=10.0, step=1.0, format="%.2f", key="multi_stake"
         )
 
         n_legs = len(st.session_state.multi_bets)
@@ -1080,20 +1103,21 @@ with tab_multi:
         base_return = multi_stake * base_odd
         boosted_return = multi_stake * boosted_odd
 
-        st.markdown("#### Odd impulsionada")
+        st.markdown("#### Odd após os bônus simulados")
         b1, b2, b3, b4 = st.columns(4)
         b1.metric("Odd combinada", f"{base_odd:.2f}")
-        b2.metric("Bônus acumulador", f"+{acca_bonus*100:.0f}%")
-        b3.metric("Bônus bet builder", f"+{builder_bonus*100:.0f}%")
+        b2.metric("Bônus por quantidade", f"+{acca_bonus*100:.0f}%")
+        b3.metric("Bônus no mesmo evento", f"+{builder_bonus*100:.0f}%")
         b4.metric("Odd final", f"{boosted_odd:.2f}")
 
         st.markdown(
             f"<div class='bot-msg'>"
             f"<div class='msg-label bot-label'>BetBot — Resumo da Múltipla</div>"
-            f"Seleções: <b>{n_legs}</b> · Stake: <b>R$ {multi_stake:.2f}</b><br>"
-            f"Retorno sem boost: <b>R$ {base_return:.2f}</b> · "
-            f"Retorno com boost: <b style='color:#163b2c'>R$ {boosted_return:.2f}</b> "
-            f"(+R$ {boosted_return - base_return:.2f})"
+            f"Escolhas: <b>{n_legs}</b> · Valor apostado: <b>R$ {multi_stake:.2f}</b><br>"
+            f"Retorno total sem bônus: <b>R$ {base_return:.2f}</b> · "
+            f"Lucro sem bônus: <b>R$ {base_return - multi_stake:.2f}</b><br>"
+            f"Retorno total com bônus: <b style='color:#163b2c'>R$ {boosted_return:.2f}</b> · "
+            f"Lucro com bônus: <b>R$ {boosted_return - multi_stake:.2f}</b>"
             f"</div>",
             unsafe_allow_html=True
         )
@@ -1104,15 +1128,19 @@ with tab_multi:
         st.divider()
 
         # --- Probabilidade e distribuição de cenários ---
-        st.markdown("#### Probabilidade e Distribuição de Cenários")
+        st.markdown("#### Cenários e referências pelas odds")
         combined_prob = 1.0
         for leg in st.session_state.multi_bets:
             combined_prob *= (1 / leg["odd"])
-        st.metric("Probabilidade de a múltipla ocorrer (todos os eventos baterem)", f"{combined_prob*100:.2f}%")
+        st.metric("Referência calculada pelas odds", f"{combined_prob*100:.2f}%")
+        st.caption(
+            "É uma estimativa implícita nas odds, não uma probabilidade real comprovada nem uma previsão. "
+            "As escolhas podem depender umas das outras."
+        )
 
         st.markdown(
-            "Clique no botão abaixo para ver a **distribuição de todos os cenários possíveis** "
-            "(combinações de acerto/erro de cada evento) em barras verticais."
+            "Veja como ficariam os resultados se algumas escolhas acertassem e outras não. "
+            "As chances dos cenários são referências calculadas pelas odds, não previsões."
         )
 
         if st.button("Calcular distribuição de cenários", key="multi_scenarios_btn"):
@@ -1144,7 +1172,8 @@ with tab_multi:
             display_data = scenario_data[:max_display]
             if len(scenario_data) > max_display:
                 st.caption(
-                    f"Mostrando os {max_display} cenários mais prováveis de {len(scenario_data)} combinações totais."
+                    f"Mostrando os {max_display} cenários com maiores referências pelas odds, "
+                    f"de {len(scenario_data)} combinações totais."
                 )
 
             max_prob = max(s["prob"] for s in display_data) if display_data else 1.0
@@ -1176,8 +1205,8 @@ with tab_multi:
                 st.markdown(
                     f"<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;color:#163b2c;margin:2px 0;'>"
                     f"<b style='color:#163b2c'>#{idx}</b> {s['label']} — "
-                    f"<span style='color:#163b2c'>{s['prob']*100:.2f}%</span> — "
-                    f"<span style='color:{net_color}'>{net_sign}R$ {s['net']:.2f}</span>"
+                    f"<span style='color:#163b2c'>Referência pelas odds: {s['prob']*100:.2f}%</span> — "
+                    f"<span style='color:{net_color}'>Lucro/prejuízo: {net_sign}R$ {s['net']:.2f}</span>"
                     f"</div>",
                     unsafe_allow_html=True
                 )
