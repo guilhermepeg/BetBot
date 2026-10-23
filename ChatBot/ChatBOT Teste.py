@@ -679,11 +679,15 @@ def process_pasted_image(pasted_image: dict) -> dict:
     }
 
 def build_api_messages(history: list) -> list:
+    last_user_idx = max(
+        (i for i, m in enumerate(history) if m.get("role") == "user"),
+        default=-1,
+    )
     api_messages = []
-    for message in history:
+    for idx, message in enumerate(history):
         attachments = message.get("attachments", [])
         content = message["content"]
-        if attachments:
+        if attachments and idx == last_user_idx:
             blocks = []
             for attachment in attachments:
                 if attachment["kind"] == "image":
@@ -711,6 +715,11 @@ def build_api_messages(history: list) -> list:
                     })
             blocks.append({"type": "text", "text": content})
             content = blocks
+        elif attachments:
+            notas = " ".join(
+                f"[anexo enviado anteriormente: {a['name']}]" for a in attachments
+            )
+            content = f"{content}\n{notas}".strip()
         api_messages.append({"role": message["role"], "content": content})
     return api_messages
 
