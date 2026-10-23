@@ -1258,9 +1258,7 @@ with tab_history:
         roi = net_result / total_staked if total_staked else 0.0
 
         bet_dates = [date.fromisoformat(bet["date"]) for bet in st.session_state.bet_history]
-        tracking_days = max((max(bet_dates) - min(bet_dates)).days + 1, 1)
-        projected_annual_stake = total_staked / tracking_days * 365
-        projected_annual_bet_result = projected_annual_stake * roi
+        tracking_days = (max(bet_dates) - min(bet_dates)).days + 1
 
         st.divider()
         st.markdown("#### Desempenho das bets")
@@ -1268,11 +1266,21 @@ with tab_history:
         m1.metric("Total apostado", f"R$ {total_staked:.2f}")
         m2.metric("Resultado líquido", f"R$ {net_result:.2f}")
         m3.metric("ROI realizado", f"{roi * 100:.2f}%")
-        m4.metric("Projeção anual", f"R$ {projected_annual_bet_result:.2f}")
-        st.caption(
-            f"Projeção baseada no ROI do histórico e no ritmo de apostas dos últimos {tracking_days} dia(s). "
-            "Não representa garantia de resultado."
-        )
+        if tracking_days >= 30:
+            projected_annual_stake = total_staked / tracking_days * 365
+            projected_annual_bet_result = projected_annual_stake * roi
+            m4.metric("Projeção anual", f"R$ {projected_annual_bet_result:.2f}")
+            st.caption(
+                f"Projeção baseada no ROI do histórico e no ritmo de apostas dos últimos {tracking_days} dia(s). "
+                "Não representa garantia de resultado."
+            )
+        else:
+            m4.metric("Projeção anual", "Dados insuficientes")
+            st.caption(
+                f"Projeção disponível a partir de 30 dias de histórico "
+                f"(histórico atual: {tracking_days} dia(s)). "
+                "Não representa garantia de resultado."
+            )
 
         st.markdown("#### Comparação com CDI")
         cdi_rate = st.number_input(
