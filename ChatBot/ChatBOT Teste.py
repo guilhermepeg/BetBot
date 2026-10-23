@@ -33,6 +33,7 @@ MAX_IMAGE_BYTES = 5 * 1024 * 1024
 MAX_TOTAL_ATTACHMENT_BYTES = 20 * 1024 * 1024
 MAX_ATTACHMENT_COUNT = 5
 MAX_EXTRACTED_TEXT_CHARS = 80_000
+CDI_ANUAL_PADRAO = 14.15  # valor ilustrativo, atualizar antes de apresentar
 
 st.set_page_config(
     page_title="BetBot AI",
@@ -1275,7 +1276,7 @@ with tab_history:
 
         st.markdown("#### Comparação com CDI")
         cdi_rate = st.number_input(
-            "CDI anual estimado (%)", min_value=0.0, max_value=100.0, value=14.15, step=0.01, format="%.2f"
+            "CDI anual estimado (%)", min_value=0.0, max_value=100.0, value=CDI_ANUAL_PADRAO, step=0.01, format="%.2f"
         ) / 100
         cdi_annual_profit = total_staked * cdi_rate
         cdi_annual_total = total_staked + cdi_annual_profit
