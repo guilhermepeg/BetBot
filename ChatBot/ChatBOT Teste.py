@@ -349,6 +349,27 @@ st.markdown("""
     .stApp .st-key-sim_calculate button * {
         color: #ffffff !important;
     }
+    /* Resultados da simulação: largura adaptável e sem ellipsis do st.metric. */
+    .sim-result-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 185px), 1fr));
+        gap: 1rem;
+        width: 100%;
+        margin: 0.6rem 0 1.6rem;
+    }
+    .sim-result-card { min-width: 0; max-width: 100%; }
+    .sim-result-label {
+        color: #111111 !important; font-size: 0.92rem;
+        font-family: 'Rajdhani', sans-serif; line-height: 1.35;
+        overflow-wrap: anywhere;
+    }
+    .sim-result-number {
+        color: #111111 !important; font-family: 'Orbitron', monospace;
+        line-height: 1.35; letter-spacing: 0;
+        white-space: normal; overflow-wrap: anywhere; word-break: break-word;
+        max-width: 100%; min-width: 0;
+        font-variant-numeric: tabular-nums;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -897,6 +918,22 @@ def extract_simulation_bets(instruction: str, current_bets: list) -> dict:
     return {"bets": validated, "reply": str(parsed.get("reply", ""))[:500]}
 
 
+def render_simulation_metrics(metrics: list) -> None:
+    """Cards responsivos: valores extensos diminuem e podem quebrar sem reticências."""
+    cards = []
+    for label, value in metrics:
+        value_text = str(value)
+        size = max(0.7, min(1.35, 17.0 / max(len(value_text), 1)))
+        cards.append(
+            '<div class="sim-result-card">'
+            f'<div class="sim-result-label">{html.escape(str(label))}</div>'
+            f'<div class="sim-result-number" style="font-size:{size:.2f}rem">'
+            f'{html.escape(value_text)}</div></div>'
+        )
+    st.markdown('<div class="sim-result-grid">' + "".join(cards) + '</div>',
+                unsafe_allow_html=True)
+
+
 def simulate_bet_returns(bets: list, iterations: int, seed: int = 2026) -> np.ndarray:
     """Retornos líquidos de apostas simples e independentes, sob p=1/odd."""
     rng = np.random.default_rng(seed)
@@ -1122,11 +1159,12 @@ with tab_sim:
         for bet in st.session_state.sim_bets:
             pot_return = bet["stake"] * bet["odd"]
             pot_profit = pot_return - bet["stake"]
-            col1, col2, col3, col4 = st.columns(4)
-            col1.metric(bet["name"], f"Odd {bet['odd']:.2f}")
-            col2.metric("Valor apostado", f"R$ {bet['stake']:.2f}")
-            col3.metric("Retorno total se acertar", f"R$ {pot_return:.2f}")
-            col4.metric("Lucro se acertar", f"R$ {pot_profit:.2f}")
+            render_simulation_metrics([
+                (bet["name"], f"Odd {bet['odd']:.2f}"),
+                ("Valor apostado", f"R$ {bet['stake']:.2f}"),
+                ("Retorno total se acertar", f"R$ {pot_return:.2f}"),
+                ("Lucro se acertar", f"R$ {pot_profit:.2f}"),
+            ])
 
         st.divider()
 
@@ -1144,11 +1182,12 @@ with tab_sim:
             for b in st.session_state.sim_bets
         )
         returns = simulate_bet_returns(st.session_state.sim_bets, iterations)
-        m1, m2, m3, m4 = st.columns(4)
-        m1.metric("Valor esperado (lucro líquido)", f"R$ {expected:.2f}")
-        m2.metric("Média simulada", f"R$ {returns.mean():.2f}")
-        m3.metric("Probabilidade de prejuízo", f"{(returns < 0).mean() * 100:.1f}%")
-        m4.metric("Total apostado", f"R$ {total_staked:.2f}")
+        render_simulation_metrics([
+            ("Valor esperado (lucro líquido)", f"R$ {expected:.2f}"),
+            ("Média simulada", f"R$ {returns.mean():.2f}"),
+            ("Probabilidade de prejuízo", f"{(returns < 0).mean() * 100:.1f}%"),
+            ("Total apostado", f"R$ {total_staked:.2f}"),
+        ])
 
         # Histograma com densidade normalizada (área total aproximadamente 1).
         # Resultado de apostas é discreto; a suavização contínua seria enganosa.
