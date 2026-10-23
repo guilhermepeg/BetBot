@@ -241,7 +241,23 @@ st.markdown("""
         font-size: 0.6rem !important;
         letter-spacing: 1.5px !important;
         color: #163b2c !important;
-        text-transform: uppercase;
+        text-transform: none !important;
+        font-size: 0.7rem !important;
+        letter-spacing: 0 !important;
+        white-space: normal !important;
+        overflow: visible !important;
+        text-overflow: clip !important;
+        overflow-wrap: break-word !important;
+        line-height: 1.25 !important;
+    }
+    [data-testid="stMetric"] [data-testid="stMetricLabel"],
+    [data-testid="stMetric"] [data-testid="stMetricLabel"] > div,
+    [data-testid="stMetric"] [data-testid="stMetricLabel"] p {
+        white-space: normal !important;
+        overflow: visible !important;
+        text-overflow: clip !important;
+        overflow-wrap: break-word !important;
+        line-height: 1.3 !important;
     }
     [data-testid="stMetric"] [data-testid="stMetricValue"] {
         font-family: 'Orbitron', monospace !important;
@@ -1152,11 +1168,19 @@ with tab_sim:
                     alt.Tooltip("fim:Q", title="Até (R$)", format=".2f"),
                     alt.Tooltip("densidade:Q", title="Densidade", format=".5f"),
                 ],
-            ).properties(height=320)
+            ).properties(height=320, background="#ffffff")
             reference = alt.Chart(pd.DataFrame({"x": [expected]})).mark_rule(
                 color="#666666", strokeDash=[6, 4], size=2
             ).encode(x="x:Q")
-            st.altair_chart(chart + reference, use_container_width=True)
+            light_chart = (chart + reference).configure_view(
+                fill="#ffffff", stroke="#dddddd"
+            ).configure_axis(
+                labelColor="#111111", titleColor="#111111",
+                domainColor="#666666", tickColor="#666666", gridColor="#e5e5e5"
+            ).configure(
+                background="#ffffff"
+            )
+            st.altair_chart(light_chart, use_container_width=True, theme=None)
         st.caption(
             "Modelo educacional: cada aposta é independente e sua chance de acerto é "
             "aproximada por 1/odd. Odds incluem margem da casa; essa chance não é "
