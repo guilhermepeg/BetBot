@@ -1,0 +1,262 @@
+{
+  "document": "6. Conteúdo III (1).pdf",
+  "sha256": "83cfc5eeef69598e2da8571156e2adb4e4b282b8f2b9532961d5883e37dfb5a8",
+  "entries": [
+    {
+      "id": 1,
+      "topic": "Falácia do jogador",
+      "question": "Já perdi 5 vezes seguidas, não tá na hora de ganhar?",
+      "answer": "Não é bem assim que funciona. Cada aposta é um evento independente, ou seja, o resultado de uma não influencia o resultado da próxima, mesmo que pareça que \"está na hora\". É como jogar uma moeda: mesmo depois de cair coroa 5 vezes seguidas, a chance de dar cara na próxima continua sendo a mesma, porque a moeda não \"lembra\" do que aconteceu antes. Achar que uma sequência de perdas aumenta a chance de ganhar é chamado de falácia do jogador.",
+      "resources": "Exemplo, Simulação",
+      "source": "Kahneman, D.; Tversky, A. (1979). Prospect Theory."
+    },
+    {
+      "id": 2,
+      "topic": "Loss chasing (perseguição de perdas)",
+      "question": "Perdi dinheiro hoje, será que devo apostar mais alto pra recuperar?",
+      "answer": "A gente entende essa vontade de recuperar o que foi perdido. Mas esse é um padrão de risco conhecido: aumentar o valor da aposta depois de uma perda, tentando \"zerar\" o prejuízo de uma vez. O problema é que cada nova aposta continua tendo, em média, expectativa de perda, então aumentar o valor só aumenta o tamanho do risco, não a chance de recuperação. Esse comportamento é chamado de perseguição de perdas.",
+      "resources": "Exemplo, Simulação",
+      "source": "Kahneman, D.; Tversky, A. (1979); Thaler, R. (2018). Misbehaving."
+    },
+    {
+      "id": 3,
+      "topic": "Ilusão de controle",
+      "question": "Eu estudo muito sobre futebol, isso não me dá vantagem nas apostas?",
+      "answer": "Saber muito sobre um assunto não garante prever o que vai acontecer nele. A odd que a casa mostra já é calculada levando em conta praticamente toda informação pública disponível, incluindo estatísticas, lesões e forma dos times. Se um tipo de análise realmente garantisse vantagem, a própria odd já teria se ajustado pra eliminar essa vantagem. Acreditar que \"meu método pessoal\" consegue prever resultados aleatórios de forma consistente é chamado de ilusão de controle.",
+      "resources": "Exemplo, Simulação",
+      "source": "Kahneman, D. (2011). Thinking, Fast and Slow."
+    },
+    {
+      "id": 4,
+      "topic": "House money effect",
+      "question": "Ganhei uma grana numa aposta, faz sentido arriscar tudo de novo?",
+      "answer": "Pensa numa coisa: você apostaria esse mesmo valor se tivesse tirado direto da sua carteira, do seu salário? É comum sentir que dinheiro ganho em apostas \"não é bem seu\", e por isso ficar mais à vontade pra arriscar ele todo de uma vez. Se a resposta for não, isso é um sinal de que você está tratando esse dinheiro de forma diferente só porque veio de um ganho recente, um padrão conhecido como house money effect. Dinheiro é dinheiro, não importa de onde veio.",
+      "resources": "Exemplo",
+      "source": "Thaler, R. (1985). Mental Accounting and Consumer Choice."
+    },
+    {
+      "id": 5,
+      "topic": "Assimetria de informação / odds",
+      "question": "O que realmente significa essa odd que aparece na aposta?",
+      "answer": "Esse número esconde uma informação importante. A odd é o número que a plataforma mostra pra indicar o retorno de uma aposta, mas por trás dele está a probabilidade real que a casa calculou pra aquele evento, já com a margem de lucro dela embutida. Por exemplo, uma odd de 2.50 implica uma probabilidade de cerca de 40% de acontecer, mas o número sozinho não deixa isso claro. Conhecer essa conta ajuda a enxergar melhor o risco real por trás de cada aposta.",
+      "resources": "Exemplo, Simulação",
+      "source": "Conceito de assimetria de informação, discutido em Thaler, R. (2018)."
+    },
+    {
+      "id": 6,
+      "topic": "Custo de oportunidade",
+      "question": "Apostar pouquinho toda semana faz diferença no final das contas?",
+      "answer": "Faz sim, e geralmente mais do que parece. Apostar R$50 por semana durante um ano dá R$2.600 no total. Só que o \"custo\" disso não é só esse valor, é também o que esse dinheiro poderia ter rendido se fosse investido em vez de apostado. Esse \"o que eu deixei de ganhar fazendo outra escolha\" se chama custo de oportunidade, e costuma ser maior do que as pessoas imaginam quando somado ao longo do tempo.",
+      "resources": "Exemplo, Gráfico, Simulação",
+      "source": "Conceito central da economia, discutido em Thaler, R. (2018)."
+    },
+    {
+      "id": 7,
+      "topic": "Efeito de ancoragem",
+      "question": "Uma odd de 3.50 parece uma boa chance, não é?",
+      "answer": "Esse número sozinho pode te enganar. Nosso cérebro tende a usar o primeiro número que vê como referência pra julgar se algo é \"bom\" ou \"ruim\", mesmo sem calcular o que ele realmente significa. Uma odd de 3.50 implica uma chance de vitória de aproximadamente 28%, bem menor do que a sensação de \"chance razoável\" que o número passa à primeira vista. Esse efeito de se apegar ao primeiro número visto é chamado de efeito de ancoragem.",
+      "resources": "Exemplo, Comparação",
+      "source": "Kahneman, D.; Tversky, A. (1979)."
+    },
+    {
+      "id": 8,
+      "topic": "Efeito de enquadramento",
+      "question": "Por que às vezes uma mesma chance parece boa e às vezes parece ruim, dependendo de como é dita?",
+      "answer": "Boa observação, a forma de contar a mesma coisa pode mudar como você se sente sobre ela. Dizer \"94% de chance de perder\" soa muito mais assustador do que dizer \"6% de chance de ganhar\", mesmo sendo exatamente a mesma probabilidade. Isso é chamado de efeito de enquadramento. Por isso vale sempre buscar o número puro, em vez de confiar só na forma como ele foi comunicado.",
+      "resources": "Comparação",
+      "source": "Kahneman, D.; Tversky, A. (1979)."
+    },
+    {
+      "id": 9,
+      "topic": "Efeito manada",
+      "question": "Vi um grupo no Telegram recomendando uma aposta, vale seguir?",
+      "answer": "Antes de seguir, vale perguntar uma coisa : essa pessoa tem um histórico real e comprovado de acerto, ou só passa confiança? É muito comum confiar em recomendações só porque \"todo mundo\" no grupo está apostando na mesma coisa , isso se chama efeito manada. O problema é que seguir a maioria não é garantia de acerto; às vezes só significa que várias pessoas estão cometendo o mesmo erro ao mesmo tempo.",
+      "resources": "Exemplo",
+      "source": "Thaler, R. (2018)."
+    },
+    {
+      "id": 10,
+      "topic": "Sunk cost fallacy (custos irrecuperáveis)",
+      "question": "Já perdi R$300 hoje, não faz sentido continuar tentando pra não ter perdido à toa?",
+      "answer": "O dinheiro que já foi perdido não muda em nada a chance da próxima aposta dar certo. É uma armadilha comum de pensamento continuar apostando \"pra não ter perdido à toa \", mas isso só coloca mais dinheiro em risco, sem alterar a chance real do próximo resultado. Esse raciocínio se chama falácia dos custos irrecuperáveis.",
+      "resources": "Exemplo",
+      "source": "Thaler, R. (1980). Toward a Positive Theory of Consumer Choice."
+    },
+    {
+      "id": 11,
+      "topic": "Ilusão da mão quente",
+      "question": "Acertei minhas últimas 3 apostas, faz sentido apostar mais agora?",
+      "answer": "É tentador pensar assim, mas cada aposta continua sendo independente das outras. Os acertos anteriores não aumentam a chance de acerto da próxima. Acreditar que uma sequência de vitórias significa que você está \"em um bom momento\" que vai continuar se chama ilusão da mão quente.",
+      "resources": "Exemplo e comparação",
+      "source": "Kahneman, D.; Tversky, A. (1979)."
+    },
+    {
+      "id": 12,
+      "topic": "Contabilidade mental",
+      "question": "Ganhei um bônus de fim de ano, faz sentido apostar ele com mais liberdade?",
+      "answer": "Todo dinheiro vale o mesmo, não importa de onde ele veio. É uma sensação bem comum tratar um dinheiro \"extra\" com mais leveza do que o dinheiro do salário, mas esse bônus tem exatamente o mesmo valor e o mesmo poder de compra que qualquer outro real na sua conta. Esse padrão é chamado de contabilidade mental.",
+      "resources": "Exemplo",
+      "source": "Thaler, R. (1985)."
+    },
+    {
+      "id": 13,
+      "topic": "Aversão à perda e near-miss effect",
+      "question": "Fiz uma aposta múltipla e quase acertei tudo, isso significa que estou perto de ganhar de verdade?",
+      "answer": "\"Quase ganhar\" e \"perder\" são exatamente a mesma coisa no seu bolso. A gente entende a sensação, mas o dinheiro apostado se foi da mesma forma. O que muda é como o cérebro processa essa quase-vitória, que ativa uma sensação parecida com a de ganhar de verdade, mesmo sendo uma derrota completa.",
+      "resources": "Exemplo",
+      "source": "Kahneman, D.; Tversky, A. (1979)."
+    },
+    {
+      "id": 14,
+      "topic": "Excesso de confiança",
+      "question": "Eu entendo muito de futebol, isso não me dá uma vantagem real nas apostas?",
+      "answer": "Saber muito sobre um assunto deixa a experiência mais interessante, mas não é garantia de vencer. É bom saber que praticamente todo esse tipo de informação já está calculado dentro da odd que a plataforma oferece. Achar que o próprio conhecimento pessoal é suficiente pra vencer o cálculo da casa de forma consistente é chamado de excesso de confiança.",
+      "resources": "Exemplo",
+      "source": "Kahneman, D. (2011)."
+    },
+    {
+      "id": 15,
+      "topic": "Heurística da representatividade",
+      "question": "Um time perdeu os últimos 3 jogos, não está na hora dele ganhar?",
+      "answer": "Não necessariamente. Uma sequência de derrotas pode parecer \"estranha demais\" pra continuar, mas esse tipo de sequência acontece com frequência normal, mesmo com times bons. Julgar a chance de algo só pela \"aparência\" de uma sequência curta é chamado de heurística da representatividade.",
+      "resources": "Exemplo, Comparação",
+      "source": "Kahneman, D.; Tversky, A. (1979)."
+    },
+    {
+      "id": 16,
+      "topic": "Heurística da disponibilidade",
+      "question": "Vi um vídeo de uma pessoa que ganhou muito dinheiro apostando, isso é comum?",
+      "answer": "Você já viu algum vídeo de alguém contando publicamente que perdeu apostando? Provavelmente não , porque só os grandes ganhos costumam viralizar, não as perdas. Julgar que algo é comum só porque é fácil lembrar de um exemplo marcante é chamado de heurística da disponibilidade.",
+      "resources": "Exemplo",
+      "source": "Kahneman, D.; Tversky, A. (1979)."
+    },
+    {
+      "id": 17,
+      "topic": "Negligência da taxa base",
+      "question": "Esse time ganhou o último jogo, ele está favorito agora, certo?",
+      "answer": "Um resultado recente chama atenção, mas não conta a história toda. Um time pode ter vencido seu último jogo, mas ter um histórico ruim jogando fora de casa, essa informação de fundo, chamada de taxa base, costuma ser ignorada quando a gente foca só no resultado mais recente.",
+      "resources": "Exemplo, Gráfico",
+      "source": "Kahneman, D.; Tversky, A. (1979)."
+    },
+    {
+      "id": 18,
+      "topic": "Efeito de disposição",
+      "question": "Por que eu paro de apostar rápido quando ganho, mas insisto várias vezes quando perco?",
+      "answer": "Isso tem uma explicação: perder de forma definitiva dói mais do que o alívio de um ganho equivalente. Esse é um padrão bem comum. Por isso, quando ganhamos, tendemos a \"garantir\" o resultado logo; mas quando perdemos, tendemos a insistir. Esse comportamento assimétrico é chamado de efeito de disposição.",
+      "resources": "Simulação",
+      "source": "Kahneman, D.; Tversky, A. (1979)."
+    },
+    {
+      "id": 19,
+      "topic": "Inconsistência intertemporal / desconto hiperbólico",
+      "question": "Eu sempre planejo parar depois de uma aposta, mas nunca consigo. Por quê?",
+      "answer": "Isso é muito mais comum do que parece. Planos feitos com calma costumam não resistir ao momento real de decisão , principalmente depois de uma perda. Esse acontecimento é chamado de inconsistência intertemporal. Definir um limite antes de começar costuma funcionar muito melhor do que só \"prometer pra si mesmo\".",
+      "resources": "Exemplo",
+      "source": "Thaler, R. (1980); Kahneman, D. (2011)."
+    },
+    {
+      "id": 20,
+      "topic": "Commitment devices",
+      "question": "Como eu posso me proteger de apostar mais do que eu queria?",
+      "answer": "Uma coisa que funciona bem é definir um limite antes de começar a apostar, não no meio da sessão. Você pode definir um teto de valor por sessão e usar ferramentas de autoexclusão do usuário ou limite de depósito oferecidas pelas próprias plataformas. Esses mecanismos são chamados de commitment devices.",
+      "resources": "Passo a passo",
+      "source": "Thaler, R.; Sunstein, C. (2008). Nudge."
+    },
+    {
+      "id": 21,
+      "topic": "Arquitetura de escolha e dark patterns",
+      "question": "Por que é tão mais fácil apostar de novo do que sacar meu dinheiro?",
+      "answer": "Isso não é acaso , é uma escolha de design das plataformas. Botões de \"apostar novamente\" costumam ser grandes e visíveis, enquanto sacar costuma estar escondido em menus. Esse tipo de design que induz um comportamento específico é chamado de dark pattern.",
+      "resources": "Comparação, Figura",
+      "source": "Thaler, R.; Sunstein, C. (2008)."
+    },
+    {
+      "id": 22,
+      "topic": "Viés de confirmação",
+      "question": "Eu sinto que tenho um bom taco pra apostar, isso pode ser verdade?",
+      "answer": "Você lembra igualmente das vezes que errou quanto das vezes que acertou? É possível que sim, mas a gente tende a lembrar com mais força dos acertos, isso é chamado de viés de confirmação. Um jeito de checar de verdade é anotar todas as apostas, ganhos e perdas, num histórico.",
+      "resources": "Exemplo, Passo a passo",
+      "source": "Kahneman, D. (2011)."
+    },
+    {
+      "id": 23,
+      "topic": "Escassez cognitiva",
+      "question": "Estou meio apertado financeiramente, apostar pode me ajudar a resolver isso mais rápido?",
+      "answer": "A gente entende a pressão de buscar uma solução rápida. Mas apostar, na prática , tende a piorar a situação financeira, não a melhorar. Se as dificuldades financeiras estão pesando nas suas decisões, pode ser mais útil buscar orientação especializada.",
+      "resources": "Outro: orientação para buscar apoio especializado",
+      "source": "Thaler, R. (2018)."
+    },
+    {
+      "id": 24,
+      "topic": "Rational addiction",
+      "question": "Eu sei que estatisticamente perco dinheiro, mas gosto da emoção de apostar. Isso é errado?",
+      "answer": "Vale separar duas coisas: apostar pelo dinheiro e apostar pela emoção do momento. Não necessariamente é errado. Apostar pelo dinheiro tende a dar perda no longo prazo, enquanto apostar pela experiência é uma escolha pessoal. O importante é ter clareza sobre qual dessas motivações está guiando sua decisão.",
+      "resources": "Outro: pergunta reflexiva",
+      "source": "Thaler, R. (2018), em diálogo com os vieses anteriores."
+    },
+    {
+      "id": 25,
+      "topic": "Viés do presente",
+      "question": "Eu sei que investir seria melhor no longo prazo, mas prefiro apostar agora. Por que isso acontece?",
+      "answer": "É bem comum a gente valorizar mais o que acontece agora do que o que pode acontecer no futuro. Nosso cérebro dá um peso muito maior pra recompensas imediatas do que pra recompensas futuras, mesmo sabendo que esperar seria melhor. Esse comportamento é chamado de viés do presente.",
+      "resources": "Gráfico, Simulação",
+      "source": "Thaler, R. (1980); Kahneman, D. (2011)."
+    },
+    {
+      "id": 26,
+      "topic": "Valor esperado",
+      "question": "Se eu fizer essa aposta várias vezes, o que devo esperar ganhar ou perder, em média?",
+      "answer": "Existe um número que mostra isso: o valor esperado. Ele indica o resultado médio que você teria se repetisse a mesma aposta muitas vezes. Numa aposta de R$100 com odd 2.00 e chance real de 45% de vitória, o valor esperado é de −R$10, em média, você perde R$10 a cada R$100 apostados nessas condições.",
+      "resources": "Exemplo, Simulação",
+      "source": "Conceito de valor esperado, com base na bibliografia de probabilidade e estatística do workbook."
+    },
+    {
+      "id": 27,
+      "topic": "Odds e probabilidade real",
+      "question": "A odd que a plataforma mostra é a chance real de eu ganhar?",
+      "answer": "Não exatamente. Existe uma conta simples pra descobrir a chance real: basta dividir 1 pela odd. Uma odd de 2.50 implica uma chance de cerca de 40%, mas ela também embute a margem de lucro da casa. Esse cálculo ajuda a enxergar melhor o risco real por trás do número.",
+      "resources": "Exemplo, Simulação",
+      "source": "Conceito de conversão de odds, base do simulador financeiro."
+    },
+    {
+      "id": 28,
+      "topic": "Simulação de Monte Carlo",
+      "question": "Como o simulador sabe o que pode acontecer se eu apostar de um jeito específico?",
+      "answer": "Em vez de calcular só uma média, o simulador \"testa\" milhares de vezes o mesmo padrão de aposta, cada vez com um resultado diferente. Essa técnica é chamada de simulação de Monte Carlo. No final, ele mostra não só a média, mas o melhor caso, o pior caso, e o quão provável é cada cenário.",
+      "resources": "Simulação, Gráfico",
+      "source": "Simulação de Monte Carlo, com base na bibliografia de probabilidade e estatística do workbook."
+    },
+    {
+      "id": 29,
+      "topic": "Critério de Kelly",
+      "question": "Existe um jeito matematicamente melhor de decidir quanto apostar, em vez de sempre o mesmo valor?",
+      "answer": "Existe sim. Em vez de apostar sempre o mesmo valor fixo, dá pra calcular a fração ideal do seu capital pra cada rodada, considerando o risco e o ganho esperado. Essa fórmula é chamada de critério de Kelly.",
+      "resources": "Simulação, Comparação",
+      "source": "Critério de Kelly, com base na bibliografia de probabilidade e estatística do workbook."
+    },
+    {
+      "id": 30,
+      "topic": "Variância e risco",
+      "question": "Duas apostas podem ter o mesmo retorno médio e ainda assim uma ser mais arriscada que a outra?",
+      "answer": "Sim, e isso é bem comum. Duas apostas podem ter o mesmo resultado médio esperado, mas uma pode \"balançar\" muito mais entre grandes ganhos e grandes perdas do que a outra. Apostar R$10 em cem jogos diferentes tem o mesmo valor esperado que apostar R$1.000 numa única aposta, mas a segunda opção é muito mais arriscada. Essa instabilidade é medida pela variância.",
+      "resources": "Exemplo, Comparação, Simulação",
+      "source": "Conceito de variância/desvio -padrão, com base na bibliografia de estatística do workbook."
+    },
+    {
+      "id": 31,
+      "topic": "Sequências de apostas (distribuição Binomial)",
+      "question": "Se eu fizer 10 apostas seguidas, dá pra saber a chance de eu ganhar um número específico delas?",
+      "answer": "Dá sim pra calcular isso. Se cada aposta tem a mesma chance de vitória e é independente , ou seja, não depende das outras, existe uma forma organizada de calcular a chance de ganho de qualquer combinação de resultados, por exemplo, a chance exata de ganhar 3 em 10 apostas. Essa ferramenta é chamada de distribuição Binomial.",
+      "resources": "Simulação, Gráfico",
+      "source": "Distribuições de probabilidade discretas, com base na bibliografia de estatística do workbook."
+    },
+    {
+      "id": 32,
+      "topic": "Por que simular muitas vezes em vez de uma só",
+      "question": "Se eu simular uma aposta só uma vez, o resultado é confiável?",
+      "answer": "Não muito, uma única tentativa pode dar um resultado bem diferente do esperado, só por acaso. Mas quanto mais vezes a gente repete essa simulação, mais o resultado médio observado se aproxima do valor esperado teórico. Por isso nosso simulador roda muitas simulações de uma vez, em vez de mostrar só um resultado.",
+      "resources": "Simulação, Gráfico",
+      "source": "Lei dos Grandes Números e Teorema Central do Limite, com base na bibliografia de estatística do workbook."
+    }
+  ]
+}

@@ -5,6 +5,7 @@ import base64
 import binascii
 import io
 import os
+from knowledge_base import build_system_prompt
 from datetime import date, datetime
 from uuid import uuid4
 
@@ -745,7 +746,7 @@ def get_bot_response(history: list) -> str:
         response = client.messages.create(
             model="claude-haiku-4-5-20251001",
             max_tokens=700,
-            system=SYSTEM_PROMPT,
+            system=build_system_prompt(SYSTEM_PROMPT),
             messages=api_messages,
         )
         return response.content[0].text
