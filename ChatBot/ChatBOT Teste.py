@@ -545,9 +545,6 @@ if "sim_bets" not in st.session_state:
 if "sim_ai_messages" not in st.session_state:
     st.session_state.sim_ai_messages = []
 
-if "multi_bets" not in st.session_state:
-    st.session_state.multi_bets = []
-
 # --- Real AI engine (Anthropic Claude) ---
 SYSTEM_PROMPT = """Você é o BetBot, assistente educacional de análise quantitativa de apostas esportivas.
 Seu objetivo é informar de forma equilibrada, não promover a atividade de apostar.
@@ -827,6 +824,21 @@ def get_bot_response(history: list) -> str:
         return f"Ocorreu um erro ao consultar a IA: `{e}`"
 
 
+def get_bot_response_with_status(history: list) -> str:
+    """Mantém um aviso visível e o remove mesmo se a consulta falhar."""
+    status = st.empty()
+    try:
+        status.info("Pensando...")
+        response = get_bot_response(history)
+        if not isinstance(response, str) or not response.strip():
+            raise ValueError("Resposta vazia da IA.")
+        return response
+    except Exception:
+        return "Não foi possível obter uma resposta. Tente enviar sua mensagem novamente."
+    finally:
+        status.empty()
+
+
 def extract_simulation_bets(instruction: str, current_bets: list) -> dict:
     """Interpreta texto em apostas; nunca executa código ou ações da resposta da IA."""
     client = _get_client()
@@ -930,38 +942,9 @@ def simulate_bet_returns(bets: list, iterations: int, seed: int = 2026) -> np.nd
 # ============================
 # TABS
 # ============================
-tab_chat, tab_sim, tab_multi, tab_history = st.tabs(
-    ["Chat", "Simulação", "Bet Múltipla", "Histórico de Bets"]
+tab_chat, tab_sim, tab_history = st.tabs(
+    ["Chat", "Simulação", "Histórico de Bets"]
 )
-
-# Bônus progressivo por nº de seleções (estilo "Acumulador Bônus" do bet365)
-ACCA_BONUS_TABLE = [
-    (8, 0.25),
-    (7, 0.20),
-    (6, 0.15),
-    (5, 0.10),
-    (4, 0.05),
-]
-
-def get_acca_bonus(n_selections: int) -> float:
-    for min_legs, bonus in ACCA_BONUS_TABLE:
-        if n_selections >= min_legs:
-            return bonus
-    return 0.0
-
-# Bônus de correlação (estilo "Bet Builder" do bet365: combinar mercados do mesmo evento)
-BET_BUILDER_BONUS_PER_EXTRA = 0.03
-BET_BUILDER_BONUS_CAP = 0.15
-
-def get_bet_builder_bonus(bets: list) -> float:
-    events = {}
-    for b in bets:
-        events.setdefault(b["event"], []).append(b)
-    total_bonus = 0.0
-    for legs in events.values():
-        if len(legs) >= 2:
-            total_bonus += min((len(legs) - 1) * BET_BUILDER_BONUS_PER_EXTRA, BET_BUILDER_BONUS_CAP)
-    return total_bonus
 
 # ============================
 # TAB CHAT
@@ -1050,8 +1033,8 @@ with tab_chat:
                 if attachments:
                     user_message["attachments"] = attachments
                 st.session_state.messages.append(user_message)
-                with st.spinner("BetBot está analisando..."):
-                    response = get_bot_response(st.session_state.messages)
+                with chat_container:
+                    response = get_bot_response_with_status(st.session_state.messages)
                 st.session_state.messages.append({"role": "assistant", "content": response})
                 active_chat = get_active_chat()
                 active_chat["updated_at"] = datetime.now().isoformat(timespec="seconds")
@@ -1218,193 +1201,6 @@ with tab_sim:
             st.rerun()
     else:
         st.info("Nenhuma seleção adicionada ainda. Use o formulário acima para começar.")
-
-# ============================
-# TAB BET MÚLTIPLA
-# ============================
-with tab_multi:
-    st.markdown("### Análise de Bet Múltipla")
-    st.markdown(
-        "Numa múltipla, você junta várias escolhas na mesma aposta. Para ganhar, todas precisam "
-        "acertar. Quanto maior a odd, maior pode ser o pagamento, mas geralmente menor é a chance "
-        "implícita de acerto. Essa chance é apenas uma referência, não uma previsão comprovada. "
-        "O retorno total inclui o valor apostado; o lucro é o retorno menos esse valor. "
-        "Os bônus abaixo são hipóteses ilustrativas e não representam ofertas disponíveis."
-    )
-    st.divider()
-
-    with st.form(key="multi_form", clear_on_submit=True):
-        st.markdown("#### Adicionar seleção à múltipla")
-        m1, m2, m3, m4 = st.columns([3, 2, 3, 2])
-        multi_event  = m1.text_input("Evento", placeholder="Ex: Flamengo x Palmeiras")
-        multi_market = m2.selectbox(
-            "Mercado",
-            ["Resultado Final", "Ambas Marcam", "Total de Gols", "Handicap Asiático", "Cartões", "Escanteios", "Outro"],
-        )
-        multi_name = m3.text_input("Seleção", placeholder="Ex: Flamengo vence")
-        multi_odd  = m4.number_input(
-            "Odd", min_value=1.01, max_value=1000.0, value=1.80, step=0.01, format="%.2f",
-            help="Odds maiores podem pagar mais, mas geralmente indicam uma chance implícita menor. Essa referência não comprova a chance real.",
-        )
-        multi_add  = st.form_submit_button("Adicionar")
-
-    if multi_add and (not multi_event.strip() or not multi_name.strip()):
-        st.warning("Informe o evento e o nome da seleção antes de adicionar.")
-    elif multi_add:
-        st.session_state.multi_bets.append({
-            "event":  multi_event.strip(),
-            "market": multi_market,
-            "name":   multi_name.strip(),
-            "odd":    multi_odd,
-        })
-        st.rerun()
-
-    if st.session_state.multi_bets:
-        st.markdown("#### Seleções da múltipla")
-        for i, leg in enumerate(st.session_state.multi_bets):
-            col_a, col_b, col_c, col_d = st.columns([3, 3, 2, 1])
-            col_a.markdown(f"**{leg['event']}**")
-            col_b.markdown(f"{leg['market']}: `{leg['name']}`")
-            col_c.markdown(f"Odd: `{leg['odd']:.2f}`")
-            if col_d.button("✕", key=f"del_multi_{i}"):
-                st.session_state.multi_bets.pop(i)
-                st.rerun()
-
-        st.divider()
-        multi_stake = st.number_input(
-            "Valor apostado (R$)", min_value=0.01, value=10.0, step=1.0, format="%.2f", key="multi_stake"
-        )
-
-        n_legs = len(st.session_state.multi_bets)
-        base_odd = 1.0
-        for leg in st.session_state.multi_bets:
-            base_odd *= leg["odd"]
-
-        acca_bonus = get_acca_bonus(n_legs) if n_legs >= 2 else 0.0
-        builder_bonus = get_bet_builder_bonus(st.session_state.multi_bets)
-        total_bonus = acca_bonus + builder_bonus
-        boosted_odd = base_odd * (1 + total_bonus)
-
-        base_return = multi_stake * base_odd
-        boosted_return = multi_stake * boosted_odd
-
-        st.markdown("#### Cenário hipotético com bônus")
-        b1, b2, b3, b4 = st.columns(4)
-        b1.metric("Odd combinada", f"{base_odd:.2f}")
-        b2.metric("Bônus por quantidade", f"+{acca_bonus*100:.0f}%")
-        b3.metric("Bônus no mesmo evento", f"+{builder_bonus*100:.0f}%")
-        b4.metric("Odd final", f"{boosted_odd:.2f}")
-
-        st.markdown(
-            f"<div class='bot-msg'>"
-            f"<div class='msg-label bot-label'>BetBot — Resumo da Múltipla</div>"
-            f"Escolhas: <b>{n_legs}</b> · Valor apostado: <b>R$ {multi_stake:.2f}</b><br>"
-            f"Retorno total sem bônus: <b>R$ {base_return:.2f}</b> · "
-            f"Lucro sem bônus: <b>R$ {base_return - multi_stake:.2f}</b><br>"
-            f"Retorno total com bônus: <b style='color:#163b2c'>R$ {boosted_return:.2f}</b> · "
-            f"Lucro com bônus: <b>R$ {boosted_return - multi_stake:.2f}</b>"
-            f"</div>",
-            unsafe_allow_html=True
-        )
-
-        if n_legs < 2:
-            st.info("Adicione pelo menos 2 seleções para formar uma múltipla e habilitar os bônus.")
-
-        st.divider()
-
-        # --- Probabilidade e distribuição de cenários ---
-        st.markdown("#### Cenários e referências pelas odds")
-        combined_prob = 1.0
-        for leg in st.session_state.multi_bets:
-            combined_prob *= (1 / leg["odd"])
-        st.metric("Referência calculada pelas odds", f"{combined_prob*100:.2f}%")
-        st.caption(
-            "É uma estimativa implícita nas odds, não uma probabilidade real comprovada nem uma previsão. "
-            "As escolhas podem depender umas das outras."
-        )
-
-        st.markdown(
-            "Veja como ficariam os resultados se algumas escolhas acertassem e outras não. "
-            "As chances dos cenários são referências calculadas pelas odds, não previsões."
-        )
-
-        calculate_multi = st.button("Calcular distribuição de cenários", key="multi_scenarios_btn")
-        if calculate_multi and n_legs > 10:
-            st.warning("Limite de 10 seleções para gerar cenários. Remova algumas seleções.")
-        elif calculate_multi:
-            import itertools
-
-            outcomes = list(itertools.product([True, False], repeat=n_legs))
-            scenario_data = []
-            for outcome in outcomes:
-                labels = []
-                prob = 1.0
-                for j, won in enumerate(outcome):
-                    leg = st.session_state.multi_bets[j]
-                    p = 1 / leg["odd"]
-                    prob *= p if won else (1 - p)
-                    short = leg["name"][:16] + ("…" if len(leg["name"]) > 16 else "")
-                    labels.append(f"Acerto: {short}" if won else f"Erro: {short}")
-                all_won = all(outcome)
-                net = (boosted_return - multi_stake) if all_won else -multi_stake
-                scenario_data.append({
-                    "label": " | ".join(labels),
-                    "prob":  prob,
-                    "net":   net,
-                    "won":   all_won,
-                })
-
-            scenario_data.sort(key=lambda x: x["prob"], reverse=True)
-
-            max_display = 16
-            display_data = scenario_data[:max_display]
-            if len(scenario_data) > max_display:
-                st.caption(
-                    f"Mostrando os {max_display} cenários com maiores referências pelas odds, "
-                    f"de {len(scenario_data)} combinações totais."
-                )
-
-            max_prob = max(s["prob"] for s in display_data) if display_data else 1.0
-
-            # Barras verticais: altura proporcional à probabilidade do cenário
-            bars_html = (
-                "<div style='display:flex;align-items:flex-end;gap:10px;height:220px;"
-                "overflow-x:auto;padding:16px 6px 8px;border-bottom:1px solid rgba(22,59,44,0.2);'>"
-            )
-            for idx, s in enumerate(display_data, start=1):
-                bar_h = max(4, int((s["prob"] / max_prob) * 170))
-                color = "#163b2c"
-                bars_html += (
-                    f"<div style='display:flex;flex-direction:column;align-items:center;min-width:46px;' title='{s['label']}'>"
-                    f"<div style='font-family:Orbitron,monospace;font-size:0.6rem;color:{color};margin-bottom:4px;white-space:nowrap;'>"
-                    f"{s['prob']*100:.1f}%</div>"
-                    f"<div style='width:26px;height:{bar_h}px;background:linear-gradient(180deg,{color},rgba(0,0,0,0.05));"
-                    f"border-radius:4px 4px 0 0;box-shadow:0 0 8px {color}55;'></div>"
-                    f"<div style='font-family:Orbitron,monospace;font-size:0.6rem;color:#163b2c;margin-top:6px;'>#{idx}</div>"
-                    f"</div>"
-                )
-            bars_html += "</div>"
-            st.markdown(bars_html, unsafe_allow_html=True)
-
-            st.markdown("")
-            for idx, s in enumerate(display_data, start=1):
-                net_color = "#163b2c"
-                net_sign = "+" if s["net"] >= 0 else ""
-                st.markdown(
-                    f"<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;color:#163b2c;margin:2px 0;'>"
-                    f"<b style='color:#163b2c'>#{idx}</b> {s['label']} — "
-                    f"<span style='color:#163b2c'>Referência pelas odds: {s['prob']*100:.2f}%</span> — "
-                    f"<span style='color:{net_color}'>Lucro/prejuízo: {net_sign}R$ {s['net']:.2f}</span>"
-                    f"</div>",
-                    unsafe_allow_html=True
-                )
-
-        st.divider()
-        if st.button("Limpar múltipla"):
-            st.session_state.multi_bets = []
-            st.rerun()
-    else:
-        st.info("Nenhuma seleção adicionada ainda. Use o formulário acima para montar sua múltipla.")
 
 # ============================
 # TAB HISTÓRICO DE BETS
