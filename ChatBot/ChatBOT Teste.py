@@ -14,7 +14,11 @@ def _read_setting(name: str):
     if value:
         return value
     try:
-        return st.secrets.get(name)
+        from streamlit.errors import StreamlitSecretNotFoundError
+        try:
+            return st.secrets.get(name)
+        except StreamlitSecretNotFoundError:
+            return None
     except Exception:
         return None
 
