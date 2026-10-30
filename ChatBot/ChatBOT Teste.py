@@ -538,8 +538,6 @@ with st.sidebar:
 if "sim_bets" not in st.session_state:
     st.session_state.sim_bets = []
 
-if "multi_bets" not in st.session_state:
-    st.session_state.multi_bets = []
 
 # --- Real AI engine (Anthropic Claude) ---
 SYSTEM_PROMPT = """Você é o BetBot, um assistente de IA especializado EXCLUSIVAMENTE em apostas esportivas.
@@ -551,11 +549,15 @@ estratégias de apostas, bônus/promoções de casas de apostas, e apostas em ge
 outros esportes).
 
 Regras:
-- Responda em português do Brasil, com palavras simples, explicações intuitivas e parágrafos
-  curtos. Prefira expressões do dia a dia, como "ganhar dinheiro", e explique termos técnicos
-  quando forem necessários. Evite listas longas, salvo quando o usuário pedir.
-- Não use emojis nas respostas, exceto quando forem estritamente necessários para a clareza
-  ou compreensão.
+- Responda sempre em português do Brasil, em texto corrido e fluido, como se estivesse
+  conversando com alguém. Use parágrafos curtos e linguagem do dia a dia. Explique os termos
+  técnicos de forma simples dentro do próprio texto.
+- Nunca use cabeçalhos markdown (# ## ###). Nunca estruture a resposta como um documento ou
+  artigo. Não use listas de bullet points, exceto quando o usuário pedir explicitamente uma
+  lista ou comparação. Prefira conectar as ideias em parágrafos naturais.
+- Não formate a resposta com negrito excessivo. Use negrito apenas para destacar um termo
+  técnico que está sendo explicado pela primeira vez, e só se realmente ajudar o leigo.
+- Não use emojis.
 - Ao explicar odds, comece pela ideia intuitiva: odds maiores oferecem um pagamento potencial
   maior, mas geralmente indicam uma probabilidade implícita menor de acerto. Explique que essa
   probabilidade é uma referência calculada pela odd, não uma chance real comprovada. Antes de
@@ -866,43 +868,20 @@ def get_bot_response(history: list) -> str:
 # ============================
 # TABS
 # ============================
-tab_chat, tab_sim, tab_multi, tab_history = st.tabs(
-    ["Chat", "Simulação", "Bet Múltipla", "Histórico de Bets"]
+tab_chat, tab_sim, tab_history = st.tabs(
+    ["Chat", "Simulação", "Histórico de Bets"]
 )
-
-# Bônus progressivo por nº de seleções (estilo "Acumulador Bônus" do bet365)
-ACCA_BONUS_TABLE = [
-    (8, 0.25),
-    (7, 0.20),
-    (6, 0.15),
-    (5, 0.10),
-    (4, 0.05),
-]
-
-def get_acca_bonus(n_selections: int) -> float:
-    for min_legs, bonus in ACCA_BONUS_TABLE:
-        if n_selections >= min_legs:
-            return bonus
-    return 0.0
-
-# Bônus de correlação (estilo "Bet Builder" do bet365: combinar mercados do mesmo evento)
-BET_BUILDER_BONUS_PER_EXTRA = 0.03
-BET_BUILDER_BONUS_CAP = 0.15
-
-def get_bet_builder_bonus(bets: list) -> float:
-    events = {}
-    for b in bets:
-        events.setdefault(b["event"], []).append(b)
-    total_bonus = 0.0
-    for legs in events.values():
-        if len(legs) >= 2:
-            total_bonus += min((len(legs) - 1) * BET_BUILDER_BONUS_PER_EXTRA, BET_BUILDER_BONUS_CAP)
-    return total_bonus
 
 # ============================
 # TAB CHAT
 # ============================
 with tab_chat:
+    st.markdown(
+        "Tire suas dúvidas sobre apostas esportivas com o BetBot. "
+        "Pergunte sobre odds, tipos de apostas, estratégias, como funciona a margem das casas — "
+        "tudo em linguagem simples, sem enrolação."
+    )
+    st.divider()
     chat_container = st.container()
     with chat_container:
         for msg in st.session_state.messages:
@@ -1007,9 +986,25 @@ with tab_chat:
 with tab_sim:
     st.markdown("### Simulador de Apostas")
     st.markdown(
-        "Adicione apostas para ver quanto poderia receber no total ou ganhar de lucro se acertar. "
-        "O retorno total inclui o valor apostado; o lucro é o que sobra depois de descontá-lo. "
-        "Os cenários usam as odds como referência, não são previsões nem probabilidades reais comprovadas."
+        "Aqui você calcula, antes de apostar, quanto pode ganhar ou perder. "
+        "Informe a aposta, a odd que a casa está oferecendo e quanto você quer colocar — "
+        "o simulador mostra o retorno se acertar e o prejuízo se errar. "
+        "Mais abaixo tem uma simulação de longo prazo para você ver o que acontece repetindo a mesma aposta muitas vezes."
+    )
+    st.divider()
+
+    st.markdown(
+        "**Como preencher:**\n\n"
+        "1. **Nome da seleção** — escreva o que você vai apostar. Ex: Flamengo vence\n"
+        "2. **Odd** — é o número que a casa de apostas mostra. Quanto maior, mais você recebe se acertar, mas geralmente mais difícil de acontecer. Ex: 2,50\n"
+        "3. **Valor apostado** — quanto você quer colocar nessa aposta. Ex: R$ 20,00\n"
+        "4. Clique em **Adicionar** para incluir a seleção na simulação."
+    )
+    st.info(
+        "Exemplo: Seleção Flamengo vence, odd 2,50, valor R$ 20,00. "
+        "Se acertar: retorno total de R$ 50,00 e lucro de R$ 30,00. "
+        "Se errar: perde R$ 20,00. "
+        "A odd não garante a probabilidade real do resultado."
     )
     st.divider()
 
@@ -1189,25 +1184,43 @@ with tab_sim:
     else:
         st.info("Nenhuma seleção adicionada ainda. Use o formulário acima para começar.")
 
-    # --- Simulação Monte Carlo ---
+    # --- Simulação de Longo Prazo (Monte Carlo) ---
     st.divider()
-    st.markdown("### Simulação de várias apostas")
+    st.markdown("### E se você repetir a mesma aposta várias vezes?")
     st.markdown(
-        "Veja o que pode acontecer repetindo a mesma aposta muitas vezes. "
-        "O resultado depende da chance que você informar, não das odds."
+        "Essa simulação responde à pergunta: se você fizer a mesma aposta 100 vezes seguidas, "
+        "o que pode acontecer com o seu dinheiro? "
+        "O simulador roda 1.000 cenários diferentes e mostra o melhor caso, o pior caso e o resultado mais provável. "
+        "Você informa a chance que *você* estima de acertar — não é a da casa, é a sua própria avaliação."
     )
+
     with st.form(key="monte_carlo_form", clear_on_submit=False):
+        st.markdown("**Preencha os dados da aposta que quer repetir:**")
         mc1, mc2, mc3 = st.columns(3)
-        mc_odd    = mc1.number_input("Odd", min_value=1.01, max_value=1000.0, value=2.00, step=0.01, format="%.2f")
-        mc_stake  = mc2.number_input("Valor por aposta (R$)", min_value=0.01, value=10.0, step=1.0, format="%.2f")
-        mc_p_pct  = mc3.number_input("Chance estimada de acerto (%)", min_value=0.1, max_value=99.9, value=45.0, step=1.0, format="%.1f")
+        mc_odd      = mc1.number_input(
+            "Odd", min_value=1.01, max_value=1000.0, value=2.00, step=0.01, format="%.2f",
+            help="O número que a casa de apostas mostra para essa aposta.",
+        )
+        mc_stake    = mc2.number_input(
+            "Valor por aposta (R$)", min_value=0.01, value=10.0, step=1.0, format="%.2f",
+            help="Quanto você vai colocar em cada uma das apostas.",
+        )
+        mc_p_pct    = mc3.number_input(
+            "Sua estimativa de acerto (%)", min_value=0.1, max_value=99.9, value=45.0, step=1.0, format="%.1f",
+            help="Qual é a chance, na sua avaliação, de essa aposta ser vencedora? Ex: 45% significa que você acha que vai acertar em 45 de cada 100 apostas.",
+        )
         mc4, mc5, mc6 = st.columns(3)
-        mc_n_bets    = mc4.number_input("Número de apostas", min_value=1, max_value=1000, value=100, step=10)
-        mc_bankroll  = mc5.number_input("Banca inicial (R$)", min_value=1.0, value=100.0, step=10.0, format="%.2f")
-        mc_n_sim     = mc6.number_input("Número de simulações", min_value=1, max_value=5000, value=1000, step=100)
-        mc_seed = st.number_input(
-            "Semente aleatória (0 = aleatório)", min_value=0, max_value=99999, value=42, step=1,
-            help="Use um valor fixo para reproduzir o mesmo resultado.",
+        mc_n_bets   = mc4.number_input(
+            "Quantas vezes vai repetir?", min_value=10, max_value=1000, value=100, step=10,
+            help="Número de apostas iguais que você quer simular.",
+        )
+        mc_bankroll = mc5.number_input(
+            "Banca inicial (R$)", min_value=1.0, value=200.0, step=10.0, format="%.2f",
+            help="Quanto você tem disponível para apostar no total.",
+        )
+        mc_cdi_rate = mc6.number_input(
+            "CDI anual estimado (%)", min_value=0.0, max_value=100.0, value=CDI_ANUAL_PADRAO, step=0.01, format="%.2f",
+            help="Taxa do CDI (renda fixa) para comparar com as apostas.",
         )
         mc_run = st.form_submit_button("Simular")
 
@@ -1215,246 +1228,166 @@ with tab_sim:
         import numpy as np
         import pandas as pd
 
-        seed = int(mc_seed) if mc_seed > 0 else None
-        rng = np.random.default_rng(seed)
-        p         = mc_p_pct / 100.0
-        lucro_win = float(mc_stake) * (float(mc_odd) - 1.0)
+        rng = np.random.default_rng()
+        p          = mc_p_pct / 100.0
+        lucro_win  = float(mc_stake) * (float(mc_odd) - 1.0)
         perda_lose = float(mc_stake)
-        n_sims    = int(mc_n_sim)
-        n_bets    = int(mc_n_bets)
+        n_sims     = 1000
+        n_bets     = int(mc_n_bets)
+        bankroll   = float(mc_bankroll)
+        cdi_rate   = mc_cdi_rate / 100.0
 
         all_finals: list[float] = []
         example_trajs: list[list[float]] = []
 
         for sim_i in range(n_sims):
-            wins = rng.random(n_bets) < p
+            wins    = rng.random(n_bets) < p
             changes = np.where(wins, lucro_win, -perda_lose)
-            traj = float(mc_bankroll) + np.cumsum(changes)
+            traj    = bankroll + np.cumsum(changes)
             all_finals.append(float(traj[-1]))
             if sim_i < 20:
-                example_trajs.append([float(mc_bankroll)] + traj.tolist())
+                example_trajs.append([bankroll] + traj.tolist())
 
-        arr = np.array(all_finals)
+        arr      = np.array(all_finals)
         mean_f   = float(np.mean(arr))
-        median_f = float(np.median(arr))
-        pct_below = float(np.mean(arr < float(mc_bankroll))) * 100.0
+        best_f   = float(np.max(arr))
+        worst_f  = float(np.min(arr))
         pct_broke = float(np.mean(arr <= 0.0)) * 100.0
 
-        r1, r2, r3, r4 = st.columns(4)
-        r1.metric("Banca final média",         f"R$ {mean_f:.2f}")
-        r2.metric("Banca final mediana",       f"R$ {median_f:.2f}")
-        r3.metric("Termina abaixo da banca",   f"{pct_below:.1f}%")
-        r4.metric("Quebra (banca ≤ R$ 0,00)", f"{pct_broke:.1f}%")
-        st.caption("Resultado de simulação com a chance que você informou. Não é previsão.")
-
-        st.markdown("#### 20 trajetórias de exemplo")
-        traj_df = pd.DataFrame(
-            {f"Sim {i+1}": traj for i, traj in enumerate(example_trajs)}
-        )
-        st.line_chart(traj_df)
-
-# ============================
-# TAB BET MÚLTIPLA
-# ============================
-with tab_multi:
-    st.markdown("### Bet Múltipla — estilo bet365")
-    st.markdown(
-        "Numa múltipla, você junta várias escolhas na mesma aposta. Para ganhar, todas precisam "
-        "acertar. Quanto maior a odd, maior pode ser o pagamento, mas geralmente menor é a chance "
-        "implícita de acerto. Essa chance é apenas uma referência, não uma previsão comprovada. "
-        "O retorno total inclui o valor apostado; o lucro é o retorno menos esse valor. "
-        "Os bônus exibidos são uma simulação e podem variar conforme as regras da casa."
-    )
-    st.divider()
-
-    with st.form(key="multi_form", clear_on_submit=True):
-        st.markdown("#### Adicionar seleção à múltipla")
-        m1, m2, m3, m4 = st.columns([3, 2, 3, 2])
-        multi_event  = m1.text_input("Evento", placeholder="Ex: Flamengo x Palmeiras")
-        multi_market = m2.selectbox(
-            "Mercado",
-            ["Resultado Final", "Ambas Marcam", "Total de Gols", "Handicap Asiático", "Cartões", "Escanteios", "Outro"],
-        )
-        multi_name = m3.text_input("Seleção", placeholder="Ex: Flamengo vence")
-        multi_odd  = m4.number_input(
-            "Odd", min_value=1.01, max_value=1000.0, value=1.80, step=0.01, format="%.2f",
-            help="Odds maiores podem pagar mais, mas geralmente indicam uma chance implícita menor. Essa referência não comprova a chance real.",
-        )
-        multi_add  = st.form_submit_button("Adicionar")
-
-    if multi_add and multi_event.strip() and multi_name.strip():
-        st.session_state.multi_bets.append({
-            "event":  multi_event.strip(),
-            "market": multi_market,
-            "name":   multi_name.strip(),
-            "odd":    multi_odd,
-        })
-        st.rerun()
-    elif multi_add:
-        st.warning("Preencha o evento e o nome da seleção.")
-
-    if st.session_state.multi_bets:
-        st.markdown("#### Seleções da múltipla")
-        for i, leg in enumerate(st.session_state.multi_bets):
-            col_a, col_b, col_c, col_d = st.columns([3, 3, 2, 1])
-            col_a.markdown(f"**{leg['event']}**")
-            col_b.markdown(f"{leg['market']}: `{leg['name']}`")
-            col_c.markdown(f"Odd: `{leg['odd']:.2f}`")
-            if col_d.button("✕", key=f"del_multi_{i}"):
-                st.session_state.multi_bets.pop(i)
-                st.rerun()
+        mean_gain  = mean_f  - bankroll
+        best_gain  = best_f  - bankroll
+        worst_gain = worst_f - bankroll
+        cdi_gain   = bankroll * cdi_rate
 
         st.divider()
-        multi_stake = st.number_input(
-            "Valor apostado (R$)", min_value=0.01, value=10.0, step=1.0, format="%.2f", key="multi_stake"
+        st.markdown("#### O que aconteceu nas 1.000 simulações")
+
+        r1, r2, r3 = st.columns(3)
+        best_sign  = "+" if best_gain  >= 0 else ""
+        mean_sign  = "+" if mean_gain  >= 0 else ""
+        worst_sign = "+" if worst_gain >= 0 else ""
+        r1.metric(
+            "Melhor cenário encontrado",
+            f"R$ {best_f:.2f}",
+            f"{best_sign}R$ {best_gain:.2f} em relação ao que você começou",
         )
+        r2.metric(
+            "Resultado mais provável (média)",
+            f"R$ {mean_f:.2f}",
+            f"{mean_sign}R$ {mean_gain:.2f} em relação ao que você começou",
+        )
+        r3.metric(
+            "Pior cenário encontrado",
+            f"R$ {worst_f:.2f}",
+            f"{worst_sign}R$ {worst_gain:.2f} em relação ao que você começou",
+        )
+        if pct_broke > 0:
+            st.warning(
+                f"Em {pct_broke:.1f}% dos cenários simulados a banca zerou antes de terminar as apostas. "
+                "Isso significa que, com a chance que você informou, há risco real de perder tudo."
+            )
+        st.caption("Resultados baseados na chance que você estimou. Não representam previsões reais.")
 
-        n_legs = len(st.session_state.multi_bets)
-        base_odd = 1.0
-        for leg in st.session_state.multi_bets:
-            base_odd *= leg["odd"]
-
-        acca_bonus = get_acca_bonus(n_legs) if n_legs >= 2 else 0.0
-        builder_bonus = get_bet_builder_bonus(st.session_state.multi_bets)
-        total_bonus = acca_bonus + builder_bonus
-        boosted_odd = base_odd * (1 + total_bonus)
-
-        base_return = multi_stake * base_odd
-        boosted_return = multi_stake * boosted_odd
-
-        st.markdown("#### Odd após os bônus simulados")
-        b1, b2, b3, b4 = st.columns(4)
-        b1.metric("Odd combinada", f"{base_odd:.2f}")
-        b2.metric("Bônus por quantidade", f"+{acca_bonus*100:.0f}%")
-        b3.metric("Bônus no mesmo evento", f"+{builder_bonus*100:.0f}%")
-        b4.metric("Odd final", f"{boosted_odd:.2f}")
-
+        # --- Gráfico divergente: melhor / média / CDI / pior ---
+        st.markdown("#### Ganho ou perda: comparação visual")
         st.markdown(
-            f"<div class='bot-msg'>"
-            f"<div class='msg-label bot-label'>BetBot — Resumo da Múltipla</div>"
-            f"Escolhas: <b>{n_legs}</b> · Valor apostado: <b>R$ {multi_stake:.2f}</b><br>"
-            f"Retorno total sem bônus: <b>R$ {base_return:.2f}</b> · "
-            f"Lucro sem bônus: <b>R$ {base_return - multi_stake:.2f}</b><br>"
-            f"Retorno total com bônus: <b style='color:#163b2c'>R$ {boosted_return:.2f}</b> · "
-            f"Lucro com bônus: <b>R$ {boosted_return - multi_stake:.2f}</b>"
-            f"</div>",
-            unsafe_allow_html=True
+            "O gráfico abaixo mostra quanto você ganha (barras para a direita) "
+            "ou perde (barras para a esquerda) em cada cenário, "
+            "comparado com quanto renderia no CDI (renda fixa)."
         )
 
-        if n_legs < 2:
-            st.info("Adicione pelo menos 2 seleções para formar uma múltipla e habilitar os bônus.")
+        items = [
+            ("Melhor cenário (apostas)",   best_gain),
+            ("Resultado médio (apostas)",  mean_gain),
+            ("CDI — renda fixa (1 ano)",   cdi_gain),
+            ("Pior cenário (apostas)",     worst_gain),
+        ]
+        max_abs = max(abs(v) for _, v in items) or 1.0
 
-        st.divider()
-
-        # --- Probabilidade e distribuição de cenários ---
-        st.markdown("#### Cenários e referências pelas odds")
-        combined_prob = 1.0
-        for leg in st.session_state.multi_bets:
-            combined_prob *= (1 / leg["odd"])
-        st.metric("Referência calculada pelas odds", f"{combined_prob*100:.2f}%")
-        st.caption(
-            "É uma estimativa implícita nas odds, não uma probabilidade real comprovada nem uma previsão. "
-            "As escolhas podem depender umas das outras."
+        rows_html = (
+            "<div style='font-family:Rajdhani,sans-serif;margin:12px 0;'>"
+            "<div style='display:flex;align-items:center;margin-bottom:8px;'>"
+            "<div style='width:210px;'></div>"
+            "<div style='flex:1;text-align:center;font-family:Orbitron,monospace;font-size:0.6rem;"
+            "color:#163b2c;letter-spacing:1px;'>← PERDA &nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp; GANHO →</div>"
+            "</div>"
         )
-
-        st.markdown(
-            "Veja como ficariam os resultados se algumas escolhas acertassem e outras não. "
-            "As chances dos cenários são referências calculadas pelas odds, não previsões."
-        )
-
-        if st.button("Calcular distribuição de cenários", key="multi_scenarios_btn"):
-            import itertools
-
-            if n_legs > 10:
-                st.warning(
-                    f"Com {n_legs} seleções seriam geradas {2**n_legs:,} combinações. "
-                    "Mostrando apenas os cenários principais (todas acertam / alguma erra)."
-                )
-                p_all_win = combined_prob
-                net_all_win = boosted_return - multi_stake
-                r1, r2 = st.columns(2)
-                r1.metric(
-                    "Todas acertam — referência pelas odds",
-                    f"{p_all_win*100:.2f}%",
-                    f"+R$ {net_all_win:.2f}",
-                )
-                r2.metric(
-                    "Alguma erra — referência pelas odds",
-                    f"{(1 - p_all_win)*100:.2f}%",
-                    f"-R$ {multi_stake:.2f}",
+        for label, value in items:
+            pct = abs(value) / max_abs * 42
+            val_str = (f"+R$ {value:.2f}" if value >= 0 else f"-R$ {abs(value):.2f}")
+            label_safe = _html.escape(label)
+            if value >= 0:
+                left_side  = "<div style='flex:1;'></div>"
+                right_side = (
+                    f"<div style='flex:1;display:flex;align-items:center;'>"
+                    f"<div style='width:{pct:.1f}%;background:#163b2c;height:16px;"
+                    f"border-radius:0 4px 4px 0;min-width:2px;'></div>"
+                    f"<span style='margin-left:8px;font-family:Orbitron,monospace;font-size:0.65rem;"
+                    f"color:#163b2c;white-space:nowrap;'>{val_str}</span>"
+                    f"</div>"
                 )
             else:
-                outcomes = list(itertools.product([True, False], repeat=n_legs))
-                scenario_data = []
-                for outcome in outcomes:
-                    labels = []
-                    prob = 1.0
-                    for j, won in enumerate(outcome):
-                        leg = st.session_state.multi_bets[j]
-                        p = 1 / leg["odd"]
-                        prob *= p if won else (1 - p)
-                        short = leg["name"][:16] + ("…" if len(leg["name"]) > 16 else "")
-                        labels.append(f"Acerto: {short}" if won else f"Erro: {short}")
-                    all_won = all(outcome)
-                    net = (boosted_return - multi_stake) if all_won else -multi_stake
-                    scenario_data.append({
-                        "label": " | ".join(labels),
-                        "prob":  prob,
-                        "net":   net,
-                        "won":   all_won,
-                    })
-
-                scenario_data.sort(key=lambda x: x["prob"], reverse=True)
-
-                max_display = 16
-                display_data = scenario_data[:max_display]
-                if len(scenario_data) > max_display:
-                    st.caption(
-                        f"Mostrando os {max_display} cenários com maiores referências pelas odds, "
-                        f"de {len(scenario_data)} combinações totais."
-                    )
-
-                max_prob = max(s["prob"] for s in display_data) if display_data else 1.0
-
-                bars_html = (
-                    "<div style='display:flex;align-items:flex-end;gap:10px;height:220px;"
-                    "overflow-x:auto;padding:16px 6px 8px;border-bottom:1px solid rgba(22,59,44,0.2);'>"
+                left_side  = (
+                    f"<div style='flex:1;display:flex;align-items:center;justify-content:flex-end;'>"
+                    f"<span style='margin-right:8px;font-family:Orbitron,monospace;font-size:0.65rem;"
+                    f"color:#163b2c;white-space:nowrap;'>{val_str}</span>"
+                    f"<div style='width:{pct:.1f}%;background:rgba(22,59,44,0.4);height:16px;"
+                    f"border-radius:4px 0 0 4px;min-width:2px;'></div>"
+                    f"</div>"
                 )
-                for idx, s in enumerate(display_data, start=1):
-                    bar_h = max(4, int((s["prob"] / max_prob) * 170))
-                    color = "#163b2c"
-                    safe_label_attr = _html.escape(s["label"], quote=True)
-                    bars_html += (
-                        f"<div style='display:flex;flex-direction:column;align-items:center;min-width:46px;' title='{safe_label_attr}'>"
-                        f"<div style='font-family:Orbitron,monospace;font-size:0.6rem;color:{color};margin-bottom:4px;white-space:nowrap;'>"
-                        f"{s['prob']*100:.1f}%</div>"
-                        f"<div style='width:26px;height:{bar_h}px;background:linear-gradient(180deg,{color},rgba(0,0,0,0.05));"
-                        f"border-radius:4px 4px 0 0;box-shadow:0 0 8px {color}55;'></div>"
-                        f"<div style='font-family:Orbitron,monospace;font-size:0.6rem;color:#163b2c;margin-top:6px;'>#{idx}</div>"
-                        f"</div>"
-                    )
-                bars_html += "</div>"
-                st.markdown(bars_html, unsafe_allow_html=True)
+                right_side = "<div style='flex:1;'></div>"
+            rows_html += (
+                f"<div style='display:flex;align-items:center;gap:4px;margin:10px 0;'>"
+                f"<div style='width:210px;min-width:210px;text-align:right;font-size:0.9rem;"
+                f"color:#163b2c;padding-right:10px;'>{label_safe}</div>"
+                f"<div style='width:2px;min-width:2px;background:#163b2c;height:22px;flex-shrink:0;'></div>"
+                f"{left_side}{right_side}"
+                f"</div>"
+            )
+        rows_html += "</div>"
+        st.markdown(rows_html, unsafe_allow_html=True)
 
-                st.markdown("")
-                for idx, s in enumerate(display_data, start=1):
-                    net_sign = "+" if s["net"] >= 0 else ""
-                    safe_label = _html.escape(s["label"])
-                    st.markdown(
-                        f"<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;color:#163b2c;margin:2px 0;'>"
-                        f"<b style='color:#163b2c'>#{idx}</b> {safe_label} — "
-                        f"<span style='color:#163b2c'>Referência pelas odds: {s['prob']*100:.2f}%</span> — "
-                        f"<span style='color:#163b2c'>Lucro/prejuízo: {net_sign}R$ {s['net']:.2f}</span>"
-                        f"</div>",
-                        unsafe_allow_html=True
-                    )
-
+        # --- Comparação com CDI ---
         st.divider()
-        if st.button("Limpar múltipla"):
-            st.session_state.multi_bets = []
-            st.rerun()
-    else:
-        st.info("Nenhuma seleção adicionada ainda. Use o formulário acima para montar sua múltipla.")
+        st.markdown("#### E se você investisse em renda fixa em vez de apostar?")
+        st.markdown(
+            f"O **CDI** é a principal referência da renda fixa no Brasil — funciona como um rendimento garantido "
+            f"sobre o dinheiro que você investe. Diferente das apostas, **não existe risco de perder**: "
+            f"você contrata uma taxa e recebe aquele valor no final do período, independente do que aconteça. "
+            f"Com uma taxa de {mc_cdi_rate:.2f}% ao ano, investir R$ {bankroll:.2f} renderia "
+            f"**R$ {cdi_gain:.2f} em 1 ano** — sem precisar acertar nenhuma aposta."
+        )
+        delta_mean = mean_gain - cdi_gain
+        delta_sign = "a mais" if delta_mean >= 0 else "a menos"
+        c1, c2, c3 = st.columns(3)
+        c1.metric("Rendimento CDI (1 ano)", f"R$ {cdi_gain:.2f}", "risco zero")
+        c2.metric(
+            "Resultado médio das apostas",
+            f"R$ {mean_gain:+.2f}",
+            f"sobre a banca inicial",
+        )
+        c3.metric(
+            "Custo de oportunidade",
+            f"R$ {abs(delta_mean):.2f}",
+            f"{delta_sign} do que o CDI renderia",
+            delta_color="inverse" if delta_mean < 0 else "normal",
+        )
+        st.caption(
+            "Custo de oportunidade é o que você deixa de ganhar na renda fixa ao escolher apostar. "
+            "Não representa uma previsão — é uma comparação baseada na sua estimativa de chance."
+        )
+
+        # --- Trajetórias ---
+        st.divider()
+        st.markdown("#### Como a sua banca se movimenta ao longo das apostas")
+        st.markdown(
+            "Cada linha abaixo é um cenário diferente. O eixo horizontal mostra o número da aposta "
+            "e o eixo vertical mostra quanto sobra na banca naquele momento."
+        )
+        traj_df = pd.DataFrame(
+            {f"Cenário {i+1}": traj for i, traj in enumerate(example_trajs)}
+        )
+        st.line_chart(traj_df)
 
 # ============================
 # TAB HISTÓRICO DE BETS
@@ -1462,8 +1395,12 @@ with tab_multi:
 with tab_history:
     st.markdown("### Histórico de Bets")
     st.markdown(
-        "Registre apostas já encerradas. Informe o retorno **bruto** recebido; em caso de perda, use `R$ 0,00`."
+        "Aqui você registra as apostas que já fez e vê como está seu desempenho real. "
+        "Anote o valor que apostou e o quanto recebeu de volta — se perdeu, coloque R$ 0,00 no retorno. "
+        "O BetBot calcula automaticamente seu lucro ou prejuízo total, seu ROI (o quanto você ganhou ou perdeu em relação ao que apostou) "
+        "e ainda compara com o que renderia se esse mesmo dinheiro estivesse investido na renda fixa."
     )
+    st.divider()
 
     with st.form(key="bet_history_form", clear_on_submit=True):
         st.markdown("#### Registrar resultado")
