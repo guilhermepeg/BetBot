@@ -82,9 +82,15 @@ st.set_page_config(
 )
 
 # --- CSS: white and dark green theme ---
+st.markdown(
+    '<link rel="preconnect" href="https://fonts.googleapis.com">'
+    '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
+    '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap">',
+    unsafe_allow_html=True,
+)
+
 st.markdown("""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap');
 
     html, body, [class*="css"] {
         font-family: 'Rajdhani', sans-serif !important;
@@ -542,22 +548,24 @@ if "sim_bets" not in st.session_state:
 # --- Real AI engine (Anthropic Claude) ---
 SYSTEM_PROMPT = """Você é o BetBot, um assistente de IA especializado EXCLUSIVAMENTE em apostas esportivas.
 
+FORMATAÇÃO — ESTAS REGRAS SÃO ABSOLUTAS E NÃO PODEM SER IGNORADAS:
+- PROIBIDO usar emojis. Nenhum emoji em nenhuma parte da resposta. Jamais.
+- PROIBIDO usar cabeçalhos markdown: nunca escreva # ## ### #### nem **Título:** no início de um parágrafo.
+- PROIBIDO usar listas de bullet points (-, *, •) exceto se o usuário pedir explicitamente uma lista.
+- PROIBIDO estruturar a resposta como um documento, artigo ou menu de opções.
+- OBRIGATÓRIO responder em texto corrido, parágrafos curtos, como numa conversa informal.
+- Negrito apenas para destacar um termo técnico sendo explicado pela primeira vez.
+Se você usar emojis, cabeçalhos ou bullet points sem o usuário ter pedido, sua resposta está errada.
+
 Seu escopo cobre: odds, probabilidade implícita, handicap (asiático/europeu), over/under,
 apostas múltiplas/acumuladores, value bets, gestão de banca (bankroll), cashout, ROI,
 mercados de apostas (1X2, BTTS, dupla chance, placar exato, etc.), apostas ao vivo,
 estratégias de apostas, bônus/promoções de casas de apostas, e apostas em geral (futebol e
 outros esportes).
 
-Regras:
-- Responda sempre em português do Brasil, em texto corrido e fluido, como se estivesse
-  conversando com alguém. Use parágrafos curtos e linguagem do dia a dia. Explique os termos
-  técnicos de forma simples dentro do próprio texto.
-- Nunca use cabeçalhos markdown (# ## ###). Nunca estruture a resposta como um documento ou
-  artigo. Não use listas de bullet points, exceto quando o usuário pedir explicitamente uma
-  lista ou comparação. Prefira conectar as ideias em parágrafos naturais.
-- Não formate a resposta com negrito excessivo. Use negrito apenas para destacar um termo
-  técnico que está sendo explicado pela primeira vez, e só se realmente ajudar o leigo.
-- Não use emojis.
+Regras de conteúdo:
+- Responda sempre em português do Brasil, linguagem do dia a dia, texto corrido. Explique os
+  termos técnicos de forma simples dentro do próprio texto.
 - Ao explicar odds, comece pela ideia intuitiva: odds maiores oferecem um pagamento potencial
   maior, mas geralmente indicam uma probabilidade implícita menor de acerto. Explique que essa
   probabilidade é uma referência calculada pela odd, não uma chance real comprovada. Antes de
@@ -805,6 +813,7 @@ def build_api_messages(history: list) -> list:
         api_messages.append({"role": message["role"], "content": content})
     return api_messages
 
+@st.cache_resource
 def _get_client():
     api_key = os.getenv("ANTHROPIC_API_KEY")
     if not api_key:
@@ -984,29 +993,56 @@ with tab_chat:
 # TAB SIMULAÇÃO
 # ============================
 with tab_sim:
-    st.markdown("### Simulador de Apostas")
     st.markdown(
-        "Aqui você calcula, antes de apostar, quanto pode ganhar ou perder. "
-        "Informe a aposta, a odd que a casa está oferecendo e quanto você quer colocar — "
-        "o simulador mostra o retorno se acertar e o prejuízo se errar. "
-        "Mais abaixo tem uma simulação de longo prazo para você ver o que acontece repetindo a mesma aposta muitas vezes."
+        "<div style='background:#163b2c;border-radius:8px;padding:16px 20px 14px;margin-bottom:20px;'>"
+        "<div style='font-family:Orbitron,monospace;font-size:1rem;font-weight:900;"
+        "letter-spacing:3px;color:#fff;'>SIMULADOR DE APOSTAS</div>"
+        "<p style='font-family:Rajdhani,sans-serif;font-size:1rem;color:rgba(255,255,255,0.85);"
+        "margin:8px 0 0;line-height:1.5;'>"
+        "Calcule quanto pode ganhar ou perder <b>antes de apostar</b>. "
+        "Informe a odd e o valor — veja o retorno se acertar e o prejuízo se errar. "
+        "Mais abaixo simule o que acontece repetindo a mesma aposta várias vezes."
+        "</p></div>",
+        unsafe_allow_html=True,
     )
-    st.divider()
+
+    # Passo 1
+    st.markdown(
+        "<div style='display:flex;align-items:center;gap:12px;margin:20px 0 14px;'>"
+        "<div style='width:30px;height:30px;background:#163b2c;border-radius:50%;"
+        "display:flex;align-items:center;justify-content:center;flex-shrink:0;'>"
+        "<span style='font-family:Orbitron,monospace;font-size:0.7rem;font-weight:700;color:#fff;'>1</span>"
+        "</div>"
+        "<div style='font-family:Orbitron,monospace;font-size:0.75rem;font-weight:700;"
+        "letter-spacing:2px;color:#163b2c;text-transform:uppercase;border-bottom:1px solid rgba(22,59,44,0.25);"
+        "flex:1;padding-bottom:5px;'>Adicionar uma seleção</div>"
+        "</div>",
+        unsafe_allow_html=True,
+    )
 
     st.markdown(
-        "**Como preencher:**\n\n"
-        "1. **Nome da seleção** — escreva o que você vai apostar. Ex: Flamengo vence\n"
-        "2. **Odd** — é o número que a casa de apostas mostra. Quanto maior, mais você recebe se acertar, mas geralmente mais difícil de acontecer. Ex: 2,50\n"
-        "3. **Valor apostado** — quanto você quer colocar nessa aposta. Ex: R$ 20,00\n"
-        "4. Clique em **Adicionar** para incluir a seleção na simulação."
+        "<div style='display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;'>"
+        "<div style='flex:1;min-width:140px;background:#f0f5f2;border-radius:8px;"
+        "padding:12px 14px;border-left:3px solid #163b2c;'>"
+        "<div style='font-family:Orbitron,monospace;font-size:0.55rem;letter-spacing:2px;"
+        "color:#163b2c;text-transform:uppercase;margin-bottom:4px;'>Seleção</div>"
+        "<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;color:#163b2c;line-height:1.4;'>"
+        "O que você quer apostar. Ex: <b>Flamengo vence</b></div></div>"
+        "<div style='flex:1;min-width:140px;background:#f0f5f2;border-radius:8px;"
+        "padding:12px 14px;border-left:3px solid #163b2c;'>"
+        "<div style='font-family:Orbitron,monospace;font-size:0.55rem;letter-spacing:2px;"
+        "color:#163b2c;text-transform:uppercase;margin-bottom:4px;'>Odd</div>"
+        "<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;color:#163b2c;line-height:1.4;'>"
+        "Número da casa de apostas. Maior odd = retorno maior, mas geralmente mais difícil. Ex: <b>2,50</b></div></div>"
+        "<div style='flex:1;min-width:140px;background:#f0f5f2;border-radius:8px;"
+        "padding:12px 14px;border-left:3px solid #163b2c;'>"
+        "<div style='font-family:Orbitron,monospace;font-size:0.55rem;letter-spacing:2px;"
+        "color:#163b2c;text-transform:uppercase;margin-bottom:4px;'>Valor apostado</div>"
+        "<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;color:#163b2c;line-height:1.4;'>"
+        "Quanto colocar. Ex: <b>R$ 20</b> com odd 2,50 = retorno de R$ 50 se acertar</div></div>"
+        "</div>",
+        unsafe_allow_html=True,
     )
-    st.info(
-        "Exemplo: Seleção Flamengo vence, odd 2,50, valor R$ 20,00. "
-        "Se acertar: retorno total de R$ 50,00 e lucro de R$ 30,00. "
-        "Se errar: perde R$ 20,00. "
-        "A odd não garante a probabilidade real do resultado."
-    )
-    st.divider()
 
     # --- Formulário para adicionar aposta ---
     with st.form(key="sim_form", clear_on_submit=True):
@@ -1055,50 +1091,75 @@ with tab_sim:
 
     # --- Lista de seleções ---
     if st.session_state.sim_bets:
-        st.markdown("#### Seleções adicionadas")
+        st.markdown(
+            "<div style='display:flex;align-items:center;gap:12px;margin:24px 0 14px;'>"
+            "<div style='width:30px;height:30px;background:#163b2c;border-radius:50%;"
+            "display:flex;align-items:center;justify-content:center;flex-shrink:0;'>"
+            "<span style='font-family:Orbitron,monospace;font-size:0.7rem;font-weight:700;color:#fff;'>2</span>"
+            "</div>"
+            "<div style='font-family:Orbitron,monospace;font-size:0.75rem;font-weight:700;"
+            "letter-spacing:2px;color:#163b2c;text-transform:uppercase;border-bottom:1px solid rgba(22,59,44,0.25);"
+            "flex:1;padding-bottom:5px;'>Resultado de cada aposta</div>"
+            "</div>",
+            unsafe_allow_html=True,
+        )
         for i, bet in enumerate(st.session_state.sim_bets):
-            col_a, col_b, col_c, col_d = st.columns([4, 2, 2, 1])
-            col_a.markdown(f"**{bet['name']}**")
-            col_b.markdown(f"Odd: `{bet['odd']:.2f}`")
-            col_c.markdown(f"Valor apostado: `R$ {bet['stake']:.2f}`")
-            if col_d.button("✕", key=f"del_{i}"):
-                st.session_state.sim_bets.pop(i)
-                st.rerun()
-
-        st.divider()
-
-        # --- Resultados individuais ---
-        st.markdown("#### Resumo por Aposta")
-        for bet in st.session_state.sim_bets:
             pot_return = bet["stake"] * bet["odd"]
             pot_profit = pot_return - bet["stake"]
-            col1, col2, col3, col4 = st.columns(4)
-            col1.metric(bet["name"], f"Odd {bet['odd']:.2f}")
-            col2.metric("Valor apostado", f"R$ {bet['stake']:.2f}")
-            col3.metric("Retorno total se acertar", f"R$ {pot_return:.2f}")
-            col4.metric("Lucro se acertar", f"R$ {pot_profit:.2f}")
-            p_est = bet.get("p_estimate")
-            if p_est is not None:
-                ev = p_est * pot_profit - (1 - p_est) * bet["stake"]
-                direcao = "ganharia" if ev >= 0 else "perderia"
-                st.caption(
-                    f"Valor esperado (chance estimada {p_est*100:.1f}%): R$ {ev:+.2f} — "
-                    f"em média, repetindo essa aposta muitas vezes, você {direcao} "
-                    f"R$ {abs(ev):.2f} por aposta."
+            accent = "#1a6641" if pot_profit > 0 else "rgba(22,59,44,0.45)"
+            card_bg = "#e8f5ee" if pot_profit > 0 else "#fff"
+            safe_name = _html.escape(bet["name"])
+            profit_sign = "+" if pot_profit >= 0 else ""
+
+            col_card, col_del = st.columns([12, 1])
+            with col_card:
+                st.markdown(
+                    f"<div style='background:{card_bg};border:1px solid rgba(22,59,44,0.12);"
+                    f"border-left:4px solid {accent};border-radius:0 8px 8px 0;"
+                    f"padding:12px 16px;margin:6px 0;'>"
+                    f"<div style='display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px;'>"
+                    f"<span style='font-family:Rajdhani,sans-serif;font-size:1.05rem;"
+                    f"font-weight:700;color:#163b2c;'>{safe_name}</span>"
+                    f"<span style='font-family:Orbitron,monospace;font-size:0.62rem;"
+                    f"color:#163b2c;letter-spacing:1px;'>ODD <b>{bet['odd']:.2f}</b></span>"
+                    f"<span style='font-family:Orbitron,monospace;font-size:0.62rem;"
+                    f"color:#163b2c;letter-spacing:1px;'>APOSTA <b>R$ {bet['stake']:.2f}</b></span>"
+                    f"<span style='font-family:Orbitron,monospace;font-size:0.62rem;"
+                    f"color:{accent};letter-spacing:1px;font-weight:700;'>"
+                    f"SE ACERTAR R$ {pot_return:.2f} ({profit_sign}R$ {pot_profit:.2f})</span>"
+                    f"</div></div>",
+                    unsafe_allow_html=True,
                 )
-            other_odds = bet.get("other_odds", [])
-            if other_odds:
-                all_odds = [bet["odd"]] + other_odds
-                margin = sum(1.0 / o for o in all_odds) - 1.0
-                st.caption(f"Margem embutida no mercado (odds informadas): {margin*100:.2f}%.")
+                p_est = bet.get("p_estimate")
+                if p_est is not None:
+                    ev = p_est * pot_profit - (1 - p_est) * bet["stake"]
+                    direcao = "ganharia" if ev >= 0 else "perderia"
+                    st.caption(
+                        f"Valor esperado (chance estimada {p_est*100:.1f}%): R$ {ev:+.2f} — "
+                        f"em média, repetindo essa aposta, você {direcao} R$ {abs(ev):.2f} por aposta."
+                    )
+                other_odds = bet.get("other_odds", [])
+                if other_odds:
+                    all_odds = [bet["odd"]] + other_odds
+                    margin = sum(1.0 / o for o in all_odds) - 1.0
+                    st.caption(f"Margem embutida no mercado (odds informadas): {margin*100:.2f}%.")
+            with col_del:
+                if st.button("✕", key=f"del_{i}", help="Remover"):
+                    st.session_state.sim_bets.pop(i)
+                    st.rerun()
 
         st.divider()
 
         # --- Distribuição de cenários ---
-        st.markdown("#### Distribuição de Cenários")
         st.markdown(
-            "Veja uma referência de chance calculada pelas odds e o lucro ou prejuízo em cada cenário. "
-            "Essa referência não é uma probabilidade real comprovada nem uma previsão."
+            "<div style='font-family:Orbitron,monospace;font-size:0.75rem;font-weight:700;"
+            "letter-spacing:2px;color:#163b2c;text-transform:uppercase;margin:4px 0 6px;'>"
+            "Distribuição de cenários</div>",
+            unsafe_allow_html=True,
+        )
+        st.markdown(
+            "Todos os cenários possíveis de acerto e erro, com referência de chance calculada "
+            "pela odd e o resultado financeiro em cada um. Não é uma previsão do que vai acontecer."
         )
 
         if st.button("Calcular todos os cenários"):
@@ -1159,22 +1220,26 @@ with tab_sim:
                     net_sign   = "+" if s["net"] >= 0 else ""
                     bar_width  = max(4, int(s["prob"] * 100 * 2))
                     safe_scenario = _html.escape(s["scenario"])
+                    net_color = "#1a6641" if s["net"] >= 0 else "rgba(160,40,40,0.8)"
+                    net_bg = "#e8f5ee" if s["net"] >= 0 else "#fdf0f0"
                     st.markdown(
-                        f"<div style='background:#ffffff;border-left:3px solid rgba(22,59,44,0.25);"
+                        f"<div style='background:{net_bg};border-left:3px solid {net_color};"
                         f"border-radius:0 8px 8px 0;padding:10px 14px;margin:6px 0;'>"
-                        f"<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;color:#163b2c;margin-bottom:6px;'>"
-                        f"{safe_scenario}</div>"
+                        f"<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;"
+                        f"color:#163b2c;margin-bottom:6px;'>{safe_scenario}</div>"
                         f"<div style='display:flex;align-items:center;gap:14px;flex-wrap:wrap;'>"
-                        f"<span style='font-family:Orbitron,monospace;font-size:0.7rem;color:#163b2c;"
-                        f"letter-spacing:1px;'>REFERÊNCIA PELAS ODDS <b style='color:#163b2c'>{s['prob']*100:.2f}%</b></span>"
-                        f"<div style='flex:1;min-width:80px;background:rgba(255,255,255,0.06);"
+                        f"<span style='font-family:Orbitron,monospace;font-size:0.62rem;"
+                        f"color:#163b2c;letter-spacing:1px;'>REFERÊNCIA PELAS ODDS "
+                        f"<b>{s['prob']*100:.2f}%</b></span>"
+                        f"<div style='flex:1;min-width:60px;background:rgba(22,59,44,0.1);"
                         f"border-radius:4px;height:8px;'>"
                         f"<div style='width:{bar_width}%;background:linear-gradient(90deg,#163b2c,#4b8068);"
                         f"height:8px;border-radius:4px;'></div></div>"
-                        f"<span style='font-family:Orbitron,monospace;font-size:0.7rem;"
-                        f"color:#163b2c;letter-spacing:1px;'>LUCRO/PREJUÍZO <b>{net_sign}R$ {s['net']:.2f}</b></span>"
+                        f"<span style='font-family:Orbitron,monospace;font-size:0.62rem;"
+                        f"color:{net_color};letter-spacing:1px;font-weight:700;'>"
+                        f"RESULTADO {net_sign}R$ {s['net']:.2f}</span>"
                         f"</div></div>",
-                        unsafe_allow_html=True
+                        unsafe_allow_html=True,
                     )
 
         st.divider()
@@ -1182,20 +1247,42 @@ with tab_sim:
             st.session_state.sim_bets = []
             st.rerun()
     else:
-        st.info("Nenhuma seleção adicionada ainda. Use o formulário acima para começar.")
+        st.markdown(
+            "<div style='background:#f0f5f2;border-radius:8px;padding:16px 20px;margin:10px 0;"
+            "border:1px dashed rgba(22,59,44,0.3);text-align:center;'>"
+            "<span style='font-family:Rajdhani,sans-serif;font-size:1rem;color:#163b2c;'>"
+            "Nenhuma seleção adicionada ainda. Preencha o formulário acima e clique em "
+            "<b>Adicionar</b> para começar."
+            "</span></div>",
+            unsafe_allow_html=True,
+        )
 
     # --- Simulação de Longo Prazo (Monte Carlo) ---
-    st.divider()
-    st.markdown("### E se você repetir a mesma aposta várias vezes?")
     st.markdown(
-        "Essa simulação responde à pergunta: se você fizer a mesma aposta 100 vezes seguidas, "
-        "o que pode acontecer com o seu dinheiro? "
-        "O simulador roda 1.000 cenários diferentes e mostra o melhor caso, o pior caso e o resultado mais provável. "
-        "Você informa a chance que *você* estima de acertar — não é a da casa, é a sua própria avaliação."
+        "<div style='display:flex;align-items:center;gap:12px;margin:28px 0 14px;'>"
+        "<div style='width:30px;height:30px;background:#163b2c;border-radius:50%;"
+        "display:flex;align-items:center;justify-content:center;flex-shrink:0;'>"
+        "<span style='font-family:Orbitron,monospace;font-size:0.7rem;font-weight:700;color:#fff;'>3</span>"
+        "</div>"
+        "<div style='font-family:Orbitron,monospace;font-size:0.75rem;font-weight:700;"
+        "letter-spacing:2px;color:#163b2c;text-transform:uppercase;border-bottom:1px solid rgba(22,59,44,0.25);"
+        "flex:1;padding-bottom:5px;'>Simulação de longo prazo</div>"
+        "</div>",
+        unsafe_allow_html=True,
+    )
+    st.markdown(
+        "<div style='background:#f0f5f2;border-radius:8px;padding:14px 16px;margin-bottom:16px;"
+        "border-left:4px solid #163b2c;'>"
+        "<p style='font-family:Rajdhani,sans-serif;font-size:1rem;color:#163b2c;margin:0;line-height:1.5;'>"
+        "Se você fizer a <b>mesma aposta 100 vezes seguidas</b>, o que acontece com o seu dinheiro? "
+        "O simulador roda 1.000 cenários e mostra o melhor caso, o pior e o resultado mais provável. "
+        "Você informa a chance que <i>você</i> estima de acertar — não é a probabilidade da casa, é a sua avaliação."
+        "</p></div>",
+        unsafe_allow_html=True,
     )
 
     with st.form(key="monte_carlo_form", clear_on_submit=False):
-        st.markdown("**Preencha os dados da aposta que quer repetir:**")
+        st.markdown("**Dados da aposta que você quer repetir:**")
         mc1, mc2, mc3 = st.columns(3)
         mc_odd      = mc1.number_input(
             "Odd", min_value=1.01, max_value=1000.0, value=2.00, step=0.01, format="%.2f",
@@ -1259,27 +1346,34 @@ with tab_sim:
         worst_gain = worst_f - bankroll
         cdi_gain   = bankroll * cdi_rate
 
-        st.divider()
-        st.markdown("#### O que aconteceu nas 1.000 simulações")
+        st.markdown(
+            "<div style='background:#163b2c;border-radius:8px;padding:14px 18px;margin:16px 0;'>"
+            "<div style='font-family:Orbitron,monospace;font-size:0.6rem;letter-spacing:3px;"
+            "color:rgba(255,255,255,0.6);text-transform:uppercase;'>1.000 simulações</div>"
+            f"<div style='font-family:Orbitron,monospace;font-size:0.85rem;color:#fff;margin-top:3px;'>"
+            f"{n_bets} apostas &nbsp;·&nbsp; odd {mc_odd:.2f} &nbsp;·&nbsp; banca R$ {bankroll:.2f}"
+            f"</div></div>",
+            unsafe_allow_html=True,
+        )
 
         r1, r2, r3 = st.columns(3)
         best_sign  = "+" if best_gain  >= 0 else ""
         mean_sign  = "+" if mean_gain  >= 0 else ""
         worst_sign = "+" if worst_gain >= 0 else ""
         r1.metric(
-            "Melhor cenário encontrado",
+            "Melhor cenário",
             f"R$ {best_f:.2f}",
-            f"{best_sign}R$ {best_gain:.2f} em relação ao que você começou",
+            f"{best_sign}R$ {best_gain:.2f} vs. início",
         )
         r2.metric(
             "Resultado mais provável (média)",
             f"R$ {mean_f:.2f}",
-            f"{mean_sign}R$ {mean_gain:.2f} em relação ao que você começou",
+            f"{mean_sign}R$ {mean_gain:.2f} vs. início",
         )
         r3.metric(
-            "Pior cenário encontrado",
+            "Pior cenário",
             f"R$ {worst_f:.2f}",
-            f"{worst_sign}R$ {worst_gain:.2f} em relação ao que você começou",
+            f"{worst_sign}R$ {worst_gain:.2f} vs. início",
         )
         if pct_broke > 0:
             st.warning(
@@ -1289,73 +1383,96 @@ with tab_sim:
         st.caption("Resultados baseados na chance que você estimou. Não representam previsões reais.")
 
         # --- Gráfico divergente: melhor / média / CDI / pior ---
-        st.markdown("#### Ganho ou perda: comparação visual")
         st.markdown(
-            "O gráfico abaixo mostra quanto você ganha (barras para a direita) "
-            "ou perde (barras para a esquerda) em cada cenário, "
-            "comparado com quanto renderia no CDI (renda fixa)."
+            "<div style='font-family:Orbitron,monospace;font-size:0.7rem;font-weight:700;"
+            "letter-spacing:2px;color:#163b2c;text-transform:uppercase;margin:20px 0 6px;'>"
+            "Comparação visual: ganho ou perda</div>",
+            unsafe_allow_html=True,
+        )
+        st.markdown(
+            "Barras para a **direita** = ganho. Barras para a **esquerda** = perda. "
+            "O CDI mostra o que a mesma quantia renderia investida na renda fixa."
         )
 
         items = [
-            ("Melhor cenário (apostas)",   best_gain),
-            ("Resultado médio (apostas)",  mean_gain),
-            ("CDI — renda fixa (1 ano)",   cdi_gain),
-            ("Pior cenário (apostas)",     worst_gain),
+            ("Melhor cenário (apostas)",  best_gain,  False),
+            ("Resultado médio (apostas)", mean_gain,  False),
+            ("CDI — renda fixa (1 ano)",  cdi_gain,   True),
+            ("Pior cenário (apostas)",    worst_gain, False),
         ]
-        max_abs = max(abs(v) for _, v in items) or 1.0
+        max_abs = max(abs(v) for _, v, _ in items) or 1.0
 
         rows_html = (
-            "<div style='font-family:Rajdhani,sans-serif;margin:12px 0;'>"
+            "<div style='font-family:Rajdhani,sans-serif;margin:12px 0 20px;'>"
             "<div style='display:flex;align-items:center;margin-bottom:8px;'>"
-            "<div style='width:210px;'></div>"
-            "<div style='flex:1;text-align:center;font-family:Orbitron,monospace;font-size:0.6rem;"
-            "color:#163b2c;letter-spacing:1px;'>← PERDA &nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp; GANHO →</div>"
-            "</div>"
+            "<div style='width:200px;min-width:200px;'></div>"
+            "<div style='flex:1;display:flex;'>"
+            "<div style='flex:1;text-align:right;padding-right:6px;"
+            "font-family:Orbitron,monospace;font-size:0.55rem;color:rgba(22,59,44,0.5);"
+            "letter-spacing:1px;'>← PERDA</div>"
+            "<div style='width:2px;background:#163b2c;height:14px;flex-shrink:0;'></div>"
+            "<div style='flex:1;padding-left:6px;"
+            "font-family:Orbitron,monospace;font-size:0.55rem;color:rgba(22,59,44,0.5);"
+            "letter-spacing:1px;'>GANHO →</div>"
+            "</div></div>"
         )
-        for label, value in items:
-            pct = abs(value) / max_abs * 42
-            val_str = (f"+R$ {value:.2f}" if value >= 0 else f"-R$ {abs(value):.2f}")
+        for label, value, is_cdi in items:
+            pct = abs(value) / max_abs * 44
+            val_str = (f"+R$ {value:.2f}" if value >= 0 else f"−R$ {abs(value):.2f}")
             label_safe = _html.escape(label)
+            if is_cdi:
+                bar_color, val_color = "#4b8068", "#4b8068"
+            elif value >= 0:
+                bar_color, val_color = "#1a6641", "#1a6641"
+            else:
+                bar_color, val_color = "rgba(160,40,40,0.7)", "rgba(160,40,40,0.9)"
             if value >= 0:
-                left_side  = "<div style='flex:1;'></div>"
+                left_side = "<div style='flex:1;'></div>"
                 right_side = (
-                    f"<div style='flex:1;display:flex;align-items:center;'>"
-                    f"<div style='width:{pct:.1f}%;background:#163b2c;height:16px;"
+                    f"<div style='flex:1;display:flex;align-items:center;padding-left:4px;'>"
+                    f"<div style='width:{pct:.1f}%;background:{bar_color};height:18px;"
                     f"border-radius:0 4px 4px 0;min-width:2px;'></div>"
-                    f"<span style='margin-left:8px;font-family:Orbitron,monospace;font-size:0.65rem;"
-                    f"color:#163b2c;white-space:nowrap;'>{val_str}</span>"
+                    f"<span style='margin-left:8px;font-family:Orbitron,monospace;font-size:0.62rem;"
+                    f"color:{val_color};white-space:nowrap;font-weight:700;'>{val_str}</span>"
                     f"</div>"
                 )
             else:
-                left_side  = (
-                    f"<div style='flex:1;display:flex;align-items:center;justify-content:flex-end;'>"
-                    f"<span style='margin-right:8px;font-family:Orbitron,monospace;font-size:0.65rem;"
-                    f"color:#163b2c;white-space:nowrap;'>{val_str}</span>"
-                    f"<div style='width:{pct:.1f}%;background:rgba(22,59,44,0.4);height:16px;"
+                left_side = (
+                    f"<div style='flex:1;display:flex;align-items:center;justify-content:flex-end;"
+                    f"padding-right:4px;'>"
+                    f"<span style='margin-right:8px;font-family:Orbitron,monospace;font-size:0.62rem;"
+                    f"color:{val_color};white-space:nowrap;font-weight:700;'>{val_str}</span>"
+                    f"<div style='width:{pct:.1f}%;background:{bar_color};height:18px;"
                     f"border-radius:4px 0 0 4px;min-width:2px;'></div>"
                     f"</div>"
                 )
                 right_side = "<div style='flex:1;'></div>"
             rows_html += (
-                f"<div style='display:flex;align-items:center;gap:4px;margin:10px 0;'>"
-                f"<div style='width:210px;min-width:210px;text-align:right;font-size:0.9rem;"
-                f"color:#163b2c;padding-right:10px;'>{label_safe}</div>"
+                f"<div style='display:flex;align-items:center;margin:8px 0;'>"
+                f"<div style='width:200px;min-width:200px;text-align:right;font-size:0.88rem;"
+                f"color:#163b2c;padding-right:10px;line-height:1.3;'>{label_safe}</div>"
+                f"<div style='flex:1;display:flex;'>"
+                f"{left_side}"
                 f"<div style='width:2px;min-width:2px;background:#163b2c;height:22px;flex-shrink:0;'></div>"
-                f"{left_side}{right_side}"
-                f"</div>"
+                f"{right_side}"
+                f"</div></div>"
             )
         rows_html += "</div>"
         st.markdown(rows_html, unsafe_allow_html=True)
 
         # --- Comparação com CDI ---
-        st.divider()
-        st.markdown("#### E se você investisse em renda fixa em vez de apostar?")
         st.markdown(
-            f"O **CDI** é a principal referência da renda fixa no Brasil — funciona como um rendimento garantido "
-            f"sobre o dinheiro que você investe. Diferente das apostas, **não existe risco de perder**: "
-            f"você contrata uma taxa e recebe aquele valor no final do período, independente do que aconteça. "
-            f"Com uma taxa de {mc_cdi_rate:.2f}% ao ano, investir R$ {bankroll:.2f} renderia "
-            f"**R$ {cdi_gain:.2f} em 1 ano** — sem precisar acertar nenhuma aposta."
+            "<div style='background:#f0f5f2;border-radius:8px;padding:14px 16px;margin:4px 0 12px;"
+            "border-left:4px solid #4b8068;'>"
+            "<div style='font-family:Orbitron,monospace;font-size:0.65rem;letter-spacing:2px;"
+            "color:#163b2c;text-transform:uppercase;margin-bottom:8px;'>E se você investisse em renda fixa?</div>"
+            f"<p style='font-family:Rajdhani,sans-serif;font-size:0.95rem;color:#163b2c;margin:0;line-height:1.5;'>"
+            f"O <b>CDI</b> é a referência da renda fixa no Brasil — um rendimento garantido sobre o que você investe. "
+            f"Diferente das apostas, <b>não há risco de perder</b>: você contrata uma taxa e recebe no final. "
+            f"Com {mc_cdi_rate:.2f}% ao ano, investir R$ {bankroll:.2f} renderia "
+            f"<b>R$ {cdi_gain:.2f} em 1 ano</b> — sem precisar acertar nenhuma aposta."
+            f"</p></div>",
+            unsafe_allow_html=True,
         )
         delta_mean = mean_gain - cdi_gain
         delta_sign = "a mais" if delta_mean >= 0 else "a menos"
@@ -1378,11 +1495,17 @@ with tab_sim:
         )
 
         # --- Trajetórias ---
-        st.divider()
-        st.markdown("#### Como a sua banca se movimenta ao longo das apostas")
         st.markdown(
-            "Cada linha abaixo é um cenário diferente. O eixo horizontal mostra o número da aposta "
-            "e o eixo vertical mostra quanto sobra na banca naquele momento."
+            "<div style='font-family:Orbitron,monospace;font-size:0.7rem;font-weight:700;"
+            "letter-spacing:2px;color:#163b2c;text-transform:uppercase;margin:20px 0 6px;"
+            "border-bottom:1px solid rgba(22,59,44,0.2);padding-bottom:5px;'>"
+            "Trajetórias da banca</div>",
+            unsafe_allow_html=True,
+        )
+        st.markdown(
+            f"Cada linha é um cenário diferente. O eixo horizontal é o número da aposta "
+            f"e o vertical é o saldo da banca naquele momento. "
+            f"A linha de referência é a banca inicial de R$ {bankroll:.2f}."
         )
         traj_df = pd.DataFrame(
             {f"Cenário {i+1}": traj for i, traj in enumerate(example_trajs)}
