@@ -542,9 +542,6 @@ with st.sidebar:
 if "sim_bets" not in st.session_state:
     st.session_state.sim_bets = []
 
-if "sim_ai_messages" not in st.session_state:
-    st.session_state.sim_ai_messages = []
-
 # --- Real AI engine (Anthropic Claude) ---
 SYSTEM_PROMPT = """Você é o BetBot, assistente educacional de análise quantitativa de apostas esportivas.
 Seu objetivo é informar de forma equilibrada, não promover a atividade de apostar.
@@ -1056,28 +1053,18 @@ with tab_sim:
     )
     st.divider()
 
-    st.markdown("#### Adicionar apostas pelo chat")
-    st.caption("Exemplo: Simule R$ 20 no Flamengo vencer com odd 2,10 e R$ 15 no empate com odd 3,20.")
-    for message in st.session_state.sim_ai_messages[-12:]:
-        with st.chat_message(message["role"]):
-            st.write(message["content"])
-    with st.form("sim_ai_form", clear_on_submit=True):
-        sim_text = st.text_input("Descreva a simulação", placeholder="Ex: R$ 50 no time A, odd 2,50", key="sim_ai_text")
-        sim_submit = st.form_submit_button("Adicionar pelo chat")
-    if sim_submit and sim_text.strip():
-        st.session_state.sim_ai_messages.append({"role": "user", "content": sim_text.strip()})
-        try:
-            with st.spinner("Interpretando seleções..."):
-                extracted = extract_simulation_bets(sim_text.strip(), st.session_state.sim_bets)
-            if extracted["bets"]:
-                st.session_state.sim_bets.extend(extracted["bets"])
-                reply = f"{len(extracted['bets'])} seleção(ões) adicionada(s) à simulação."
-            else:
-                reply = extracted["reply"] or "Informe o nome, a odd e o valor de cada aposta."
-        except (ValueError, anthropic.APIError) as exc:
-            reply = f"Não foi possível adicionar a aposta: {exc}"
-        st.session_state.sim_ai_messages.append({"role": "assistant", "content": reply})
-        st.rerun()
+    st.markdown("#### Como preencher a simulação")
+    st.markdown(
+        "1. **Seleção:** digite o nome do evento ou resultado que deseja simular.\\n"
+        "2. **Odd:** informe a cotação decimal correspondente.\\n"
+        "3. **Valor apostado (R$):** informe o valor hipotético da aposta.\\n"
+        "4. Clique em **Adicionar** para incluir a seleção na simulação."
+    )
+    st.info(
+        "**Exemplo:** Seleção: Flamengo vence | Odd: 2,50 | Valor apostado: R$ 20,00. "
+        "Se acertar, o retorno bruto será R$ 50,00 (lucro líquido de R$ 30,00); "
+        "se errar, a perda será de R$ 20,00. A odd não garante a probabilidade real do resultado."
+    )
 
     # --- Formulário para adicionar aposta ---
     with st.form(key="sim_form", clear_on_submit=True):
