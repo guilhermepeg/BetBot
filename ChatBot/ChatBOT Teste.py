@@ -839,7 +839,9 @@ def get_bot_response(history: list) -> str:
                 "type": "text",
                 "text": (
                     "Use o texto abaixo apenas como referência quando o usuário perguntar sobre "
-                    "legislação. Se a resposta não estiver nele, diga que não sabe. "
+                    "legislação. Ao usar este texto, cite explicitamente a lei ou portaria mencionada "
+                    "(ex: 'Conforme a Lei 14.790/2023...' ou 'De acordo com a Portaria SPA/MF nº X...'). "
+                    "Se a resposta não estiver nele, diga que não sabe. "
                     "Não dê consultoria jurídica.\n\n" + base_legal
                 ),
                 "cache_control": {"type": "ephemeral"},
