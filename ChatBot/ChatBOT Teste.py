@@ -908,7 +908,7 @@ with tab_chat:
                     '<div class="bot-msg"><div class="msg-label bot-label">BetBot</div></div>',
                     unsafe_allow_html=True,
                 )
-                st.markdown(msg["content"])
+                st.markdown(msg["content"].replace("R$", "R\\$"))
             if msg.get("attachments"):
                 st.caption("Anexos: " + ", ".join(item["name"] for item in msg["attachments"]))
                 for attachment in msg["attachments"]:
@@ -1603,7 +1603,7 @@ with tab_history:
         st.markdown("#### Lançamentos")
         for index, bet in enumerate(st.session_state.bet_history):
             net = bet["gross_return"] - bet["stake"]
-            net_color = "#163b2c"
+            net_color = "#1a6641" if net >= 0 else "rgba(160,40,40,0.9)"
             col1, col2, col3, col4, col5 = st.columns([3, 2, 2, 2, 1])
             col1.markdown(f"**{bet['name']}**")
             col2.markdown(date.fromisoformat(bet["date"]).strftime("%d/%m/%Y"))
