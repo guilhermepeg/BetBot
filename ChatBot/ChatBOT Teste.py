@@ -1055,9 +1055,9 @@ with tab_sim:
 
     st.markdown("#### Como preencher a simulação")
     st.markdown(
-        "1. **Seleção:** digite o nome do evento ou resultado que deseja simular.\\n"
-        "2. **Odd:** informe a cotação decimal correspondente.\\n"
-        "3. **Valor apostado (R$):** informe o valor hipotético da aposta.\\n"
+        "1. **Seleção:** digite o nome do evento ou resultado que deseja simular.\n"
+        "2. **Odd:** informe a cotação decimal correspondente.\n"
+        "3. **Valor apostado (R$):** informe o valor hipotético da aposta.\n"
         "4. Clique em **Adicionar** para incluir a seleção na simulação."
     )
     st.info(
