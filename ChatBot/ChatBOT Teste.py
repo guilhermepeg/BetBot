@@ -9,10 +9,19 @@ import os
 from datetime import date, datetime
 from uuid import uuid4
 
+def _read_setting(name: str):
+    value = os.getenv(name)
+    if value:
+        return value
+    try:
+        return st.secrets.get(name)
+    except Exception:
+        return None
+
 @st.cache_resource
 def _get_supabase_client():
-    url = os.getenv("SUPABASE_URL") or (st.secrets.get("SUPABASE_URL") if hasattr(st, "secrets") else None)
-    key = os.getenv("SUPABASE_SERVICE_KEY") or (st.secrets.get("SUPABASE_SERVICE_KEY") if hasattr(st, "secrets") else None)
+    url = _read_setting("SUPABASE_URL")
+    key = _read_setting("SUPABASE_SERVICE_KEY")
     if not url or not key:
         return None
     try:
