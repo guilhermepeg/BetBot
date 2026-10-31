@@ -1724,6 +1724,58 @@ elif _page == "simulacao":
         )
         st.line_chart(traj_df)
 
+        # --- Conclusão do Monte Carlo ---
+        pct_win  = float(np.mean(arr > bankroll)) * 100.0
+        pct_loss = 100.0 - pct_win
+        n_win  = int(round(pct_win  * 10))   # de 1000
+        n_loss = int(round(pct_loss * 10))
+
+        if pct_win >= 50:
+            conclusion_text = (
+                f"Na maioria dos cenários simulados ({pct_win:.0f}%), o saldo final ficou "
+                f"acima de R$ {bankroll:.2f}. Ainda assim, em {pct_loss:.0f}% das situações houve perda."
+            )
+        else:
+            conclusion_text = (
+                f"Na maioria dos cenários simulados ({pct_loss:.0f}%), o saldo final ficou "
+                f"abaixo de R$ {bankroll:.2f}. Apenas em {pct_win:.0f}% das situações houve lucro."
+            )
+
+        st.markdown(
+            f"<div style='background:#fff;border:1px solid rgba(22,59,44,0.15);"
+            f"border-radius:10px;padding:20px 24px;margin-top:16px;'>"
+            f"<div style='font-family:Rajdhani,sans-serif;font-size:0.8rem;font-weight:700;"
+            f"color:#0f2a1e;text-transform:uppercase;letter-spacing:1px;margin-bottom:14px;'>"
+            f"O que a simulação mostra</div>"
+            f"<div style='display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:14px;'>"
+            f"<div style='background:#e8f5ee;border-radius:8px;padding:16px 18px;"
+            f"border-left:4px solid #1a6641;'>"
+            f"<div style='font-family:Rajdhani,sans-serif;font-size:0.78rem;font-weight:700;"
+            f"color:#1a6641;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;'>"
+            f"Cenários com lucro</div>"
+            f"<div style='font-family:Rajdhani,sans-serif;font-size:2rem;font-weight:700;"
+            f"color:#1a6641;line-height:1;'>{pct_win:.0f}%</div>"
+            f"<div style='font-family:Rajdhani,sans-serif;font-size:0.82rem;color:#1a6641;"
+            f"margin-top:4px;'>({n_win} de 1.000 situações)</div>"
+            f"</div>"
+            f"<div style='background:#fdf0f0;border-radius:8px;padding:16px 18px;"
+            f"border-left:4px solid rgba(160,40,40,0.6);'>"
+            f"<div style='font-family:Rajdhani,sans-serif;font-size:0.78rem;font-weight:700;"
+            f"color:rgba(140,30,30,0.9);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;'>"
+            f"Cenários com perda</div>"
+            f"<div style='font-family:Rajdhani,sans-serif;font-size:2rem;font-weight:700;"
+            f"color:rgba(160,40,40,0.9);line-height:1;'>{pct_loss:.0f}%</div>"
+            f"<div style='font-family:Rajdhani,sans-serif;font-size:0.82rem;"
+            f"color:rgba(140,30,30,0.8);margin-top:4px;'>({n_loss} de 1.000 situações)</div>"
+            f"</div>"
+            f"</div>"
+            f"<div style='font-family:Rajdhani,sans-serif;font-size:0.95rem;color:#0f2a1e;"
+            f"line-height:1.5;border-top:1px solid rgba(22,59,44,0.1);padding-top:12px;'>"
+            f"{conclusion_text}"
+            f"</div></div>",
+            unsafe_allow_html=True,
+        )
+
 # ============================
 # PÁGINA HISTÓRICO DE BETS
 # ============================
