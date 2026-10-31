@@ -1795,7 +1795,7 @@ elif _page == "historico":
         )
         st.rerun()
 
-    def _stat_card(label, value, sub=None, positive=None):
+    def _stat_card(label, value, sub=None, positive=None, compact=False):
         if positive is None:
             bg, border, val_color = "#f0f5f2", "#163b2c", "#163b2c"
         elif positive:
@@ -1806,12 +1806,14 @@ elif _page == "historico":
             f"<div style='font-family:Rajdhani,sans-serif;font-size:0.82rem;"
             f"color:#163b2c;margin-top:3px;'>{sub}</div>"
         ) if sub else ""
+        val_size = "1.35rem" if compact else "1.7rem"
+        pad = "16px 14px" if compact else "22px 20px"
         return (
-            f"<div style='background:{bg};border-radius:10px;padding:22px 20px;"
+            f"<div style='background:{bg};border-radius:10px;padding:{pad};"
             f"border-left:4px solid {border};height:100%;'>"
             f"<div style='font-family:Rajdhani,sans-serif;font-size:0.82rem;font-weight:700;"
             f"color:#0f2a1e;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;'>{label}</div>"
-            f"<div style='font-family:Rajdhani,sans-serif;font-size:1.7rem;font-weight:700;"
+            f"<div style='font-family:Rajdhani,sans-serif;font-size:{val_size};font-weight:700;"
             f"color:{val_color};word-break:break-word;line-height:1.1;'>{value}</div>"
             f"{sub_html}</div>"
         )
@@ -1847,13 +1849,17 @@ elif _page == "historico":
             proj_str = "Dados insuficientes"
             proj_positive = None
 
-        row1_c1, row1_c2 = st.columns(2)
-        row1_c1.markdown(_stat_card("Total apostado", f"R$ {total_staked:.2f}"), unsafe_allow_html=True)
-        row1_c2.markdown(_stat_card("Resultado líquido", f"R$ {net_result:.2f}", positive=net_result >= 0), unsafe_allow_html=True)
-        st.markdown("<div style='margin-top:10px;'></div>", unsafe_allow_html=True)
-        row2_c1, row2_c2 = st.columns(2)
-        row2_c1.markdown(_stat_card("Rendimento (%)", f"{roi * 100:.2f}%", positive=roi >= 0), unsafe_allow_html=True)
-        row2_c2.markdown(_stat_card("Projeção anual", proj_str, positive=proj_positive), unsafe_allow_html=True)
+        if tracking_days >= 30:
+            dc1, dc2, dc3, dc4 = st.columns(4)
+            dc1.markdown(_stat_card("Total apostado", f"R$ {total_staked:.2f}", compact=True), unsafe_allow_html=True)
+            dc2.markdown(_stat_card("Resultado líquido", f"R$ {net_result:.2f}", positive=net_result >= 0, compact=True), unsafe_allow_html=True)
+            dc3.markdown(_stat_card("Rendimento (%)", f"{roi * 100:.2f}%", positive=roi >= 0, compact=True), unsafe_allow_html=True)
+            dc4.markdown(_stat_card("Projeção anual", proj_str, positive=proj_positive, compact=True), unsafe_allow_html=True)
+        else:
+            dc1, dc2, dc3 = st.columns(3)
+            dc1.markdown(_stat_card("Total apostado", f"R$ {total_staked:.2f}"), unsafe_allow_html=True)
+            dc2.markdown(_stat_card("Resultado líquido", f"R$ {net_result:.2f}", positive=net_result >= 0), unsafe_allow_html=True)
+            dc3.markdown(_stat_card("Rendimento (%)", f"{roi * 100:.2f}%", positive=roi >= 0), unsafe_allow_html=True)
 
         if tracking_days >= 30:
             st.caption(
@@ -1947,7 +1953,7 @@ elif _page == "historico":
                     f"</div></div>",
                     unsafe_allow_html=True,
                 )
-            if col_del.button("✕", key=f"delete_history_{index}"):
+            if col_del.button("×", key=f"delete_history_{index}"):
                 st.session_state.bet_history.pop(index)
                 _supabase_save(
                     st.session_state.supabase_user_code,
