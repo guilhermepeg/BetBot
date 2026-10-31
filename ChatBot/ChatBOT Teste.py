@@ -522,13 +522,12 @@ with st.sidebar:
         "Navegar</div>",
         unsafe_allow_html=True,
     )
-    nav_cols = st.columns(2)
-    if nav_cols[0].button("Simulação", use_container_width=True,
-                          type="primary" if st.session_state.active_page == "simulacao" else "secondary"):
+    if st.button("Simulação", use_container_width=True,
+                 type="primary" if st.session_state.active_page == "simulacao" else "secondary"):
         st.session_state.active_page = "simulacao"
         st.rerun()
-    if nav_cols[1].button("Histórico", use_container_width=True,
-                          type="primary" if st.session_state.active_page == "historico" else "secondary"):
+    if st.button("Histórico de Bets", use_container_width=True,
+                 type="primary" if st.session_state.active_page == "historico" else "secondary"):
         st.session_state.active_page = "historico"
         st.rerun()
 
