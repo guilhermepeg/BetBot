@@ -510,21 +510,46 @@ st.session_state.messages = get_active_chat()["messages"]
 if "chat_attachment_version" not in st.session_state:
     st.session_state.chat_attachment_version = 0
 
+if "active_page" not in st.session_state:
+    st.session_state.active_page = "chat"
+
 with st.sidebar:
     st.markdown("## BetBot AI")
+
+    st.markdown(
+        "<div style='font-family:Rajdhani,sans-serif;font-size:0.7rem;font-weight:700;"
+        "letter-spacing:2px;color:#163b2c;text-transform:uppercase;margin:8px 0 4px;'>"
+        "Navegar</div>",
+        unsafe_allow_html=True,
+    )
+    nav_cols = st.columns(2)
+    if nav_cols[0].button("Simulação", use_container_width=True,
+                          type="primary" if st.session_state.active_page == "simulacao" else "secondary"):
+        st.session_state.active_page = "simulacao"
+        st.rerun()
+    if nav_cols[1].button("Histórico", use_container_width=True,
+                          type="primary" if st.session_state.active_page == "historico" else "secondary"):
+        st.session_state.active_page = "historico"
+        st.rerun()
+
+    st.divider()
+
     if st.button("Criar novo chat", use_container_width=True):
         chat = create_chat()
         st.session_state.chats.insert(0, chat)
         st.session_state.active_chat_id = chat["id"]
         st.session_state.messages = chat["messages"]
+        st.session_state.active_page = "chat"
         st.rerun()
 
     st.markdown("### Seus chats")
     for chat in st.session_state.chats:
-        is_active = chat["id"] == st.session_state.active_chat_id
+        is_active = (chat["id"] == st.session_state.active_chat_id
+                     and st.session_state.active_page == "chat")
         label = f"{'[Ativo] ' if is_active else ''}{chat.get('title', 'Novo chat')}"
         if st.button(label, key=f"chat_{chat['id']}", use_container_width=True):
             select_chat(chat["id"])
+            st.session_state.active_page = "chat"
             st.rerun()
 
     st.divider()
@@ -566,6 +591,8 @@ if "chat_sim_open" not in st.session_state:
     st.session_state.chat_sim_open = False
 if "chat_sim_result" not in st.session_state:
     st.session_state.chat_sim_result = None
+if "chat_sim_prefill" not in st.session_state:
+    st.session_state.chat_sim_prefill = {"odd": 2.0, "stake": 10.0, "ver": 0}
 
 
 # --- Real AI engine (Anthropic Claude) ---
@@ -918,16 +945,14 @@ def get_bot_response(history: list) -> str:
         return f"Ocorreu um erro ao consultar a IA: `{e}`"
 
 # ============================
-# TABS
+# PÁGINAS (navegação lateral)
 # ============================
-tab_chat, tab_sim, tab_history = st.tabs(
-    ["Chat", "Simulação", "Histórico de Bets"]
-)
+_page = st.session_state.active_page
 
 # ============================
-# TAB CHAT
+# PÁGINA CHAT
 # ============================
-with tab_chat:
+if _page == "chat":
     st.markdown(
         "<div style='background:#163b2c;border-radius:8px;padding:16px 20px 14px;margin-bottom:20px;'>"
         "<div style='font-family:Rajdhani,sans-serif;font-size:1rem;font-weight:900;"
@@ -982,14 +1007,15 @@ with tab_chat:
             "</div>",
             unsafe_allow_html=True,
         )
-        with st.form(key="chat_sim_form", clear_on_submit=False):
+        _pf  = st.session_state.chat_sim_prefill
+        with st.form(key=f"chat_sim_form_v{_pf['ver']}", clear_on_submit=False):
             cs1, cs2 = st.columns(2)
             csim_odd = cs1.number_input(
-                "Odd", min_value=1.01, max_value=1000.0, value=2.00, step=0.01, format="%.2f",
+                "Odd", min_value=1.01, max_value=1000.0, value=float(_pf["odd"]), step=0.01, format="%.2f",
                 help="Número que aparece ao lado da aposta na casa.",
             )
             csim_stake = cs2.number_input(
-                "Valor apostado (R$)", min_value=0.01, value=10.0, step=1.0, format="%.2f",
+                "Valor apostado (R$)", min_value=0.01, value=float(_pf["stake"]), step=1.0, format="%.2f",
             )
             csim_name = st.text_input("Nome (opcional)", placeholder="Ex: Resultado esperado da partida")
             csim_submitted = st.form_submit_button("Calcular", use_container_width=True)
@@ -1117,6 +1143,16 @@ with tab_chat:
                            "retorno", "odd", "simule", "me simul"}
                 if any(kw in message_text.lower() for kw in _SIM_KW):
                     st.session_state.chat_sim_open = True
+                    _odd_m = re.search(r'\b(?:odd|cota)\s*(?:de\s*)?(\d+(?:[.,]\d+)?)', message_text, re.I)
+                    _stk_m = re.search(r'(?:r\$\s*|valor\s*(?:apostado\s*)?(?:de\s*)?)(\d[\d.,]*)', message_text, re.I)
+                    _new_odd   = float(_odd_m.group(1).replace(',', '.')) if _odd_m else None
+                    _new_stake = float(_stk_m.group(1).replace('.', '').replace(',', '.')) if _stk_m else None
+                    if _new_odd or _new_stake:
+                        st.session_state.chat_sim_prefill = {
+                            "odd":   max(1.01, min(1000.0, _new_odd  or st.session_state.chat_sim_prefill["odd"])),
+                            "stake": max(0.01, _new_stake or st.session_state.chat_sim_prefill["stake"]),
+                            "ver":   st.session_state.chat_sim_prefill["ver"] + 1,
+                        }
                 _supabase_save(
                     st.session_state.supabase_user_code,
                     st.session_state.chats,
@@ -1125,9 +1161,9 @@ with tab_chat:
                 st.rerun()
 
 # ============================
-# TAB SIMULAÇÃO
+# PÁGINA SIMULAÇÃO
 # ============================
-with tab_sim:
+elif _page == "simulacao":
     st.markdown(
         "<div style='background:#163b2c;border-radius:8px;padding:16px 20px 14px;margin-bottom:20px;'>"
         "<div style='font-family:Rajdhani,sans-serif;font-size:1rem;font-weight:900;"
@@ -1234,7 +1270,7 @@ with tab_sim:
             pot_return = bet["stake"] * bet["odd"]
             pot_profit = pot_return - bet["stake"]
             accent = "#1a6641" if pot_profit > 0 else "rgba(22,59,44,0.45)"
-            card_bg = "#e8f5ee" if pot_profit > 0 else "#fff"
+            card_bg = "#fff"
             safe_name = _html.escape(bet["name"])
             profit_sign = "+" if pot_profit >= 0 else ""
 
@@ -1294,8 +1330,10 @@ with tab_sim:
             unsafe_allow_html=True,
         )
         st.markdown(
-            "Veja todos os cenários possíveis: quanto você ganha se acertar e quanto perde se errar. "
-            "Não é uma previsão — é apenas para visualizar os valores envolvidos."
+            "Para cada seleção que você adicionou, o BetBot calcula dois cenários: "
+            "o que acontece **se você acertar** (quanto recebe de volta) e o que acontece **se você errar** (quanto perde). "
+            "A \"chance calculada\" é só um número derivado da odd — quanto menor a odd, maior essa chance. "
+            "Não é uma previsão de quem vai ganhar."
         )
 
         if st.button("Calcular todos os cenários"):
@@ -1354,27 +1392,29 @@ with tab_sim:
 
                 st.markdown("")
                 for s in scenario_data:
-                    net_sign   = "+" if s["net"] >= 0 else ""
-                    bar_width  = max(4, int(s["prob"] * 100 * 2))
+                    net_sign      = "+" if s["net"] >= 0 else ""
                     safe_scenario = _html.escape(s["scenario"])
-                    net_color = "#1a6641" if s["net"] >= 0 else "rgba(160,40,40,0.8)"
-                    net_bg = "#e8f5ee" if s["net"] >= 0 else "#fdf0f0"
+                    net_color     = "#1a6641" if s["net"] >= 0 else "rgba(160,40,40,0.9)"
+                    border_color  = "#1a6641" if s["net"] >= 0 else "rgba(160,40,40,0.5)"
                     st.markdown(
-                        f"<div style='background:{net_bg};border-left:3px solid {net_color};"
-                        f"border-radius:0 8px 8px 0;padding:10px 14px;margin:6px 0;'>"
-                        f"<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;"
-                        f"color:#163b2c;margin-bottom:6px;'>{safe_scenario}</div>"
-                        f"<div style='display:flex;align-items:center;gap:14px;flex-wrap:wrap;'>"
-                        f"<span style='font-family:Rajdhani,sans-serif;font-size:0.62rem;"
-                        f"color:#163b2c;letter-spacing:1px;'>PROB. CALCULADA "
-                        f"<b>{s['prob']*100:.2f}%</b></span>"
-                        f"<div style='flex:1;min-width:60px;background:rgba(22,59,44,0.1);"
-                        f"border-radius:4px;height:8px;'>"
-                        f"<div style='width:{bar_width}%;background:linear-gradient(90deg,#163b2c,#4b8068);"
-                        f"height:8px;border-radius:4px;'></div></div>"
-                        f"<span style='font-family:Rajdhani,sans-serif;font-size:0.62rem;"
-                        f"color:{net_color};letter-spacing:1px;font-weight:700;'>"
-                        f"RESULTADO {net_sign}R$ {s['net']:.2f}</span>"
+                        f"<div style='background:#fff;border:1px solid rgba(22,59,44,0.15);"
+                        f"border-left:4px solid {border_color};border-radius:0 8px 8px 0;"
+                        f"padding:14px 16px;margin:6px 0;'>"
+                        f"<div style='font-family:Rajdhani,sans-serif;font-size:0.95rem;font-weight:700;"
+                        f"color:#163b2c;margin-bottom:10px;'>{safe_scenario}</div>"
+                        f"<div style='display:flex;gap:24px;flex-wrap:wrap;'>"
+                        f"<div>"
+                        f"<div style='font-family:Rajdhani,sans-serif;font-size:0.72rem;font-weight:700;"
+                        f"color:#163b2c;text-transform:uppercase;letter-spacing:1px;margin-bottom:2px;'>Chance calculada</div>"
+                        f"<div style='font-family:Rajdhani,sans-serif;font-size:1.1rem;font-weight:700;"
+                        f"color:#163b2c;'>{s['prob']*100:.2f}%</div>"
+                        f"</div>"
+                        f"<div>"
+                        f"<div style='font-family:Rajdhani,sans-serif;font-size:0.72rem;font-weight:700;"
+                        f"color:#163b2c;text-transform:uppercase;letter-spacing:1px;margin-bottom:2px;'>Resultado</div>"
+                        f"<div style='font-family:Rajdhani,sans-serif;font-size:1.1rem;font-weight:700;"
+                        f"color:{net_color};'>{net_sign}R$ {s['net']:.2f}</div>"
+                        f"</div>"
                         f"</div></div>",
                         unsafe_allow_html=True,
                     )
@@ -1596,7 +1636,7 @@ with tab_sim:
         st.markdown(
             "<div style='background:#f0f5f2;border-radius:8px;padding:14px 16px;margin:4px 0 12px;"
             "border-left:4px solid #4b8068;'>"
-            "<div style='font-family:Rajdhani,sans-serif;font-size:0.65rem;letter-spacing:2px;"
+            "<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;letter-spacing:1px;"
             "color:#163b2c;text-transform:uppercase;margin-bottom:8px;'>E se você investisse em renda fixa?</div>"
             f"<p style='font-family:Rajdhani,sans-serif;font-size:0.95rem;color:#163b2c;margin:0;line-height:1.5;'>"
             f"O <b>CDI</b> é a referência da renda fixa no Brasil — um rendimento garantido sobre o que você investe. "
@@ -1673,9 +1713,9 @@ with tab_sim:
         st.line_chart(traj_df)
 
 # ============================
-# TAB HISTÓRICO DE BETS
+# PÁGINA HISTÓRICO DE BETS
 # ============================
-with tab_history:
+elif _page == "historico":
     st.markdown(
         "<div style='background:#163b2c;border-radius:8px;padding:16px 20px 14px;margin-bottom:20px;'>"
         "<div style='font-family:Rajdhani,sans-serif;font-size:1rem;font-weight:900;"
@@ -1759,8 +1799,8 @@ with tab_history:
             f"border-left:3px solid {border};height:100%;'>"
             f"<div style='font-family:Rajdhani,sans-serif;font-size:0.8rem;font-weight:700;"
             f"color:#163b2c;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;'>{label}</div>"
-            f"<div style='font-family:Rajdhani,sans-serif;font-size:1.5rem;font-weight:700;"
-            f"color:{val_color};'>{value}</div>"
+            f"<div style='font-family:Rajdhani,sans-serif;font-size:1.2rem;font-weight:700;"
+            f"color:{val_color};word-break:break-word;line-height:1.2;'>{value}</div>"
             f"{sub_html}</div>"
         )
 
