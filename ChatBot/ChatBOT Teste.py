@@ -1807,12 +1807,12 @@ elif _page == "historico":
             f"color:#163b2c;margin-top:3px;'>{sub}</div>"
         ) if sub else ""
         return (
-            f"<div style='background:{bg};border-radius:8px;padding:14px 16px;"
-            f"border-left:3px solid {border};height:100%;'>"
-            f"<div style='font-family:Rajdhani,sans-serif;font-size:0.8rem;font-weight:700;"
-            f"color:#163b2c;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;'>{label}</div>"
-            f"<div style='font-family:Rajdhani,sans-serif;font-size:1.2rem;font-weight:700;"
-            f"color:{val_color};word-break:break-word;line-height:1.2;'>{value}</div>"
+            f"<div style='background:{bg};border-radius:10px;padding:22px 20px;"
+            f"border-left:4px solid {border};height:100%;'>"
+            f"<div style='font-family:Rajdhani,sans-serif;font-size:0.82rem;font-weight:700;"
+            f"color:#0f2a1e;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;'>{label}</div>"
+            f"<div style='font-family:Rajdhani,sans-serif;font-size:1.7rem;font-weight:700;"
+            f"color:{val_color};word-break:break-word;line-height:1.1;'>{value}</div>"
             f"{sub_html}</div>"
         )
 
