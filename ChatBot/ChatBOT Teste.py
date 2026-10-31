@@ -1503,6 +1503,7 @@ elif _page == "simulacao":
     if mc_run:
         import numpy as np
         import pandas as pd
+        import plotly.graph_objects as go
 
         rng = np.random.default_rng()
         p          = mc_p_pct / 100.0
@@ -1719,10 +1720,55 @@ elif _page == "simulacao":
             f"Linhas que descem mostram situações em que o saldo caiu. "
             f"Isso não é uma previsão — é só para mostrar o que pode acontecer em cada caminho possível."
         )
-        traj_df = pd.DataFrame(
-            {f"Cenário {i+1}": traj for i, traj in enumerate(example_trajs)}
+        _win_colors = [
+            "#1a6641","#2196F3","#9C27B0","#FF6F00","#00838F",
+            "#E91E63","#33691E","#1565C0","#6A1B9A","#AD1457",
+            "#0277BD","#558B2F","#F57F17","#4527A0","#00695C",
+            "#283593","#827717","#BF360C","#01579B","#1B5E20",
+        ]
+        fig = go.Figure()
+        for i, traj in enumerate(example_trajs):
+            x_vals = list(range(len(traj)))
+            final_val = traj[-1]
+            if final_val > bankroll:
+                fig.add_trace(go.Scatter(
+                    x=x_vals, y=traj,
+                    mode="lines",
+                    line=dict(color=_win_colors[i % len(_win_colors)], width=2),
+                    name=f"Cenário {i+1} ✓",
+                    opacity=0.9,
+                ))
+            else:
+                fig.add_trace(go.Scatter(
+                    x=x_vals, y=traj,
+                    mode="lines",
+                    line=dict(color="rgba(150,150,150,0.25)", width=1),
+                    name=f"Cenário {i+1}",
+                    showlegend=False,
+                ))
+        fig.add_hline(
+            y=bankroll,
+            line_dash="dot",
+            line_color="rgba(22,59,44,0.5)",
+            line_width=1.5,
+            annotation_text=f"Banca inicial R$ {bankroll:.0f}",
+            annotation_position="top left",
+            annotation_font_size=11,
+            annotation_font_color="rgba(22,59,44,0.7)",
         )
-        st.line_chart(traj_df)
+        fig.update_layout(
+            margin=dict(l=0, r=0, t=10, b=10),
+            paper_bgcolor="rgba(0,0,0,0)",
+            plot_bgcolor="rgba(0,0,0,0)",
+            xaxis=dict(showgrid=True, gridcolor="rgba(22,59,44,0.08)", title="Aposta nº"),
+            yaxis=dict(showgrid=True, gridcolor="rgba(22,59,44,0.08)", title="Saldo (R$)"),
+            legend=dict(
+                orientation="h", yanchor="bottom", y=-0.25,
+                xanchor="left", x=0, font=dict(size=11),
+            ),
+            height=380,
+        )
+        st.plotly_chart(fig, use_container_width=True)
 
         # --- Conclusão do Monte Carlo ---
         pct_win  = float(np.mean(arr > bankroll)) * 100.0
