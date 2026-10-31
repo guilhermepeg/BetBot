@@ -107,12 +107,14 @@ st.markdown("""
 
     html, body, [class*="css"] {
         font-family: 'Rajdhani', sans-serif !important;
+        font-size: 17px !important;
         letter-spacing: 0.3px;
+        color: #0f2a1e !important;
     }
 
     .stApp {
         background: #ffffff !important;
-        color: #163b2c !important;
+        color: #0f2a1e !important;
     }
 
     .stApp code, .stApp pre,
@@ -1841,11 +1843,13 @@ elif _page == "historico":
             proj_str = "Dados insuficientes"
             proj_positive = None
 
-        m1, m2, m3, m4 = st.columns(4)
-        m1.markdown(_stat_card("Total apostado", f"R$ {total_staked:.2f}"), unsafe_allow_html=True)
-        m2.markdown(_stat_card("Resultado líquido", f"R$ {net_result:.2f}", positive=net_result >= 0), unsafe_allow_html=True)
-        m3.markdown(_stat_card("Rendimento (%)", f"{roi * 100:.2f}%", positive=roi >= 0), unsafe_allow_html=True)
-        m4.markdown(_stat_card("Projeção anual", proj_str, positive=proj_positive), unsafe_allow_html=True)
+        row1_c1, row1_c2 = st.columns(2)
+        row1_c1.markdown(_stat_card("Total apostado", f"R$ {total_staked:.2f}"), unsafe_allow_html=True)
+        row1_c2.markdown(_stat_card("Resultado líquido", f"R$ {net_result:.2f}", positive=net_result >= 0), unsafe_allow_html=True)
+        st.markdown("<div style='margin-top:10px;'></div>", unsafe_allow_html=True)
+        row2_c1, row2_c2 = st.columns(2)
+        row2_c1.markdown(_stat_card("Rendimento (%)", f"{roi * 100:.2f}%", positive=roi >= 0), unsafe_allow_html=True)
+        row2_c2.markdown(_stat_card("Projeção anual", proj_str, positive=proj_positive), unsafe_allow_html=True)
 
         if tracking_days >= 30:
             st.caption(
@@ -1908,20 +1912,35 @@ elif _page == "historico":
             col_card, col_del = st.columns([12, 1])
             with col_card:
                 st.markdown(
-                    f"<div style='background:{card_bg};border:1px solid rgba(22,59,44,0.1);"
-                    f"border-left:4px solid {accent};border-radius:0 8px 8px 0;"
-                    f"padding:10px 14px;margin-bottom:6px;display:flex;align-items:center;gap:16px;'>"
-                    f"<div style='flex:2;'>"
-                    f"<div style='font-family:Rajdhani,sans-serif;font-size:0.95rem;font-weight:700;"
-                    f"color:#163b2c;'>{safe_name}</div>"
+                    f"<div style='background:#fff;border:1px solid rgba(22,59,44,0.15);"
+                    f"border-left:4px solid {accent};border-radius:0 10px 10px 0;"
+                    f"padding:16px 20px;margin-bottom:6px;'>"
+                    f"<div style='display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px;'>"
+                    f"<div style='font-family:Rajdhani,sans-serif;font-size:1.15rem;font-weight:700;"
+                    f"color:#0f2a1e;'>{safe_name}</div>"
                     f"<div style='font-family:Rajdhani,sans-serif;font-size:0.82rem;"
-                    f"color:rgba(22,59,44,0.6);'>{bet_date_str}</div>"
+                    f"color:rgba(15,42,30,0.55);'>{bet_date_str}</div>"
                     f"</div>"
-                    f"<div style='flex:1;font-family:Rajdhani,sans-serif;font-size:0.9rem;color:#163b2c;'>"
-                    f"Apostado: <b>R$ {bet['stake']:.2f}</b></div>"
-                    f"<div style='flex:1;font-family:Rajdhani,sans-serif;font-size:0.9rem;"
-                    f"font-weight:700;color:{net_color};'>{net_sign}R$ {net:.2f}</div>"
-                    f"</div>",
+                    f"<div style='display:grid;grid-template-columns:repeat(3,1fr);gap:12px;'>"
+                    f"<div>"
+                    f"<div style='font-family:Rajdhani,sans-serif;font-size:0.72rem;font-weight:700;"
+                    f"color:#0f2a1e;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;'>Apostado</div>"
+                    f"<div style='font-family:Rajdhani,sans-serif;font-size:1.25rem;font-weight:700;"
+                    f"color:#0f2a1e;'>R$ {bet['stake']:.2f}</div>"
+                    f"</div>"
+                    f"<div>"
+                    f"<div style='font-family:Rajdhani,sans-serif;font-size:0.72rem;font-weight:700;"
+                    f"color:#0f2a1e;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;'>Total recebido</div>"
+                    f"<div style='font-family:Rajdhani,sans-serif;font-size:1.25rem;font-weight:700;"
+                    f"color:#0f2a1e;'>R$ {bet['gross_return']:.2f}</div>"
+                    f"</div>"
+                    f"<div>"
+                    f"<div style='font-family:Rajdhani,sans-serif;font-size:0.72rem;font-weight:700;"
+                    f"color:#0f2a1e;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;'>Lucro / Prejuízo</div>"
+                    f"<div style='font-family:Rajdhani,sans-serif;font-size:1.25rem;font-weight:700;"
+                    f"color:{net_color};'>{net_sign}R$ {net:.2f}</div>"
+                    f"</div>"
+                    f"</div></div>",
                     unsafe_allow_html=True,
                 )
             if col_del.button("✕", key=f"delete_history_{index}"):
