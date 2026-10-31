@@ -1523,6 +1523,75 @@ with tab_sim:
             )
         st.caption("Resultados baseados na chance que você estimou. Não representam previsões reais.")
 
+        # --- Gráfico divergente: melhor / média / pior ---
+        st.markdown(
+            "<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;"
+            "letter-spacing:2px;color:#163b2c;text-transform:uppercase;margin:20px 0 6px;'>"
+            "Comparação visual: ganho ou perda</div>",
+            unsafe_allow_html=True,
+        )
+
+        items = [
+            ("Melhor cenário",   best_gain),
+            ("Resultado médio",  mean_gain),
+            ("Pior cenário",     worst_gain),
+        ]
+        max_abs = max(abs(v) for _, v in items) or 1.0
+
+        rows_html = (
+            "<div style='font-family:Rajdhani,sans-serif;margin:12px 0 20px;'>"
+            "<div style='display:flex;align-items:center;margin-bottom:10px;'>"
+            "<div style='width:180px;min-width:180px;'></div>"
+            "<div style='flex:1;display:flex;'>"
+            "<div style='flex:1;text-align:right;padding-right:8px;"
+            "font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;color:rgba(22,59,44,0.55);"
+            "letter-spacing:1px;'>← PERDA</div>"
+            "<div style='width:2px;background:#163b2c;height:18px;flex-shrink:0;'></div>"
+            "<div style='flex:1;padding-left:8px;"
+            "font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;color:rgba(22,59,44,0.55);"
+            "letter-spacing:1px;'>GANHO →</div>"
+            "</div></div>"
+        )
+        for label, value in items:
+            pct = abs(value) / max_abs * 46
+            val_str = (f"+R$ {value:.2f}" if value >= 0 else f"−R$ {abs(value):.2f}")
+            label_safe = _html.escape(label)
+            bar_color = "#1a6641" if value >= 0 else "rgba(160,40,40,0.75)"
+            val_color = "#1a6641" if value >= 0 else "rgba(160,40,40,0.9)"
+            if value >= 0:
+                left_side = "<div style='flex:1;'></div>"
+                right_side = (
+                    f"<div style='flex:1;display:flex;align-items:center;padding-left:4px;'>"
+                    f"<div style='width:{pct:.1f}%;background:{bar_color};height:26px;"
+                    f"border-radius:0 5px 5px 0;min-width:3px;'></div>"
+                    f"<span style='margin-left:10px;font-family:Rajdhani,sans-serif;font-size:0.95rem;"
+                    f"color:{val_color};white-space:nowrap;font-weight:700;'>{val_str}</span>"
+                    f"</div>"
+                )
+            else:
+                left_side = (
+                    f"<div style='flex:1;display:flex;align-items:center;justify-content:flex-end;"
+                    f"padding-right:4px;'>"
+                    f"<span style='margin-right:10px;font-family:Rajdhani,sans-serif;font-size:0.95rem;"
+                    f"color:{val_color};white-space:nowrap;font-weight:700;'>{val_str}</span>"
+                    f"<div style='width:{pct:.1f}%;background:{bar_color};height:26px;"
+                    f"border-radius:5px 0 0 5px;min-width:3px;'></div>"
+                    f"</div>"
+                )
+                right_side = "<div style='flex:1;'></div>"
+            rows_html += (
+                f"<div style='display:flex;align-items:center;margin:10px 0;'>"
+                f"<div style='width:180px;min-width:180px;text-align:right;font-size:0.95rem;"
+                f"font-family:Rajdhani,sans-serif;color:#163b2c;padding-right:12px;line-height:1.3;font-weight:600;'>{label_safe}</div>"
+                f"<div style='flex:1;display:flex;'>"
+                f"{left_side}"
+                f"<div style='width:2px;min-width:2px;background:#163b2c;height:28px;flex-shrink:0;'></div>"
+                f"{right_side}"
+                f"</div></div>"
+            )
+        rows_html += "</div>"
+        st.markdown(rows_html, unsafe_allow_html=True)
+
         # --- Comparação com CDI ---
         st.markdown(
             "<div style='background:#f0f5f2;border-radius:8px;padding:14px 16px;margin:4px 0 12px;"
