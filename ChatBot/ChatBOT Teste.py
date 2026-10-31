@@ -1751,24 +1751,21 @@ elif _page == "simulacao":
             line_dash="dot",
             line_color="rgba(22,59,44,0.5)",
             line_width=1.5,
-            annotation_text=f"Banca inicial R$ {bankroll:.0f}",
-            annotation_position="top left",
-            annotation_font_size=11,
-            annotation_font_color="rgba(22,59,44,0.7)",
         )
         fig.update_layout(
             margin=dict(l=0, r=0, t=10, b=10),
             paper_bgcolor="rgba(0,0,0,0)",
             plot_bgcolor="rgba(0,0,0,0)",
-            xaxis=dict(showgrid=True, gridcolor="rgba(22,59,44,0.08)", title="Aposta nº"),
-            yaxis=dict(showgrid=True, gridcolor="rgba(22,59,44,0.08)", title="Saldo (R$)"),
+            hovermode=False,
+            xaxis=dict(showgrid=True, gridcolor="rgba(22,59,44,0.08)", title="Aposta nº", fixedrange=True),
+            yaxis=dict(showgrid=True, gridcolor="rgba(22,59,44,0.08)", title="Saldo (R$)", fixedrange=True),
             legend=dict(
                 orientation="h", yanchor="bottom", y=-0.25,
                 xanchor="left", x=0, font=dict(size=11),
             ),
             height=380,
         )
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
 
         # --- Conclusão do Monte Carlo ---
         pct_win  = float(np.mean(arr > bankroll)) * 100.0
