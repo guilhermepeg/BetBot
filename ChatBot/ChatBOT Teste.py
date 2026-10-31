@@ -146,10 +146,10 @@ st.markdown("""
 
     /* Tabs */
     [data-testid="stTabs"] button {
-        font-family: 'Orbitron', monospace !important;
-        font-size: 0.75rem !important;
+        font-family: 'Rajdhani', sans-serif !important;
+        font-size: 0.85rem !important;
         font-weight: 700 !important;
-        letter-spacing: 2px !important;
+        letter-spacing: 1px !important;
         color: #163b2c !important;
         text-transform: uppercase;
     }
@@ -179,10 +179,10 @@ st.markdown("""
     }
     .user-msg * { color: #ffffff !important; }
     .bot-label {
-        font-family: 'Orbitron', monospace;
-        font-size: 0.58rem;
+        font-family: 'Rajdhani', sans-serif;
+        font-size: 0.72rem;
         font-weight: 700;
-        letter-spacing: 2px;
+        letter-spacing: 1px;
         text-transform: uppercase;
         color: rgba(22,59,44,0.45);
         margin: 14px 0 1px;
@@ -217,10 +217,10 @@ st.markdown("""
     .stButton > button {
         background: #ffffff !important;
         color: #163b2c !important;
-        font-family: 'Orbitron', monospace !important;
-        font-size: 0.7rem !important;
+        font-family: 'Rajdhani', sans-serif !important;
+        font-size: 0.85rem !important;
         font-weight: 700 !important;
-        letter-spacing: 2px !important;
+        letter-spacing: 1px !important;
         border: 1px solid #163b2c !important;
         border-radius: 6px !important;
         padding: 0.5rem 1.4rem !important;
@@ -239,8 +239,8 @@ st.markdown("""
     [data-testid="stFormSubmitButton"] button {
         background: #ffffff !important;
         color: #163b2c !important;
-        font-family: 'Orbitron', monospace !important;
-        font-size: 0.65rem !important;
+        font-family: 'Rajdhani', sans-serif !important;
+        font-size: 0.9rem !important;
         letter-spacing: 1.5px !important;
         border: 1px solid #163b2c !important;
         box-shadow: 0 0 14px rgba(22,59,44,0.18) !important;
@@ -285,14 +285,15 @@ st.markdown("""
 
     /* Metrics */
     [data-testid="stMetric"] label {
-        font-family: 'Orbitron', monospace !important;
-        font-size: 0.6rem !important;
-        letter-spacing: 1.5px !important;
+        font-family: 'Rajdhani', sans-serif !important;
+        font-size: 0.85rem !important;
+        font-weight: 700 !important;
+        letter-spacing: 0.5px !important;
         color: #163b2c !important;
         text-transform: uppercase;
     }
     [data-testid="stMetric"] [data-testid="stMetricValue"] {
-        font-family: 'Orbitron', monospace !important;
+        font-family: 'Rajdhani', sans-serif !important;
         color: #163b2c !important;
         text-shadow: none;
     }
@@ -323,18 +324,19 @@ st.markdown("""
         color: #163b2c !important;
     }
     section[data-testid="stSidebar"] h2, section[data-testid="stSidebar"] h3 {
-        font-family: 'Orbitron', monospace !important;
+        font-family: 'Rajdhani', sans-serif !important;
         color: #163b2c !important;
         text-shadow: none;
-        font-size: 0.85rem !important;
+        font-size: 1rem !important;
+        font-weight: 700 !important;
     }
 
     /* Markdown section headers */
     [data-testid="stMarkdownContainer"] h3, [data-testid="stMarkdownContainer"] h4 {
-        font-family: 'Orbitron', monospace !important;
+        font-family: 'Rajdhani', sans-serif !important;
         color: #163b2c !important;
         text-shadow: none;
-        letter-spacing: 1px;
+        letter-spacing: 0.5px;
         border-bottom: 1px solid rgba(22,59,44,0.25);
         padding-bottom: 6px;
     }
@@ -396,7 +398,7 @@ components.html("""
       'border-bottom:1px solid rgba(22,59,44,0.25);' +
       'box-shadow:0 4px 18px rgba(22,59,44,0.08);';
     bar.innerHTML =
-      '<span style="font-family:Orbitron,monospace;font-size:1.8rem;font-weight:900;' +
+      '<span style="font-family:Rajdhani,sans-serif;font-size:1.8rem;font-weight:900;' +
       'letter-spacing:5px;color:#163b2c;">BETBOT AI</span>';
 
     doc.body.appendChild(bar);
@@ -551,7 +553,7 @@ with st.sidebar:
         st.caption("Histórico não será salvo ao recarregar.")
 
     st.markdown(
-        "<div style='text-align:center; font-family:Orbitron,monospace; color:#163b2c; "
+        "<div style='text-align:center; font-family:Rajdhani,sans-serif; color:#163b2c; "
         "font-size:0.6rem; letter-spacing:2px; margin-top:1rem; "
         "text-shadow:none;'>"
         "BETBOT AI · POWERED BY AI</div>",
@@ -916,7 +918,7 @@ tab_chat, tab_sim, tab_history = st.tabs(
 with tab_chat:
     st.markdown(
         "<div style='background:#163b2c;border-radius:8px;padding:16px 20px 14px;margin-bottom:20px;'>"
-        "<div style='font-family:Orbitron,monospace;font-size:1rem;font-weight:900;"
+        "<div style='font-family:Rajdhani,sans-serif;font-size:1rem;font-weight:900;"
         "letter-spacing:3px;color:#fff;'>CHAT COM O BETBOT</div>"
         "<p style='font-family:Rajdhani,sans-serif;font-size:1rem;color:rgba(255,255,255,0.85);"
         "margin:8px 0 0;line-height:1.5;'>"
@@ -960,7 +962,7 @@ with tab_chat:
             "<div style='display:flex;align-items:center;gap:12px;margin:0 0 14px;'>"
             "<div style='width:30px;height:30px;background:#163b2c;border-radius:50%;"
             "display:flex;align-items:center;justify-content:center;flex-shrink:0;'>"
-            "<span style='font-family:Orbitron,monospace;font-size:0.75rem;font-weight:700;'>⚡</span>"
+            "<span style='font-family:Rajdhani,sans-serif;font-size:0.75rem;font-weight:700;'>⚡</span>"
             "</div>"
             "<div style='font-family:Rajdhani,sans-serif;font-size:0.95rem;font-weight:700;"
             "color:#163b2c;flex:1;padding-bottom:5px;border-bottom:1px solid rgba(22,59,44,0.25);'>"
@@ -1116,7 +1118,7 @@ with tab_chat:
 with tab_sim:
     st.markdown(
         "<div style='background:#163b2c;border-radius:8px;padding:16px 20px 14px;margin-bottom:20px;'>"
-        "<div style='font-family:Orbitron,monospace;font-size:1rem;font-weight:900;"
+        "<div style='font-family:Rajdhani,sans-serif;font-size:1rem;font-weight:900;"
         "letter-spacing:3px;color:#fff;'>SIMULADOR DE APOSTAS</div>"
         "<p style='font-family:Rajdhani,sans-serif;font-size:1rem;color:rgba(255,255,255,0.85);"
         "margin:8px 0 0;line-height:1.5;'>"
@@ -1132,7 +1134,7 @@ with tab_sim:
         "<div style='display:flex;align-items:center;gap:12px;margin:20px 0 14px;'>"
         "<div style='width:30px;height:30px;background:#163b2c;border-radius:50%;"
         "display:flex;align-items:center;justify-content:center;flex-shrink:0;'>"
-        "<span style='font-family:Orbitron,monospace;font-size:0.7rem;font-weight:700;color:#fff;'>1</span>"
+        "<span style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;color:#fff;'>1</span>"
         "</div>"
         "<div style='font-family:Rajdhani,sans-serif;font-size:0.95rem;font-weight:700;"
         "color:#163b2c;flex:1;padding-bottom:5px;border-bottom:1px solid rgba(22,59,44,0.25);'>"
@@ -1208,9 +1210,9 @@ with tab_sim:
             "<div style='display:flex;align-items:center;gap:12px;margin:24px 0 14px;'>"
             "<div style='width:30px;height:30px;background:#163b2c;border-radius:50%;"
             "display:flex;align-items:center;justify-content:center;flex-shrink:0;'>"
-            "<span style='font-family:Orbitron,monospace;font-size:0.7rem;font-weight:700;color:#fff;'>2</span>"
+            "<span style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;color:#fff;'>2</span>"
             "</div>"
-            "<div style='font-family:Orbitron,monospace;font-size:0.75rem;font-weight:700;"
+            "<div style='font-family:Rajdhani,sans-serif;font-size:0.75rem;font-weight:700;"
             "letter-spacing:2px;color:#163b2c;text-transform:uppercase;border-bottom:1px solid rgba(22,59,44,0.25);"
             "flex:1;padding-bottom:5px;'>Resultado de cada aposta</div>"
             "</div>",
@@ -1233,14 +1235,14 @@ with tab_sim:
                     f"<div style='display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px;'>"
                     f"<span style='font-family:Rajdhani,sans-serif;font-size:1.05rem;"
                     f"font-weight:700;color:#163b2c;'>{safe_name}</span>"
-                    f"<span style='font-family:Orbitron,monospace;font-size:0.62rem;"
+                    f"<span style='font-family:Rajdhani,sans-serif;font-size:0.62rem;"
                     f"color:#163b2c;letter-spacing:1px;'>ODD <b>{bet['odd']:.2f}</b></span>"
-                    f"<span style='font-family:Orbitron,monospace;font-size:0.62rem;"
+                    f"<span style='font-family:Rajdhani,sans-serif;font-size:0.62rem;"
                     f"color:#163b2c;letter-spacing:1px;'>APOSTA <b>R$ {bet['stake']:.2f}</b></span>"
-                    f"<span style='font-family:Orbitron,monospace;font-size:0.62rem;"
+                    f"<span style='font-family:Rajdhani,sans-serif;font-size:0.62rem;"
                     f"color:{accent};letter-spacing:1px;font-weight:700;'>"
                     f"RETORNO R$ {pot_return:.2f}</span>"
-                    f"<span style='font-family:Orbitron,monospace;font-size:0.62rem;"
+                    f"<span style='font-family:Rajdhani,sans-serif;font-size:0.62rem;"
                     f"color:{accent};letter-spacing:1px;font-weight:700;'>"
                     f"LUCRO R$ {pot_profit:.2f}</span>"
                     f"</div></div>",
@@ -1271,9 +1273,9 @@ with tab_sim:
             "<div style='display:flex;align-items:center;gap:12px;margin:24px 0 14px;'>"
             "<div style='width:30px;height:30px;background:#163b2c;border-radius:50%;"
             "display:flex;align-items:center;justify-content:center;flex-shrink:0;'>"
-            "<span style='font-family:Orbitron,monospace;font-size:0.7rem;font-weight:700;color:#fff;'>3</span>"
+            "<span style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;color:#fff;'>3</span>"
             "</div>"
-            "<div style='font-family:Orbitron,monospace;font-size:0.75rem;font-weight:700;"
+            "<div style='font-family:Rajdhani,sans-serif;font-size:0.75rem;font-weight:700;"
             "letter-spacing:2px;color:#163b2c;text-transform:uppercase;border-bottom:1px solid rgba(22,59,44,0.25);"
             "flex:1;padding-bottom:5px;'>O que pode acontecer</div>"
             "</div>",
@@ -1330,9 +1332,10 @@ with tab_sim:
                 total_staked = sum(b["stake"] for b in st.session_state.sim_bets)
 
                 st.markdown(
-                    f"<div class='bot-msg'>"
-                    f"<div class='msg-label bot-label'>Resumo dos cenários</div>"
-                    f"Total apostado: <b>R$ {total_staked:.2f}</b>"
+                    f"<div style='background:#f0f5f2;border-radius:8px;padding:12px 16px;"
+                    f"border-left:3px solid #163b2c;margin-bottom:8px;'>"
+                    f"<span style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;"
+                    f"color:#163b2c;'>Total apostado: R$ {total_staked:.2f}</span>"
                     f"</div>",
                     unsafe_allow_html=True
                 )
@@ -1350,14 +1353,14 @@ with tab_sim:
                         f"<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;"
                         f"color:#163b2c;margin-bottom:6px;'>{safe_scenario}</div>"
                         f"<div style='display:flex;align-items:center;gap:14px;flex-wrap:wrap;'>"
-                        f"<span style='font-family:Orbitron,monospace;font-size:0.62rem;"
+                        f"<span style='font-family:Rajdhani,sans-serif;font-size:0.62rem;"
                         f"color:#163b2c;letter-spacing:1px;'>PROB. CALCULADA "
                         f"<b>{s['prob']*100:.2f}%</b></span>"
                         f"<div style='flex:1;min-width:60px;background:rgba(22,59,44,0.1);"
                         f"border-radius:4px;height:8px;'>"
                         f"<div style='width:{bar_width}%;background:linear-gradient(90deg,#163b2c,#4b8068);"
                         f"height:8px;border-radius:4px;'></div></div>"
-                        f"<span style='font-family:Orbitron,monospace;font-size:0.62rem;"
+                        f"<span style='font-family:Rajdhani,sans-serif;font-size:0.62rem;"
                         f"color:{net_color};letter-spacing:1px;font-weight:700;'>"
                         f"RESULTADO {net_sign}R$ {s['net']:.2f}</span>"
                         f"</div></div>",
@@ -1384,9 +1387,9 @@ with tab_sim:
         "<div style='display:flex;align-items:center;gap:12px;margin:28px 0 14px;'>"
         "<div style='width:30px;height:30px;background:#163b2c;border-radius:50%;"
         "display:flex;align-items:center;justify-content:center;flex-shrink:0;'>"
-        "<span style='font-family:Orbitron,monospace;font-size:0.7rem;font-weight:700;color:#fff;'>3</span>"
+        "<span style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;color:#fff;'>3</span>"
         "</div>"
-        "<div style='font-family:Orbitron,monospace;font-size:0.75rem;font-weight:700;"
+        "<div style='font-family:Rajdhani,sans-serif;font-size:0.75rem;font-weight:700;"
         "letter-spacing:2px;color:#163b2c;text-transform:uppercase;border-bottom:1px solid rgba(22,59,44,0.25);"
         "flex:1;padding-bottom:5px;'>Simulação de longo prazo</div>"
         "</div>",
@@ -1470,9 +1473,9 @@ with tab_sim:
 
         st.markdown(
             "<div style='background:#163b2c;border-radius:8px;padding:14px 18px;margin:16px 0;'>"
-            "<div style='font-family:Orbitron,monospace;font-size:0.6rem;letter-spacing:3px;"
+            "<div style='font-family:Rajdhani,sans-serif;font-size:0.6rem;letter-spacing:3px;"
             "color:rgba(255,255,255,0.6);text-transform:uppercase;'>1.000 simulações</div>"
-            f"<div style='font-family:Orbitron,monospace;font-size:0.85rem;color:#fff;margin-top:3px;'>"
+            f"<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;color:#fff;margin-top:3px;'>"
             f"{n_bets} apostas &nbsp;·&nbsp; odd {mc_odd:.2f} &nbsp;·&nbsp; banca R$ {bankroll:.2f}"
             f"</div></div>",
             unsafe_allow_html=True,
@@ -1510,7 +1513,7 @@ with tab_sim:
 
         # --- Gráfico divergente: melhor / média / CDI / pior ---
         st.markdown(
-            "<div style='font-family:Orbitron,monospace;font-size:0.7rem;font-weight:700;"
+            "<div style='font-family:Rajdhani,sans-serif;font-size:0.7rem;font-weight:700;"
             "letter-spacing:2px;color:#163b2c;text-transform:uppercase;margin:20px 0 6px;'>"
             "Comparação visual: ganho ou perda</div>",
             unsafe_allow_html=True,
@@ -1532,11 +1535,11 @@ with tab_sim:
             "<div style='width:180px;min-width:180px;'></div>"
             "<div style='flex:1;display:flex;'>"
             "<div style='flex:1;text-align:right;padding-right:8px;"
-            "font-family:Orbitron,monospace;font-size:0.6rem;color:rgba(22,59,44,0.5);"
+            "font-family:Rajdhani,sans-serif;font-size:0.6rem;color:rgba(22,59,44,0.5);"
             "letter-spacing:1px;'>← PERDA</div>"
             "<div style='width:2px;background:#163b2c;height:16px;flex-shrink:0;'></div>"
             "<div style='flex:1;padding-left:8px;"
-            "font-family:Orbitron,monospace;font-size:0.6rem;color:rgba(22,59,44,0.5);"
+            "font-family:Rajdhani,sans-serif;font-size:0.6rem;color:rgba(22,59,44,0.5);"
             "letter-spacing:1px;'>GANHO →</div>"
             "</div></div>"
         )
@@ -1584,7 +1587,7 @@ with tab_sim:
         st.markdown(
             "<div style='background:#f0f5f2;border-radius:8px;padding:14px 16px;margin:4px 0 12px;"
             "border-left:4px solid #4b8068;'>"
-            "<div style='font-family:Orbitron,monospace;font-size:0.65rem;letter-spacing:2px;"
+            "<div style='font-family:Rajdhani,sans-serif;font-size:0.65rem;letter-spacing:2px;"
             "color:#163b2c;text-transform:uppercase;margin-bottom:8px;'>E se você investisse em renda fixa?</div>"
             f"<p style='font-family:Rajdhani,sans-serif;font-size:0.95rem;color:#163b2c;margin:0;line-height:1.5;'>"
             f"O <b>CDI</b> é a referência da renda fixa no Brasil — um rendimento garantido sobre o que você investe. "
@@ -1597,26 +1600,51 @@ with tab_sim:
         delta_mean = mean_gain - cdi_gain
         delta_sign = "a mais" if delta_mean >= 0 else "a menos"
         c1, c2, c3 = st.columns(3)
-        c1.metric("CDI em 1 ano", f"R$ {cdi_gain:.2f}", "risco zero")
-        c2.metric(
-            "Resultado médio",
-            f"R$ {mean_gain:+.2f}",
-            f"sobre a banca inicial",
+        _cdi_color = "#1a6641"
+        _mean_color = "#1a6641" if mean_gain >= 0 else "rgba(160,40,40,0.85)"
+        _mean_bg = "#e8f5ee" if mean_gain >= 0 else "#fdf0f0"
+        _mean_border = "#1a6641" if mean_gain >= 0 else "rgba(160,40,40,0.5)"
+        _diff_color = "#1a6641" if delta_mean >= 0 else "rgba(160,40,40,0.85)"
+        _diff_bg = "#e8f5ee" if delta_mean >= 0 else "#fdf0f0"
+        _diff_border = "#1a6641" if delta_mean >= 0 else "rgba(160,40,40,0.5)"
+        c1, c2, c3 = st.columns(3)
+        c1.markdown(
+            f"<div style='background:#f0f5f2;border-radius:8px;padding:14px 16px;"
+            f"border-left:3px solid #4b8068;height:100%;'>"
+            f"<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;font-weight:700;"
+            f"color:#163b2c;text-transform:uppercase;margin-bottom:6px;'>CDI em 1 ano</div>"
+            f"<div style='font-family:Rajdhani,sans-serif;font-size:1.5rem;font-weight:700;"
+            f"color:#163b2c;'>R$ {cdi_gain:.2f}</div>"
+            f"<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;color:{_cdi_color};margin-top:3px;'>"
+            f"sem risco</div></div>",
+            unsafe_allow_html=True,
         )
-        c3.metric(
-            "Diferença CDI",
-            f"R$ {abs(delta_mean):.2f}",
-            f"{delta_sign} do que o CDI",
-            delta_color="inverse" if delta_mean < 0 else "normal",
+        c2.markdown(
+            f"<div style='background:{_mean_bg};border-radius:8px;padding:14px 16px;"
+            f"border-left:3px solid {_mean_border};height:100%;'>"
+            f"<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;font-weight:700;"
+            f"color:#163b2c;text-transform:uppercase;margin-bottom:6px;'>Resultado médio</div>"
+            f"<div style='font-family:Rajdhani,sans-serif;font-size:1.5rem;font-weight:700;"
+            f"color:{_mean_color};'>R$ {mean_gain:+.2f}</div>"
+            f"<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;color:{_mean_color};margin-top:3px;'>"
+            f"sobre a banca inicial</div></div>",
+            unsafe_allow_html=True,
         )
-        st.caption(
-            "Custo de oportunidade é o que você deixa de ganhar na renda fixa ao escolher apostar. "
-            "Não representa uma previsão — é uma comparação baseada na sua estimativa de chance."
+        c3.markdown(
+            f"<div style='background:{_diff_bg};border-radius:8px;padding:14px 16px;"
+            f"border-left:3px solid {_diff_border};height:100%;'>"
+            f"<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;font-weight:700;"
+            f"color:#163b2c;text-transform:uppercase;margin-bottom:6px;'>Diferença vs CDI</div>"
+            f"<div style='font-family:Rajdhani,sans-serif;font-size:1.5rem;font-weight:700;"
+            f"color:{_diff_color};'>R$ {abs(delta_mean):.2f}</div>"
+            f"<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;color:{_diff_color};margin-top:3px;'>"
+            f"{delta_sign} do que o CDI</div></div>",
+            unsafe_allow_html=True,
         )
 
         # --- Trajetórias ---
         st.markdown(
-            "<div style='font-family:Orbitron,monospace;font-size:0.7rem;font-weight:700;"
+            "<div style='font-family:Rajdhani,sans-serif;font-size:0.7rem;font-weight:700;"
             "letter-spacing:2px;color:#163b2c;text-transform:uppercase;margin:20px 0 6px;"
             "border-bottom:1px solid rgba(22,59,44,0.2);padding-bottom:5px;'>"
             "Trajetórias da banca</div>",
@@ -1638,7 +1666,7 @@ with tab_sim:
 with tab_history:
     st.markdown(
         "<div style='background:#163b2c;border-radius:8px;padding:16px 20px 14px;margin-bottom:20px;'>"
-        "<div style='font-family:Orbitron,monospace;font-size:1rem;font-weight:900;"
+        "<div style='font-family:Rajdhani,sans-serif;font-size:1rem;font-weight:900;"
         "letter-spacing:3px;color:#fff;'>HISTÓRICO DE BETS</div>"
         "<p style='font-family:Rajdhani,sans-serif;font-size:1rem;color:rgba(255,255,255,0.85);"
         "margin:8px 0 0;line-height:1.5;'>"
@@ -1652,7 +1680,7 @@ with tab_history:
         "<div style='display:flex;align-items:center;gap:12px;margin:20px 0 14px;'>"
         "<div style='width:30px;height:30px;background:#163b2c;border-radius:50%;"
         "display:flex;align-items:center;justify-content:center;flex-shrink:0;'>"
-        "<span style='font-family:Orbitron,monospace;font-size:0.7rem;font-weight:700;color:#fff;'>1</span>"
+        "<span style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;color:#fff;'>1</span>"
         "</div>"
         "<div style='font-family:Rajdhani,sans-serif;font-size:0.95rem;font-weight:700;"
         "color:#163b2c;flex:1;padding-bottom:5px;border-bottom:1px solid rgba(22,59,44,0.25);'>"
@@ -1737,7 +1765,7 @@ with tab_history:
             "<div style='display:flex;align-items:center;gap:12px;margin:24px 0 14px;'>"
             "<div style='width:30px;height:30px;background:#163b2c;border-radius:50%;"
             "display:flex;align-items:center;justify-content:center;flex-shrink:0;'>"
-            "<span style='font-family:Orbitron,monospace;font-size:0.7rem;font-weight:700;color:#fff;'>2</span>"
+            "<span style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;color:#fff;'>2</span>"
             "</div>"
             "<div style='font-family:Rajdhani,sans-serif;font-size:0.95rem;font-weight:700;"
             "color:#163b2c;flex:1;padding-bottom:5px;border-bottom:1px solid rgba(22,59,44,0.25);'>"
@@ -1777,7 +1805,7 @@ with tab_history:
             "<div style='display:flex;align-items:center;gap:12px;margin:24px 0 14px;'>"
             "<div style='width:30px;height:30px;background:#163b2c;border-radius:50%;"
             "display:flex;align-items:center;justify-content:center;flex-shrink:0;'>"
-            "<span style='font-family:Orbitron,monospace;font-size:0.7rem;font-weight:700;color:#fff;'>3</span>"
+            "<span style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;color:#fff;'>3</span>"
             "</div>"
             "<div style='font-family:Rajdhani,sans-serif;font-size:0.95rem;font-weight:700;"
             "color:#163b2c;flex:1;padding-bottom:5px;border-bottom:1px solid rgba(22,59,44,0.25);'>"
@@ -1802,7 +1830,7 @@ with tab_history:
             "<div style='display:flex;align-items:center;gap:12px;margin:24px 0 14px;'>"
             "<div style='width:30px;height:30px;background:#163b2c;border-radius:50%;"
             "display:flex;align-items:center;justify-content:center;flex-shrink:0;'>"
-            "<span style='font-family:Orbitron,monospace;font-size:0.7rem;font-weight:700;color:#fff;'>4</span>"
+            "<span style='font-family:Rajdhani,sans-serif;font-size:0.7rem;font-weight:700;color:#fff;'>4</span>"
             "</div>"
             "<div style='font-family:Rajdhani,sans-serif;font-size:0.95rem;font-weight:700;"
             "color:#163b2c;flex:1;padding-bottom:5px;border-bottom:1px solid rgba(22,59,44,0.25);'>"
