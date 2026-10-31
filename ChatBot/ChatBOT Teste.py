@@ -1028,7 +1028,7 @@ with tab_sim:
         "</div>"
         "<div style='font-family:Rajdhani,sans-serif;font-size:0.95rem;font-weight:700;"
         "color:#163b2c;flex:1;padding-bottom:5px;border-bottom:1px solid rgba(22,59,44,0.25);'>"
-        "Adicionar uma seleção</div>"
+        "Dados da aposta</div>"
         "</div>",
         unsafe_allow_html=True,
     )
@@ -1037,36 +1037,36 @@ with tab_sim:
         "<div style='background:#f0f5f2;border-radius:8px;padding:14px 18px;margin-bottom:16px;"
         "border-left:3px solid #163b2c;'>"
         "<div style='font-family:Rajdhani,sans-serif;font-size:1rem;color:#163b2c;line-height:1.6;'>"
-        "Quer apostar na vitória do seu time? Por exemplo: <b>Flamengo vence</b> é a seleção, "
-        "<b>2,50</b> é a odd que a casa de apostas oferece, e <b>R$ 20</b> é quanto você colocaria. "
-        "Com esses dados, o simulador calcula que você receberia <b>R$ 50</b> se acertar "
-        "ou perderia <b>R$ 20</b> se errar."
+        "Está assistindo a um jogo e pensando se vale a pena colocar algo em uma aposta? "
+        "Preencha os campos abaixo para descobrir. Por exemplo: <b>Flamengo vence</b> como seleção, "
+        "<b>2,50</b> como a odd que a casa de apostas oferece, e <b>R$ 20</b> como valor. "
+        "O simulador calcula que você receberia <b>R$ 50</b> se acertar ou perderia <b>R$ 20</b> se errar — "
+        "para você decidir com mais informação."
         "</div></div>",
         unsafe_allow_html=True,
     )
 
     # --- Formulário para adicionar aposta ---
     with st.form(key="sim_form", clear_on_submit=True):
-        st.markdown("#### Adicionar seleção")
-        c1, c2, c3 = st.columns([3, 2, 2])
-        sel_name  = c1.text_input("Seleção", placeholder="Ex: Flamengo vence")
-        sel_odd   = c2.number_input(
+        sel_name = st.text_input("Seleção", placeholder="Ex: Flamengo vence o jogo")
+        c1, c2 = st.columns(2)
+        sel_odd   = c1.number_input(
             "Odd", min_value=1.01, max_value=1000.0, value=2.00, step=0.01, format="%.2f",
             help="Odds maiores podem pagar mais, mas geralmente indicam uma chance implícita menor.",
         )
-        sel_stake = c3.number_input("Valor apostado (R$)", min_value=0.01, value=10.0, step=1.0, format="%.2f")
-        e1, e2, e3 = st.columns([2, 3, 2])
-        sel_p_pct = e1.number_input(
+        sel_stake = c2.number_input("Valor apostado (R$)", min_value=0.01, value=10.0, step=1.0, format="%.2f")
+        d1, d2 = st.columns([1, 2])
+        sel_p_pct = d1.number_input(
             "Sua estimativa de chance (%)",
             min_value=0.0, max_value=100.0, value=0.0, step=1.0, format="%.1f",
             help="Opcional. Preencha para calcular o valor esperado desta aposta.",
         )
-        sel_other_odds_str = e2.text_input(
+        sel_other_odds_str = d2.text_input(
             "Odds dos outros resultados do mercado",
             placeholder="Ex: 2.50, 3.10 (opcional, para calcular a margem)",
             help="Opcional. Informe as odds dos demais resultados, separadas por vírgula.",
         )
-        sel_add = e3.form_submit_button("Adicionar")
+        sel_add = st.form_submit_button("Adicionar aposta", use_container_width=True)
 
     if sel_add and sel_name.strip():
         other_odds: list[float] = []
@@ -1528,9 +1528,10 @@ with tab_history:
         "<div style='background:#f0f5f2;border-radius:8px;padding:14px 18px;margin-bottom:16px;"
         "border-left:3px solid #163b2c;'>"
         "<div style='font-family:Rajdhani,sans-serif;font-size:1rem;color:#163b2c;line-height:1.6;'>"
-        "Suponha que você apostou que o seu time do coração — no caso, o <b>Flamengo</b> — vence. "
-        "Você colocou <b>R$ 50</b> nessa aposta. Se o Flamengo ganhou e a casa pagou <b>R$ 120</b> de retorno bruto, "
-        "é esse valor que você informa aqui. Se perdeu, coloque <b>R$ 0</b> no retorno."
+        "Imagine que você estava assistindo a um jogo e decidiu testar uma aposta. "
+        "Por exemplo: você colocou <b>R$ 50</b> na vitória do <b>Flamengo</b> numa partida em que achava que o time tinha boas chances. "
+        "Se o Flamengo ganhou e a casa pagou <b>R$ 120</b> de retorno bruto, informe esse valor aqui. "
+        "Se perdeu, coloque <b>R$ 0</b> — assim você acompanha se a estratégia está valendo a pena ao longo do tempo."
         "</div></div>",
         unsafe_allow_html=True,
     )
