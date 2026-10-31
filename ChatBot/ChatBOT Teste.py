@@ -516,12 +516,13 @@ if "active_page" not in st.session_state:
 with st.sidebar:
     st.markdown("## BetBot AI")
 
-    st.markdown(
-        "<div style='font-family:Rajdhani,sans-serif;font-size:0.7rem;font-weight:700;"
-        "letter-spacing:2px;color:#163b2c;text-transform:uppercase;margin:8px 0 4px;'>"
-        "Navegar</div>",
-        unsafe_allow_html=True,
-    )
+    if st.button("Criar novo chat", use_container_width=True):
+        chat = create_chat()
+        st.session_state.chats.insert(0, chat)
+        st.session_state.active_chat_id = chat["id"]
+        st.session_state.messages = chat["messages"]
+        st.session_state.active_page = "chat"
+        st.rerun()
     if st.button("Simulação", use_container_width=True,
                  type="primary" if st.session_state.active_page == "simulacao" else "secondary"):
         st.session_state.active_page = "simulacao"
@@ -532,14 +533,6 @@ with st.sidebar:
         st.rerun()
 
     st.divider()
-
-    if st.button("Criar novo chat", use_container_width=True):
-        chat = create_chat()
-        st.session_state.chats.insert(0, chat)
-        st.session_state.active_chat_id = chat["id"]
-        st.session_state.messages = chat["messages"]
-        st.session_state.active_page = "chat"
-        st.rerun()
 
     st.markdown("### Seus chats")
     for chat in st.session_state.chats:
