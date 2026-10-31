@@ -1919,7 +1919,7 @@ elif _page == "historico":
             safe_name = _html.escape(bet["name"])
             bet_date_str = date.fromisoformat(bet["date"]).strftime("%d/%m/%Y")
 
-            col_card, col_del = st.columns([12, 1])
+            col_card, col_del = st.columns([9, 1])
             with col_card:
                 st.markdown(
                     f"<div style='background:#fff;border:1px solid rgba(22,59,44,0.15);"
@@ -1953,7 +1953,7 @@ elif _page == "historico":
                     f"</div></div>",
                     unsafe_allow_html=True,
                 )
-            if col_del.button("×", key=f"delete_history_{index}"):
+            if col_del.button("X", key=f"delete_history_{index}"):
                 st.session_state.bet_history.pop(index)
                 _supabase_save(
                     st.session_state.supabase_user_code,
