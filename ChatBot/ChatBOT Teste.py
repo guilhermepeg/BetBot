@@ -1524,6 +1524,17 @@ with tab_history:
     )
     st.divider()
 
+    st.markdown(
+        "<div style='background:#f0f5f2;border-radius:8px;padding:14px 18px;margin-bottom:16px;"
+        "border-left:3px solid #163b2c;'>"
+        "<div style='font-family:Rajdhani,sans-serif;font-size:1rem;color:#163b2c;line-height:1.6;'>"
+        "Suponha que você apostou que o seu time do coração — no caso, o <b>Flamengo</b> — vence. "
+        "Você colocou <b>R$ 50</b> nessa aposta. Se o Flamengo ganhou e a casa pagou <b>R$ 120</b> de retorno bruto, "
+        "é esse valor que você informa aqui. Se perdeu, coloque <b>R$ 0</b> no retorno."
+        "</div></div>",
+        unsafe_allow_html=True,
+    )
+
     with st.form(key="bet_history_form", clear_on_submit=True):
         st.markdown("#### Registrar resultado")
         h1, h2, h3, h4 = st.columns([3, 2, 2, 2])
