@@ -348,6 +348,20 @@ st.markdown("""
         background: #163b2c !important;
         box-shadow: 0 0 12px rgba(22,59,44,0.25);
     }
+
+    /* Dark green containers: force white text (overrides global color rule) */
+    div[style*="background:#163b2c"],
+    div[style*="background:#163b2c"] * {
+        color: #ffffff !important;
+    }
+
+    /* Hide Streamlit "Press Enter to submit" hint */
+    [data-testid="InputInstructions"] { display: none !important; }
+
+    /* Chat input row: vertical alignment */
+    [data-testid="stForm"] [data-testid="stHorizontalBlock"] {
+        align-items: center !important;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -421,25 +435,14 @@ components.html("""
 """, height=0)
 
 # --- Session state ---
+WELCOME_MSG_TEXT = (
+    "Olá! Sou o BetBot, seu assistente de apostas esportivas com IA. "
+    "Posso explicar como as apostas funcionam, o que são odds, estratégias de banca e muito mais. "
+    "Se quiser calcular o retorno de uma aposta, é só pedir — abro o simulador aqui mesmo no chat."
+)
 if "messages" not in st.session_state:
-    st.session_state.messages = [
-        {
-            "role": "assistant",
-            "content": (
-                "Olá! Sou o BetBot, seu assistente de apostas esportivas com IA. "
-                "Posso explicar como as apostas funcionam e ajudar a entender quanto você pode "
-                "receber ou perder. Use a aba Simulação para visualizar alguns cenários."
-            ),
-        }
-    ]
-WELCOME_MESSAGE = {
-    "role": "assistant",
-    "content": (
-        "Olá! Sou o BetBot, seu assistente de apostas esportivas com IA. "
-        "Posso explicar como as apostas funcionam e ajudar a entender quanto você pode "
-        "receber ou perder. Use a aba Simulação para visualizar alguns cenários."
-    ),
-}
+    st.session_state.messages = [{"role": "assistant", "content": WELCOME_MSG_TEXT}]
+WELCOME_MESSAGE = {"role": "assistant", "content": WELCOME_MSG_TEXT}
 
 
 def create_chat() -> dict:
@@ -552,6 +555,10 @@ with st.sidebar:
 
 if "sim_bets" not in st.session_state:
     st.session_state.sim_bets = []
+if "chat_sim_open" not in st.session_state:
+    st.session_state.chat_sim_open = False
+if "chat_sim_result" not in st.session_state:
+    st.session_state.chat_sim_result = None
 
 
 # --- Real AI engine (Anthropic Claude) ---
@@ -603,10 +610,11 @@ Regras de conteúdo:
 - Se a pergunta não tiver relação alguma com apostas esportivas (ex: receitas, programação,
   política, saúde etc.), NÃO responda ao conteúdo. Em vez disso, informe educadamente que
   esse não é o seu propósito e redirecione o usuário para temas de apostas esportivas.
-- Sempre que fizer sentido, mencione que a aba "Simulação" pode ser usada para calcular
-  pagamentos totais e lucros possíveis em apostas simples ou múltiplas. Avise que as
-  probabilidades mostradas nessa aba são referências derivadas das odds, não probabilidades
-  reais comprovadas nem previsões garantidas.
+- Quando o usuário pedir para simular, calcular, ver quanto vai ganhar ou perder em uma aposta,
+  ou qualquer pedido de cálculo de retorno: diga que o simulador será aberto logo abaixo no chat.
+  NUNCA peça ao usuário para ir para outra aba ou janela — tudo acontece aqui.
+- Ao explicar probabilidades implícitas ou valores de retorno, avise que são referências
+  calculadas a partir da odd, não garantias de resultado.
 - Nunca incentive apostas irresponsáveis; quando relevante, reforce jogo responsável.
 - Não forneça "dicas certeiras" de apostas nem garanta resultados de jogos futuros.
 - Se perguntarem sobre legislação, responda com base na base legal fornecida e deixe claro que o BetBot não presta consultoria jurídica.
@@ -934,6 +942,90 @@ with tab_chat:
 
     st.divider()
 
+    # ---- Mini-simulador inline (abre quando o usuário pede para simular) ----
+    if st.session_state.chat_sim_open:
+        st.markdown(
+            "<div style='display:flex;align-items:center;gap:12px;margin:0 0 14px;'>"
+            "<div style='width:30px;height:30px;background:#163b2c;border-radius:50%;"
+            "display:flex;align-items:center;justify-content:center;flex-shrink:0;'>"
+            "<span style='font-family:Orbitron,monospace;font-size:0.75rem;font-weight:700;'>⚡</span>"
+            "</div>"
+            "<div style='font-family:Rajdhani,sans-serif;font-size:0.95rem;font-weight:700;"
+            "color:#163b2c;flex:1;padding-bottom:5px;border-bottom:1px solid rgba(22,59,44,0.25);'>"
+            "Simulador rápido</div>"
+            "</div>",
+            unsafe_allow_html=True,
+        )
+        with st.form(key="chat_sim_form", clear_on_submit=False):
+            cs1, cs2 = st.columns(2)
+            csim_odd = cs1.number_input(
+                "Odd", min_value=1.01, max_value=1000.0, value=2.00, step=0.01, format="%.2f",
+                help="Número que aparece ao lado da aposta na casa.",
+            )
+            csim_stake = cs2.number_input(
+                "Valor apostado (R$)", min_value=0.01, value=10.0, step=1.0, format="%.2f",
+            )
+            csim_name = st.text_input("Seleção (opcional)", placeholder="Ex: Vitória do time da casa")
+            csim_submitted = st.form_submit_button("Calcular", use_container_width=True)
+
+        if csim_submitted:
+            csim_return = csim_stake * csim_odd
+            csim_profit = csim_return - csim_stake
+            csim_impl_prob = 1 / csim_odd * 100
+            st.session_state.chat_sim_result = {
+                "name": csim_name,
+                "odd": csim_odd,
+                "stake": csim_stake,
+                "total_return": csim_return,
+                "profit": csim_profit,
+                "impl_prob": csim_impl_prob,
+            }
+
+        if st.session_state.chat_sim_result:
+            r = st.session_state.chat_sim_result
+            cr1, cr2, cr3 = st.columns(3)
+            cr1.markdown(
+                f"<div style='background:#e8f5ee;border-radius:8px;padding:12px 14px;"
+                f"border-left:3px solid #1a6641;'>"
+                f"<div style='font-family:Rajdhani,sans-serif;font-size:0.75rem;font-weight:700;"
+                f"color:#163b2c;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;'>Retorno total</div>"
+                f"<div style='font-family:Rajdhani,sans-serif;font-size:1.4rem;font-weight:700;"
+                f"color:#1a6641;'>R$ {r['total_return']:.2f}</div>"
+                f"<div style='font-family:Rajdhani,sans-serif;font-size:0.82rem;color:#163b2c;margin-top:2px;'>"
+                f"+R$ {r['profit']:.2f} de lucro</div></div>",
+                unsafe_allow_html=True,
+            )
+            cr2.markdown(
+                f"<div style='background:#fdf0f0;border-radius:8px;padding:12px 14px;"
+                f"border-left:3px solid rgba(160,40,40,0.5);'>"
+                f"<div style='font-family:Rajdhani,sans-serif;font-size:0.75rem;font-weight:700;"
+                f"color:#163b2c;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;'>Perda se errar</div>"
+                f"<div style='font-family:Rajdhani,sans-serif;font-size:1.4rem;font-weight:700;"
+                f"color:rgba(160,40,40,0.9);'>R$ {r['stake']:.2f}</div>"
+                f"<div style='font-family:Rajdhani,sans-serif;font-size:0.82rem;color:#163b2c;margin-top:2px;'>"
+                f"valor apostado</div></div>",
+                unsafe_allow_html=True,
+            )
+            cr3.markdown(
+                f"<div style='background:#f0f5f2;border-radius:8px;padding:12px 14px;"
+                f"border-left:3px solid #163b2c;'>"
+                f"<div style='font-family:Rajdhani,sans-serif;font-size:0.75rem;font-weight:700;"
+                f"color:#163b2c;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;'>Prob. implícita</div>"
+                f"<div style='font-family:Rajdhani,sans-serif;font-size:1.4rem;font-weight:700;"
+                f"color:#163b2c;'>{r['impl_prob']:.1f}%</div>"
+                f"<div style='font-family:Rajdhani,sans-serif;font-size:0.82rem;color:#163b2c;margin-top:2px;'>"
+                f"referência da odd {r['odd']:.2f}</div></div>",
+                unsafe_allow_html=True,
+            )
+
+        if st.button("Fechar simulador", key="close_chat_sim"):
+            st.session_state.chat_sim_open = False
+            st.session_state.chat_sim_result = None
+            st.rerun()
+
+        st.divider()
+    # ---- fim mini-simulador ----
+
     attachment_version = st.session_state.chat_attachment_version
     chat_key = st.session_state.active_chat_id
     upload_key = f"chat_uploads_{chat_key}_{attachment_version}"
@@ -995,6 +1087,10 @@ with tab_chat:
                     active_chat["title"] = user_input.strip()[:40] or attachments[0]["name"][:40]
                 st.session_state.chats.sort(key=lambda chat: chat["updated_at"], reverse=True)
                 st.session_state.chat_attachment_version += 1
+                _SIM_KW = {"simul", "calcul", "quanto ganharia", "quanto perderia",
+                           "retorno", "odd", "simule", "me simul"}
+                if any(kw in message_text.lower() for kw in _SIM_KW):
+                    st.session_state.chat_sim_open = True
                 _supabase_save(
                     st.session_state.supabase_user_code,
                     st.session_state.chats,
