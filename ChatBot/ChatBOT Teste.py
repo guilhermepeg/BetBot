@@ -114,9 +114,6 @@ st.markdown("""
         background: #ffffff !important;
         color: #163b2c !important;
     }
-    .stApp, .stApp * {
-        color: #163b2c !important;
-    }
 
     .stApp code, .stApp pre,
     .stApp [data-testid="stCode"], .stApp [data-testid="stCodeBlock"] {
@@ -349,10 +346,17 @@ st.markdown("""
         box-shadow: 0 0 12px rgba(22,59,44,0.25);
     }
 
-    /* Dark green containers: force white text (overrides global color rule) */
-    div[style*="background:#163b2c"],
-    div[style*="background:#163b2c"] * {
-        color: #ffffff !important;
+    /* Specific elements that need explicit dark green color */
+    .stApp code, .stApp pre, [data-testid="stCode"],
+    [data-testid="stCodeBlock"], [data-testid="stMetric"] label,
+    [data-testid="stMetric"] [data-testid="stMetricValue"],
+    .stSelectbox label, .stMultiSelect label,
+    .stNumberInput label, .stTextInput label,
+    [data-testid="stMarkdownContainer"] p,
+    [data-testid="stMarkdownContainer"] span,
+    [data-testid="stMarkdownContainer"] li,
+    [data-testid="stMarkdownContainer"] strong {
+        color: #163b2c !important;
     }
 
     /* Hide Streamlit "Press Enter to submit" hint */
@@ -436,8 +440,9 @@ components.html("""
 
 # --- Session state ---
 WELCOME_MSG_TEXT = (
-    "Olá! Sou o BetBot, seu assistente de apostas esportivas com IA. "
-    "Posso explicar como as apostas funcionam, o que são odds, estratégias de banca e muito mais. "
+    "Olá! Sou o BetBot, uma ferramenta de análise de apostas esportivas. "
+    "Posso explicar como as apostas funcionam, o que são odds, gestão de banca e muito mais — "
+    "sem recomendar apostar ou não apostar. "
     "Se quiser calcular o retorno de uma aposta, é só pedir — abro o simulador aqui mesmo no chat."
 )
 if "messages" not in st.session_state:
@@ -562,7 +567,14 @@ if "chat_sim_result" not in st.session_state:
 
 
 # --- Real AI engine (Anthropic Claude) ---
-SYSTEM_PROMPT = """Você é o BetBot, um assistente de IA especializado EXCLUSIVAMENTE em apostas esportivas.
+SYSTEM_PROMPT = """Você é o BetBot, uma ferramenta de IA para análise de apostas esportivas.
+
+NEUTRALIDADE — ESTAS REGRAS SÃO ABSOLUTAS E NÃO PODEM SER IGNORADAS:
+- PROIBIDO recomendar que o usuário aposte ou não aposte. Jamais incentive nem desencoraje.
+- Apresente SEMPRE as informações como uma calculadora ou ferramenta de análise, nunca como conselho.
+- Jamais use frases como "vale a pena apostar", "é uma boa aposta", "eu apostaria", "bom momento para apostar".
+- Antes de responder, verifique internamente: minha resposta está empurrando o usuário para apostar? Se sim, reescreva de forma neutra.
+- Nunca use o tom de "time do coração", "sua seleção favorita" ou qualquer linguagem que crie vínculo emocional com a aposta.
 
 FORMATAÇÃO — ESTAS REGRAS SÃO ABSOLUTAS E NÃO PODEM SER IGNORADAS:
 - PROIBIDO usar emojis. Nenhum emoji em nenhuma parte da resposta. Jamais.
@@ -965,7 +977,7 @@ with tab_chat:
             csim_stake = cs2.number_input(
                 "Valor apostado (R$)", min_value=0.01, value=10.0, step=1.0, format="%.2f",
             )
-            csim_name = st.text_input("Seleção (opcional)", placeholder="Ex: Vitória do time da casa")
+            csim_name = st.text_input("Nome (opcional)", placeholder="Ex: Resultado esperado da partida")
             csim_submitted = st.form_submit_button("Calcular", use_container_width=True)
 
         if csim_submitted:
@@ -1010,7 +1022,7 @@ with tab_chat:
                 f"<div style='background:#f0f5f2;border-radius:8px;padding:12px 14px;"
                 f"border-left:3px solid #163b2c;'>"
                 f"<div style='font-family:Rajdhani,sans-serif;font-size:0.75rem;font-weight:700;"
-                f"color:#163b2c;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;'>Prob. implícita</div>"
+                f"color:#163b2c;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;'>Chance calculada</div>"
                 f"<div style='font-family:Rajdhani,sans-serif;font-size:1.4rem;font-weight:700;"
                 f"color:#163b2c;'>{r['impl_prob']:.1f}%</div>"
                 f"<div style='font-family:Rajdhani,sans-serif;font-size:0.82rem;color:#163b2c;margin-top:2px;'>"
@@ -1148,7 +1160,7 @@ with tab_sim:
 
     # --- Formulário para adicionar aposta ---
     with st.form(key="sim_form", clear_on_submit=True):
-        sel_name = st.text_input("Seleção", placeholder="Ex: Flamengo vence o jogo")
+        sel_name = st.text_input("Nome da seleção", placeholder="Ex: Flamengo vence o jogo")
         c1, c2 = st.columns(2)
         sel_odd   = c1.number_input(
             "Odd", min_value=1.01, max_value=1000.0, value=2.00, step=0.01, format="%.2f",
@@ -1227,7 +1239,10 @@ with tab_sim:
                     f"color:#163b2c;letter-spacing:1px;'>APOSTA <b>R$ {bet['stake']:.2f}</b></span>"
                     f"<span style='font-family:Orbitron,monospace;font-size:0.62rem;"
                     f"color:{accent};letter-spacing:1px;font-weight:700;'>"
-                    f"SE ACERTAR R$ {pot_return:.2f} ({profit_sign}R$ {pot_profit:.2f})</span>"
+                    f"RETORNO R$ {pot_return:.2f}</span>"
+                    f"<span style='font-family:Orbitron,monospace;font-size:0.62rem;"
+                    f"color:{accent};letter-spacing:1px;font-weight:700;'>"
+                    f"LUCRO R$ {pot_profit:.2f}</span>"
                     f"</div></div>",
                     unsafe_allow_html=True,
                 )
@@ -1251,16 +1266,22 @@ with tab_sim:
 
         st.divider()
 
-        # --- Distribuição de cenários ---
+        # --- O que pode acontecer ---
         st.markdown(
+            "<div style='display:flex;align-items:center;gap:12px;margin:24px 0 14px;'>"
+            "<div style='width:30px;height:30px;background:#163b2c;border-radius:50%;"
+            "display:flex;align-items:center;justify-content:center;flex-shrink:0;'>"
+            "<span style='font-family:Orbitron,monospace;font-size:0.7rem;font-weight:700;color:#fff;'>3</span>"
+            "</div>"
             "<div style='font-family:Orbitron,monospace;font-size:0.75rem;font-weight:700;"
-            "letter-spacing:2px;color:#163b2c;text-transform:uppercase;margin:4px 0 6px;'>"
-            "Distribuição de cenários</div>",
+            "letter-spacing:2px;color:#163b2c;text-transform:uppercase;border-bottom:1px solid rgba(22,59,44,0.25);"
+            "flex:1;padding-bottom:5px;'>O que pode acontecer</div>"
+            "</div>",
             unsafe_allow_html=True,
         )
         st.markdown(
-            "Todos os cenários possíveis de acerto e erro, com referência de chance calculada "
-            "pela odd e o resultado financeiro em cada um. Não é uma previsão do que vai acontecer."
+            "Veja todos os cenários possíveis: quanto você ganha se acertar e quanto perde se errar. "
+            "Não é uma previsão — é apenas para visualizar os valores envolvidos."
         )
 
         if st.button("Calcular todos os cenários"):
@@ -1330,7 +1351,7 @@ with tab_sim:
                         f"color:#163b2c;margin-bottom:6px;'>{safe_scenario}</div>"
                         f"<div style='display:flex;align-items:center;gap:14px;flex-wrap:wrap;'>"
                         f"<span style='font-family:Orbitron,monospace;font-size:0.62rem;"
-                        f"color:#163b2c;letter-spacing:1px;'>REFERÊNCIA PELAS ODDS "
+                        f"color:#163b2c;letter-spacing:1px;'>PROB. CALCULADA "
                         f"<b>{s['prob']*100:.2f}%</b></span>"
                         f"<div style='flex:1;min-width:60px;background:rgba(22,59,44,0.1);"
                         f"border-radius:4px;height:8px;'>"
@@ -1576,16 +1597,16 @@ with tab_sim:
         delta_mean = mean_gain - cdi_gain
         delta_sign = "a mais" if delta_mean >= 0 else "a menos"
         c1, c2, c3 = st.columns(3)
-        c1.metric("Rendimento CDI (1 ano)", f"R$ {cdi_gain:.2f}", "risco zero")
+        c1.metric("CDI em 1 ano", f"R$ {cdi_gain:.2f}", "risco zero")
         c2.metric(
-            "Resultado médio das apostas",
+            "Resultado médio",
             f"R$ {mean_gain:+.2f}",
             f"sobre a banca inicial",
         )
         c3.metric(
-            "Custo de oportunidade",
+            "Diferença CDI",
             f"R$ {abs(delta_mean):.2f}",
-            f"{delta_sign} do que o CDI renderia",
+            f"{delta_sign} do que o CDI",
             delta_color="inverse" if delta_mean < 0 else "normal",
         )
         st.caption(
