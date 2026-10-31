@@ -480,6 +480,8 @@ def get_active_chat() -> dict:
 def select_chat(chat_id: str) -> None:
     st.session_state.active_chat_id = chat_id
     st.session_state.messages = get_active_chat()["messages"]
+    st.session_state.chat_sim_open = False
+    st.session_state.chat_sim_result = None
 
 
 if "supabase_user_code" not in st.session_state:
@@ -524,6 +526,8 @@ with st.sidebar:
         st.session_state.active_chat_id = chat["id"]
         st.session_state.messages = chat["messages"]
         st.session_state.active_page = "chat"
+        st.session_state.chat_sim_open = False
+        st.session_state.chat_sim_result = None
         st.rerun()
     if st.button("Simulação", use_container_width=True,
                  type="primary" if st.session_state.active_page == "simulacao" else "secondary"):
