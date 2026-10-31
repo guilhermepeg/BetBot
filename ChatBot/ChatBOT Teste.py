@@ -1026,34 +1026,22 @@ with tab_sim:
         "display:flex;align-items:center;justify-content:center;flex-shrink:0;'>"
         "<span style='font-family:Orbitron,monospace;font-size:0.7rem;font-weight:700;color:#fff;'>1</span>"
         "</div>"
-        "<div style='font-family:Orbitron,monospace;font-size:0.75rem;font-weight:700;"
-        "letter-spacing:2px;color:#163b2c;text-transform:uppercase;border-bottom:1px solid rgba(22,59,44,0.25);"
-        "flex:1;padding-bottom:5px;'>Adicionar uma seleção</div>"
+        "<div style='font-family:Rajdhani,sans-serif;font-size:0.95rem;font-weight:700;"
+        "color:#163b2c;flex:1;padding-bottom:5px;border-bottom:1px solid rgba(22,59,44,0.25);'>"
+        "Adicionar uma seleção</div>"
         "</div>",
         unsafe_allow_html=True,
     )
 
     st.markdown(
-        "<div style='display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;'>"
-        "<div style='flex:1;min-width:140px;background:#f0f5f2;border-radius:8px;"
-        "padding:12px 14px;border-left:3px solid #163b2c;'>"
-        "<div style='font-family:Orbitron,monospace;font-size:0.55rem;letter-spacing:2px;"
-        "color:#163b2c;text-transform:uppercase;margin-bottom:4px;'>Seleção</div>"
-        "<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;color:#163b2c;line-height:1.4;'>"
-        "O que você quer apostar. Ex: <b>Flamengo vence</b></div></div>"
-        "<div style='flex:1;min-width:140px;background:#f0f5f2;border-radius:8px;"
-        "padding:12px 14px;border-left:3px solid #163b2c;'>"
-        "<div style='font-family:Orbitron,monospace;font-size:0.55rem;letter-spacing:2px;"
-        "color:#163b2c;text-transform:uppercase;margin-bottom:4px;'>Odd</div>"
-        "<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;color:#163b2c;line-height:1.4;'>"
-        "Número da casa de apostas. Maior odd = retorno maior, mas geralmente mais difícil. Ex: <b>2,50</b></div></div>"
-        "<div style='flex:1;min-width:140px;background:#f0f5f2;border-radius:8px;"
-        "padding:12px 14px;border-left:3px solid #163b2c;'>"
-        "<div style='font-family:Orbitron,monospace;font-size:0.55rem;letter-spacing:2px;"
-        "color:#163b2c;text-transform:uppercase;margin-bottom:4px;'>Valor apostado</div>"
-        "<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;color:#163b2c;line-height:1.4;'>"
-        "Quanto colocar. Ex: <b>R$ 20</b> com odd 2,50 = retorno de R$ 50 se acertar</div></div>"
-        "</div>",
+        "<div style='background:#f0f5f2;border-radius:8px;padding:14px 18px;margin-bottom:16px;"
+        "border-left:3px solid #163b2c;'>"
+        "<div style='font-family:Rajdhani,sans-serif;font-size:1rem;color:#163b2c;line-height:1.6;'>"
+        "Quer apostar na vitória do seu time? Por exemplo: <b>Flamengo vence</b> é a seleção, "
+        "<b>2,50</b> é a odd que a casa de apostas oferece, e <b>R$ 20</b> é quanto você colocaria. "
+        "Com esses dados, o simulador calcula que você receberia <b>R$ 50</b> se acertar "
+        "ou perderia <b>R$ 20</b> se errar."
+        "</div></div>",
         unsafe_allow_html=True,
     )
 
@@ -1369,25 +1357,29 @@ with tab_sim:
             unsafe_allow_html=True,
         )
 
-        r1, r2, r3 = st.columns(3)
         best_sign  = "+" if best_gain  >= 0 else ""
         mean_sign  = "+" if mean_gain  >= 0 else ""
         worst_sign = "+" if worst_gain >= 0 else ""
-        r1.metric(
-            "Melhor cenário",
-            f"R$ {best_f:.2f}",
-            f"{best_sign}R$ {best_gain:.2f} vs. início",
-        )
-        r2.metric(
-            "Resultado mais provável (média)",
-            f"R$ {mean_f:.2f}",
-            f"{mean_sign}R$ {mean_gain:.2f} vs. início",
-        )
-        r3.metric(
-            "Pior cenário",
-            f"R$ {worst_f:.2f}",
-            f"{worst_sign}R$ {worst_gain:.2f} vs. início",
-        )
+        def _mc_card(label, final, gain, sign):
+            color = "#1a6641" if gain >= 0 else "rgba(160,40,40,0.85)"
+            bg    = "#e8f5ee" if gain >= 0 else "#fdf0f0"
+            border= "#1a6641" if gain >= 0 else "rgba(160,40,40,0.5)"
+            return (
+                f"<div style='background:{bg};border-radius:8px;padding:14px 16px;"
+                f"border-left:3px solid {border};height:100%;'>"
+                f"<div style='font-family:Rajdhani,sans-serif;font-size:0.8rem;font-weight:700;"
+                f"color:#163b2c;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;'>{label}</div>"
+                f"<div style='font-family:Rajdhani,sans-serif;font-size:1.5rem;font-weight:700;"
+                f"color:#163b2c;'>R$ {final:.2f}</div>"
+                f"<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;color:{color};margin-top:3px;'>"
+                f"{sign}R$ {gain:.2f} vs. início</div>"
+                f"</div>"
+            )
+        r1, r2, r3 = st.columns(3)
+        r1.markdown(_mc_card("Melhor cenário", best_f, best_gain, best_sign), unsafe_allow_html=True)
+        r2.markdown(_mc_card("Resultado mais provável", mean_f, mean_gain, mean_sign), unsafe_allow_html=True)
+        r3.markdown(_mc_card("Pior cenário", worst_f, worst_gain, worst_sign), unsafe_allow_html=True)
+        st.markdown("<div style='margin-top:8px;'></div>", unsafe_allow_html=True)
         if pct_broke > 0:
             st.warning(
                 f"Em {pct_broke:.1f}% dos cenários simulados a banca zerou antes de terminar as apostas. "
@@ -1403,49 +1395,43 @@ with tab_sim:
             unsafe_allow_html=True,
         )
         st.markdown(
-            "Barras para a **direita** = ganho. Barras para a **esquerda** = perda. "
-            "O CDI mostra o que a mesma quantia renderia investida na renda fixa."
+            "Barras para a **direita** = ganho. Barras para a **esquerda** = perda."
         )
 
         items = [
-            ("Melhor cenário (apostas)",  best_gain,  False),
-            ("Resultado médio (apostas)", mean_gain,  False),
-            ("CDI — renda fixa (1 ano)",  cdi_gain,   True),
-            ("Pior cenário (apostas)",    worst_gain, False),
+            ("Melhor cenário",   best_gain),
+            ("Resultado médio",  mean_gain),
+            ("Pior cenário",     worst_gain),
         ]
-        max_abs = max(abs(v) for _, v, _ in items) or 1.0
+        max_abs = max(abs(v) for _, v in items) or 1.0
 
         rows_html = (
             "<div style='font-family:Rajdhani,sans-serif;margin:12px 0 20px;'>"
-            "<div style='display:flex;align-items:center;margin-bottom:8px;'>"
-            "<div style='width:200px;min-width:200px;'></div>"
+            "<div style='display:flex;align-items:center;margin-bottom:10px;'>"
+            "<div style='width:180px;min-width:180px;'></div>"
             "<div style='flex:1;display:flex;'>"
-            "<div style='flex:1;text-align:right;padding-right:6px;"
-            "font-family:Orbitron,monospace;font-size:0.55rem;color:rgba(22,59,44,0.5);"
+            "<div style='flex:1;text-align:right;padding-right:8px;"
+            "font-family:Orbitron,monospace;font-size:0.6rem;color:rgba(22,59,44,0.5);"
             "letter-spacing:1px;'>← PERDA</div>"
-            "<div style='width:2px;background:#163b2c;height:14px;flex-shrink:0;'></div>"
-            "<div style='flex:1;padding-left:6px;"
-            "font-family:Orbitron,monospace;font-size:0.55rem;color:rgba(22,59,44,0.5);"
+            "<div style='width:2px;background:#163b2c;height:16px;flex-shrink:0;'></div>"
+            "<div style='flex:1;padding-left:8px;"
+            "font-family:Orbitron,monospace;font-size:0.6rem;color:rgba(22,59,44,0.5);"
             "letter-spacing:1px;'>GANHO →</div>"
             "</div></div>"
         )
-        for label, value, is_cdi in items:
-            pct = abs(value) / max_abs * 44
+        for label, value in items:
+            pct = abs(value) / max_abs * 46
             val_str = (f"+R$ {value:.2f}" if value >= 0 else f"−R$ {abs(value):.2f}")
             label_safe = _html.escape(label)
-            if is_cdi:
-                bar_color, val_color = "#4b8068", "#4b8068"
-            elif value >= 0:
-                bar_color, val_color = "#1a6641", "#1a6641"
-            else:
-                bar_color, val_color = "rgba(160,40,40,0.7)", "rgba(160,40,40,0.9)"
+            bar_color = "#1a6641" if value >= 0 else "rgba(160,40,40,0.75)"
+            val_color = "#1a6641" if value >= 0 else "rgba(160,40,40,0.9)"
             if value >= 0:
                 left_side = "<div style='flex:1;'></div>"
                 right_side = (
                     f"<div style='flex:1;display:flex;align-items:center;padding-left:4px;'>"
-                    f"<div style='width:{pct:.1f}%;background:{bar_color};height:18px;"
-                    f"border-radius:0 4px 4px 0;min-width:2px;'></div>"
-                    f"<span style='margin-left:8px;font-family:Orbitron,monospace;font-size:0.62rem;"
+                    f"<div style='width:{pct:.1f}%;background:{bar_color};height:26px;"
+                    f"border-radius:0 5px 5px 0;min-width:3px;'></div>"
+                    f"<span style='margin-left:10px;font-family:Rajdhani,sans-serif;font-size:0.95rem;"
                     f"color:{val_color};white-space:nowrap;font-weight:700;'>{val_str}</span>"
                     f"</div>"
                 )
@@ -1453,20 +1439,20 @@ with tab_sim:
                 left_side = (
                     f"<div style='flex:1;display:flex;align-items:center;justify-content:flex-end;"
                     f"padding-right:4px;'>"
-                    f"<span style='margin-right:8px;font-family:Orbitron,monospace;font-size:0.62rem;"
+                    f"<span style='margin-right:10px;font-family:Rajdhani,sans-serif;font-size:0.95rem;"
                     f"color:{val_color};white-space:nowrap;font-weight:700;'>{val_str}</span>"
-                    f"<div style='width:{pct:.1f}%;background:{bar_color};height:18px;"
-                    f"border-radius:4px 0 0 4px;min-width:2px;'></div>"
+                    f"<div style='width:{pct:.1f}%;background:{bar_color};height:26px;"
+                    f"border-radius:5px 0 0 5px;min-width:3px;'></div>"
                     f"</div>"
                 )
                 right_side = "<div style='flex:1;'></div>"
             rows_html += (
-                f"<div style='display:flex;align-items:center;margin:8px 0;'>"
-                f"<div style='width:200px;min-width:200px;text-align:right;font-size:0.88rem;"
-                f"color:#163b2c;padding-right:10px;line-height:1.3;'>{label_safe}</div>"
+                f"<div style='display:flex;align-items:center;margin:10px 0;'>"
+                f"<div style='width:180px;min-width:180px;text-align:right;font-size:0.95rem;"
+                f"color:#163b2c;padding-right:12px;line-height:1.3;font-weight:600;'>{label_safe}</div>"
                 f"<div style='flex:1;display:flex;'>"
                 f"{left_side}"
-                f"<div style='width:2px;min-width:2px;background:#163b2c;height:22px;flex-shrink:0;'></div>"
+                f"<div style='width:2px;min-width:2px;background:#163b2c;height:28px;flex-shrink:0;'></div>"
                 f"{right_side}"
                 f"</div></div>"
             )
