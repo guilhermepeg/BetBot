@@ -163,38 +163,34 @@ st.markdown("""
     }
 
     /* Chat messages */
+    .user-msg-wrap {
+        display: flex;
+        justify-content: flex-end;
+        margin: 0.4rem 0;
+    }
     .user-msg {
-        background: #ffffff;
-        border-left: 3px solid #163b2c;
-        border-radius: 0 10px 10px 0;
-        padding: 0.75rem 1rem;
-        margin: 0.5rem 0;
-        color: #163b2c;
-        box-shadow: 0 0 16px rgba(22,59,44,0.12);
+        background: #163b2c;
+        color: #ffffff !important;
+        border-radius: 18px 18px 4px 18px;
+        padding: 0.7rem 1.1rem;
+        max-width: 78%;
+        font-family: 'Rajdhani', sans-serif;
+        font-size: 1rem;
+        line-height: 1.5;
         animation: fadeSlideIn 0.4s ease-out;
+        word-break: break-word;
     }
-
-    .bot-msg {
-        background: #ffffff;
-        border-left: 3px solid #163b2c;
-        border-radius: 0 10px 10px 0;
-        padding: 0.75rem 1rem;
-        margin: 0.5rem 0;
-        color: #163b2c;
-        box-shadow: 0 0 16px rgba(22,59,44,0.12);
-        animation: fadeSlideIn 0.4s ease-out;
-    }
-
-    .msg-label {
+    .user-msg * { color: #ffffff !important; }
+    .bot-label {
         font-family: 'Orbitron', monospace;
-        font-size: 0.6rem;
+        font-size: 0.58rem;
         font-weight: 700;
         letter-spacing: 2px;
         text-transform: uppercase;
-        margin-bottom: 6px;
+        color: rgba(22,59,44,0.45);
+        margin: 14px 0 1px;
+        display: block;
     }
-
-    .user-label, .bot-label { color: #163b2c; text-shadow: none; }
 
     /* Input */
     .stTextInput > div > div > input {
@@ -899,26 +895,30 @@ tab_chat, tab_sim, tab_history = st.tabs(
 # ============================
 with tab_chat:
     st.markdown(
-        "Tire suas dúvidas sobre apostas esportivas com o BetBot. "
-        "Pergunte sobre odds, tipos de apostas, estratégias, como funciona a margem das casas — "
-        "tudo em linguagem simples, sem enrolação."
+        "<div style='background:#163b2c;border-radius:8px;padding:16px 20px 14px;margin-bottom:20px;'>"
+        "<div style='font-family:Orbitron,monospace;font-size:1rem;font-weight:900;"
+        "letter-spacing:3px;color:#fff;'>CHAT COM O BETBOT</div>"
+        "<p style='font-family:Rajdhani,sans-serif;font-size:1rem;color:rgba(255,255,255,0.85);"
+        "margin:8px 0 0;line-height:1.5;'>"
+        "Tire suas dúvidas sobre apostas esportivas. Pergunte sobre odds, tipos de apostas, "
+        "estratégias e como funciona a margem das casas — tudo em linguagem simples, sem enrolação."
+        "</p></div>",
+        unsafe_allow_html=True,
     )
-    st.divider()
     chat_container = st.container()
     with chat_container:
         for msg in st.session_state.messages:
             if msg["role"] == "user":
                 safe_content = _html.escape(msg["content"]).replace("\n", "<br>")
                 st.markdown(
-                    f'<div class="user-msg">'
-                    f'<div class="msg-label user-label">Você</div>'
-                    f'{safe_content}'
+                    f'<div class="user-msg-wrap">'
+                    f'<div class="user-msg">{safe_content}</div>'
                     f'</div>',
                     unsafe_allow_html=True,
                 )
             else:
                 st.markdown(
-                    '<div class="bot-msg"><div class="msg-label bot-label">BetBot</div></div>',
+                    '<div class="bot-label">BetBot</div>',
                     unsafe_allow_html=True,
                 )
                 st.markdown(msg["content"].replace("R$", "R\\$"))
@@ -1037,11 +1037,15 @@ with tab_sim:
         "<div style='background:#f0f5f2;border-radius:8px;padding:14px 18px;margin-bottom:16px;"
         "border-left:3px solid #163b2c;'>"
         "<div style='font-family:Rajdhani,sans-serif;font-size:1rem;color:#163b2c;line-height:1.6;'>"
-        "Está assistindo a um jogo e pensando se vale a pena colocar algo em uma aposta? "
-        "Preencha os campos abaixo para descobrir. Por exemplo: <b>Flamengo vence</b> como seleção, "
-        "<b>2,50</b> como a odd que a casa de apostas oferece, e <b>R$ 20</b> como valor. "
-        "O simulador calcula que você receberia <b>R$ 50</b> se acertar ou perderia <b>R$ 20</b> se errar — "
-        "para você decidir com mais informação."
+        "Está assistindo a um jogo e quer entender melhor os riscos e os possíveis retornos de uma aposta esportiva? "
+        "Nesta aba, você pode simular diferentes cenários para visualizar quanto poderia ganhar ou perder de acordo "
+        "com a odd oferecida pela casa de apostas e o valor apostado."
+        "<br><br>"
+        "Por exemplo, se sua seleção for <b>Flamengo vence</b>, a odd for <b>2,50</b> e o valor da aposta for <b>R$ 20</b>, "
+        "o simulador mostrará que o retorno total seria de <b>R$ 50</b> em caso de acerto (incluindo os R$ 20 apostados), "
+        "enquanto a perda seria de <b>R$ 20</b> em caso de erro. "
+        "A proposta é facilitar a compreensão dos valores envolvidos e dos riscos financeiros, "
+        "sem prever o resultado da partida ou recomendar a realização da aposta."
         "</div></div>",
         unsafe_allow_html=True,
     )
@@ -1515,14 +1519,30 @@ with tab_sim:
 # TAB HISTÓRICO DE BETS
 # ============================
 with tab_history:
-    st.markdown("### Histórico de Bets")
     st.markdown(
-        "Aqui você registra as apostas que já fez e vê como está seu desempenho real. "
-        "Anote o valor que apostou e o quanto recebeu de volta — se perdeu, coloque R$ 0,00 no retorno. "
-        "O BetBot calcula automaticamente seu lucro ou prejuízo total, seu ROI (o quanto você ganhou ou perdeu em relação ao que apostou) "
-        "e ainda compara com o que renderia se esse mesmo dinheiro estivesse investido na renda fixa."
+        "<div style='background:#163b2c;border-radius:8px;padding:16px 20px 14px;margin-bottom:20px;'>"
+        "<div style='font-family:Orbitron,monospace;font-size:1rem;font-weight:900;"
+        "letter-spacing:3px;color:#fff;'>HISTÓRICO DE BETS</div>"
+        "<p style='font-family:Rajdhani,sans-serif;font-size:1rem;color:rgba(255,255,255,0.85);"
+        "margin:8px 0 0;line-height:1.5;'>"
+        "Registre as apostas que já fez e acompanhe seu desempenho real ao longo do tempo. "
+        "O BetBot calcula seu lucro, ROI e compara com a renda fixa."
+        "</p></div>",
+        unsafe_allow_html=True,
     )
-    st.divider()
+
+    st.markdown(
+        "<div style='display:flex;align-items:center;gap:12px;margin:20px 0 14px;'>"
+        "<div style='width:30px;height:30px;background:#163b2c;border-radius:50%;"
+        "display:flex;align-items:center;justify-content:center;flex-shrink:0;'>"
+        "<span style='font-family:Orbitron,monospace;font-size:0.7rem;font-weight:700;color:#fff;'>1</span>"
+        "</div>"
+        "<div style='font-family:Rajdhani,sans-serif;font-size:0.95rem;font-weight:700;"
+        "color:#163b2c;flex:1;padding-bottom:5px;border-bottom:1px solid rgba(22,59,44,0.25);'>"
+        "Registrar resultado</div>"
+        "</div>",
+        unsafe_allow_html=True,
+    )
 
     st.markdown(
         "<div style='background:#f0f5f2;border-radius:8px;padding:14px 18px;margin-bottom:16px;"
@@ -1537,17 +1557,17 @@ with tab_history:
     )
 
     with st.form(key="bet_history_form", clear_on_submit=True):
-        st.markdown("#### Registrar resultado")
-        h1, h2, h3, h4 = st.columns([3, 2, 2, 2])
-        history_name = h1.text_input("Aposta", placeholder="Ex: Flamengo vence")
-        history_date = h2.date_input("Data", value=date.today(), format="DD/MM/YYYY")
-        history_stake = h3.number_input(
+        history_name = st.text_input("Aposta", placeholder="Ex: Vitória do time da casa")
+        h1, h2 = st.columns(2)
+        history_date = h1.date_input("Data", value=date.today(), format="DD/MM/YYYY")
+        history_stake = h2.number_input(
             "Valor apostado (R$)", min_value=0.01, value=10.0, step=1.0, format="%.2f"
         )
-        history_return = h4.number_input(
-            "Retorno bruto (R$)", min_value=0.0, value=0.0, step=1.0, format="%.2f"
+        history_return = st.number_input(
+            "Retorno bruto (R$)", min_value=0.0, value=0.0, step=1.0, format="%.2f",
+            help="Se perdeu, coloque 0. Se ganhou, informe o total recebido (inclui o valor apostado).",
         )
-        add_history = st.form_submit_button("Salvar resultado")
+        add_history = st.form_submit_button("Salvar resultado", use_container_width=True)
 
     if add_history and not history_name.strip():
         st.warning("Preencha o nome da aposta.")
@@ -1566,6 +1586,27 @@ with tab_history:
         )
         st.rerun()
 
+    def _stat_card(label, value, sub=None, positive=None):
+        if positive is None:
+            bg, border, val_color = "#f0f5f2", "#163b2c", "#163b2c"
+        elif positive:
+            bg, border, val_color = "#e8f5ee", "#1a6641", "#1a6641"
+        else:
+            bg, border, val_color = "#fdf0f0", "rgba(160,40,40,0.5)", "rgba(160,40,40,0.9)"
+        sub_html = (
+            f"<div style='font-family:Rajdhani,sans-serif;font-size:0.82rem;"
+            f"color:#163b2c;margin-top:3px;'>{sub}</div>"
+        ) if sub else ""
+        return (
+            f"<div style='background:{bg};border-radius:8px;padding:14px 16px;"
+            f"border-left:3px solid {border};height:100%;'>"
+            f"<div style='font-family:Rajdhani,sans-serif;font-size:0.8rem;font-weight:700;"
+            f"color:#163b2c;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;'>{label}</div>"
+            f"<div style='font-family:Rajdhani,sans-serif;font-size:1.5rem;font-weight:700;"
+            f"color:{val_color};'>{value}</div>"
+            f"{sub_html}</div>"
+        )
+
     if st.session_state.bet_history:
         total_staked = sum(bet["stake"] for bet in st.session_state.bet_history)
         total_return = sum(bet["gross_return"] for bet in st.session_state.bet_history)
@@ -1575,55 +1616,112 @@ with tab_history:
         bet_dates = [date.fromisoformat(bet["date"]) for bet in st.session_state.bet_history]
         tracking_days = (max(bet_dates) - min(bet_dates)).days + 1
 
-        st.divider()
-        st.markdown("#### Desempenho das bets")
-        m1, m2, m3, m4 = st.columns(4)
-        m1.metric("Total apostado", f"R$ {total_staked:.2f}")
-        m2.metric("Resultado líquido", f"R$ {net_result:.2f}")
-        m3.metric("ROI realizado", f"{roi * 100:.2f}%")
+        st.markdown(
+            "<div style='display:flex;align-items:center;gap:12px;margin:24px 0 14px;'>"
+            "<div style='width:30px;height:30px;background:#163b2c;border-radius:50%;"
+            "display:flex;align-items:center;justify-content:center;flex-shrink:0;'>"
+            "<span style='font-family:Orbitron,monospace;font-size:0.7rem;font-weight:700;color:#fff;'>2</span>"
+            "</div>"
+            "<div style='font-family:Rajdhani,sans-serif;font-size:0.95rem;font-weight:700;"
+            "color:#163b2c;flex:1;padding-bottom:5px;border-bottom:1px solid rgba(22,59,44,0.25);'>"
+            "Desempenho das bets</div>"
+            "</div>",
+            unsafe_allow_html=True,
+        )
+
         if tracking_days >= 30:
             projected_annual_stake = total_staked / tracking_days * 365
             projected_annual_bet_result = projected_annual_stake * roi
-            m4.metric("Projeção anual", f"R$ {projected_annual_bet_result:.2f}")
+            proj_str = f"R$ {projected_annual_bet_result:.2f}"
+            proj_positive = projected_annual_bet_result >= 0
+        else:
+            proj_str = "Dados insuficientes"
+            proj_positive = None
+
+        m1, m2, m3, m4 = st.columns(4)
+        m1.markdown(_stat_card("Total apostado", f"R$ {total_staked:.2f}"), unsafe_allow_html=True)
+        m2.markdown(_stat_card("Resultado líquido", f"R$ {net_result:.2f}", positive=net_result >= 0), unsafe_allow_html=True)
+        m3.markdown(_stat_card("ROI realizado", f"{roi * 100:.2f}%", positive=roi >= 0), unsafe_allow_html=True)
+        m4.markdown(_stat_card("Projeção anual", proj_str, positive=proj_positive), unsafe_allow_html=True)
+
+        if tracking_days >= 30:
             st.caption(
                 f"Projeção baseada no ROI do histórico e no ritmo de apostas dos últimos {tracking_days} dia(s). "
                 "Não representa garantia de resultado."
             )
         else:
-            m4.metric("Projeção anual", "Dados insuficientes")
             st.caption(
                 f"Projeção disponível a partir de 30 dias de histórico "
                 f"(histórico atual: {tracking_days} dia(s)). "
                 "Não representa garantia de resultado."
             )
 
-        st.markdown("#### Comparação com CDI")
+        st.markdown(
+            "<div style='display:flex;align-items:center;gap:12px;margin:24px 0 14px;'>"
+            "<div style='width:30px;height:30px;background:#163b2c;border-radius:50%;"
+            "display:flex;align-items:center;justify-content:center;flex-shrink:0;'>"
+            "<span style='font-family:Orbitron,monospace;font-size:0.7rem;font-weight:700;color:#fff;'>3</span>"
+            "</div>"
+            "<div style='font-family:Rajdhani,sans-serif;font-size:0.95rem;font-weight:700;"
+            "color:#163b2c;flex:1;padding-bottom:5px;border-bottom:1px solid rgba(22,59,44,0.25);'>"
+            "Comparação com CDI</div>"
+            "</div>",
+            unsafe_allow_html=True,
+        )
         cdi_rate = st.number_input(
             "CDI anual estimado (%)", min_value=0.0, max_value=100.0, value=CDI_ANUAL_PADRAO, step=0.01, format="%.2f"
         ) / 100
         cdi_annual_profit = total_staked * cdi_rate
         cdi_annual_total = total_staked + cdi_annual_profit
         c1, c2, c3 = st.columns(3)
-        c1.metric("Capital aplicado no CDI", f"R$ {total_staked:.2f}")
-        c2.metric("Rendimento em 1 ano", f"R$ {cdi_annual_profit:.2f}")
-        c3.metric("Total após 1 ano", f"R$ {cdi_annual_total:.2f}")
+        c1.markdown(_stat_card("Capital no CDI", f"R$ {total_staked:.2f}"), unsafe_allow_html=True)
+        c2.markdown(_stat_card("Rendimento em 1 ano", f"R$ {cdi_annual_profit:.2f}", positive=True), unsafe_allow_html=True)
+        c3.markdown(_stat_card("Total após 1 ano", f"R$ {cdi_annual_total:.2f}", positive=True), unsafe_allow_html=True)
         st.caption(
             "O CDI usa somente o dinheiro apostado em cada registro. Retornos e lucros das bets não entram no capital simulado."
         )
 
-        st.markdown("#### Lançamentos")
+        st.markdown(
+            "<div style='display:flex;align-items:center;gap:12px;margin:24px 0 14px;'>"
+            "<div style='width:30px;height:30px;background:#163b2c;border-radius:50%;"
+            "display:flex;align-items:center;justify-content:center;flex-shrink:0;'>"
+            "<span style='font-family:Orbitron,monospace;font-size:0.7rem;font-weight:700;color:#fff;'>4</span>"
+            "</div>"
+            "<div style='font-family:Rajdhani,sans-serif;font-size:0.95rem;font-weight:700;"
+            "color:#163b2c;flex:1;padding-bottom:5px;border-bottom:1px solid rgba(22,59,44,0.25);'>"
+            "Lançamentos</div>"
+            "</div>",
+            unsafe_allow_html=True,
+        )
         for index, bet in enumerate(st.session_state.bet_history):
             net = bet["gross_return"] - bet["stake"]
             net_color = "#1a6641" if net >= 0 else "rgba(160,40,40,0.9)"
-            col1, col2, col3, col4, col5 = st.columns([3, 2, 2, 2, 1])
-            col1.markdown(f"**{bet['name']}**")
-            col2.markdown(date.fromisoformat(bet["date"]).strftime("%d/%m/%Y"))
-            col3.markdown(f"Apostado: `R$ {bet['stake']:.2f}`")
-            col4.markdown(
-                f"<span style='color:{net_color}'>Líquido: R$ {net:.2f}</span>",
-                unsafe_allow_html=True,
-            )
-            if col5.button("✕", key=f"delete_history_{index}"):
+            card_bg = "#e8f5ee" if net >= 0 else "#fdf0f0"
+            accent = "#1a6641" if net >= 0 else "rgba(160,40,40,0.5)"
+            net_sign = "+" if net >= 0 else ""
+            safe_name = _html.escape(bet["name"])
+            bet_date_str = date.fromisoformat(bet["date"]).strftime("%d/%m/%Y")
+
+            col_card, col_del = st.columns([12, 1])
+            with col_card:
+                st.markdown(
+                    f"<div style='background:{card_bg};border:1px solid rgba(22,59,44,0.1);"
+                    f"border-left:4px solid {accent};border-radius:0 8px 8px 0;"
+                    f"padding:10px 14px;margin-bottom:6px;display:flex;align-items:center;gap:16px;'>"
+                    f"<div style='flex:2;'>"
+                    f"<div style='font-family:Rajdhani,sans-serif;font-size:0.95rem;font-weight:700;"
+                    f"color:#163b2c;'>{safe_name}</div>"
+                    f"<div style='font-family:Rajdhani,sans-serif;font-size:0.82rem;"
+                    f"color:rgba(22,59,44,0.6);'>{bet_date_str}</div>"
+                    f"</div>"
+                    f"<div style='flex:1;font-family:Rajdhani,sans-serif;font-size:0.9rem;color:#163b2c;'>"
+                    f"Apostado: <b>R$ {bet['stake']:.2f}</b></div>"
+                    f"<div style='flex:1;font-family:Rajdhani,sans-serif;font-size:0.9rem;"
+                    f"font-weight:700;color:{net_color};'>{net_sign}R$ {net:.2f}</div>"
+                    f"</div>",
+                    unsafe_allow_html=True,
+                )
+            if col_del.button("✕", key=f"delete_history_{index}"):
                 st.session_state.bet_history.pop(index)
                 _supabase_save(
                     st.session_state.supabase_user_code,
