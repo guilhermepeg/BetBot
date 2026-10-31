@@ -1653,16 +1653,19 @@ with tab_sim:
 
         # --- Trajetórias ---
         st.markdown(
-            "<div style='font-family:Rajdhani,sans-serif;font-size:0.7rem;font-weight:700;"
-            "letter-spacing:2px;color:#163b2c;text-transform:uppercase;margin:20px 0 6px;"
+            "<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;"
+            "letter-spacing:2px;color:#163b2c;text-transform:uppercase;margin:20px 0 8px;"
             "border-bottom:1px solid rgba(22,59,44,0.2);padding-bottom:5px;'>"
-            "Trajetórias da banca</div>",
+            "Como seu dinheiro pode se comportar ao longo das apostas</div>",
             unsafe_allow_html=True,
         )
         st.markdown(
-            f"Cada linha é um cenário diferente. O eixo horizontal é o número da aposta "
-            f"e o vertical é o saldo da banca naquele momento. "
-            f"A linha de referência é a banca inicial de R$ {bankroll:.2f}."
+            f"O simulador rodou 1.000 situações diferentes e escolheu algumas para mostrar no gráfico. "
+            f"**Cada linha colorida é uma dessas situações** — como se você apostasse {n_bets} vezes "
+            f"seguidas, começando com R$ {bankroll:.2f}. "
+            f"Linhas que sobem mostram situações em que o saldo cresceu. "
+            f"Linhas que descem mostram situações em que o saldo caiu. "
+            f"Isso não é uma previsão — é só para mostrar o que pode acontecer em cada caminho possível."
         )
         traj_df = pd.DataFrame(
             {f"Cenário {i+1}": traj for i, traj in enumerate(example_trajs)}
