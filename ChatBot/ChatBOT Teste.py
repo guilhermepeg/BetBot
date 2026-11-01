@@ -1,4 +1,5 @@
 import html as _html
+import re
 import streamlit as st
 import streamlit.components.v1 as components
 import anthropic
@@ -1015,7 +1016,7 @@ if _page == "chat":
             csim_stake = cs2.number_input(
                 "Valor apostado (R$)", min_value=0.01, value=float(_pf["stake"]), step=1.0, format="%.2f",
             )
-            csim_name = st.text_input("Nome (opcional)", placeholder="Ex: Resultado esperado da partida")
+            csim_name = st.text_input("Em que você está apostando? (opcional)", placeholder="Ex: Flamengo vence, Gol no 1º tempo...")
             csim_submitted = st.form_submit_button("Calcular", use_container_width=True)
 
         if csim_submitted:
@@ -1491,8 +1492,8 @@ elif _page == "simulacao":
             help="Número de apostas iguais que você quer simular.",
         )
         mc_bankroll = mc5.number_input(
-            "Banca inicial (R$)", min_value=1.0, value=200.0, step=10.0, format="%.2f",
-            help="Quanto você tem disponível para apostar no total.",
+            "Dinheiro disponível (R$)", min_value=1.0, value=200.0, step=10.0, format="%.2f",
+            help="O total que você separou para fazer essas apostas — não precisa ser tudo que você tem, só o valor reservado para isso.",
         )
         mc_cdi_rate = mc6.number_input(
             "CDI anual estimado (%)", min_value=0.0, max_value=100.0, value=CDI_ANUAL_PADRAO, step=0.01, format="%.2f",
