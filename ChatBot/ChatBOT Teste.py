@@ -1492,8 +1492,8 @@ elif _page == "simulacao":
             help="Número de apostas iguais que você quer simular.",
         )
         mc_bankroll = mc5.number_input(
-            "Dinheiro disponível (R$)", min_value=1.0, value=200.0, step=10.0, format="%.2f",
-            help="O total que você separou para fazer essas apostas — não precisa ser tudo que você tem, só o valor reservado para isso.",
+            "Dinheiro apostado (R$)", min_value=1.0, value=200.0, step=10.0, format="%.2f",
+            help="O total que você vai colocar nessas apostas ao longo das rodadas simuladas.",
         )
         mc_cdi_rate = mc6.number_input(
             "CDI anual estimado (%)", min_value=0.0, max_value=100.0, value=CDI_ANUAL_PADRAO, step=0.01, format="%.2f",
