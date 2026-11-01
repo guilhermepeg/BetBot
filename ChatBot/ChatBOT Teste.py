@@ -492,6 +492,7 @@ def select_chat(chat_id: str) -> None:
     st.session_state.messages = get_active_chat()["messages"]
     st.session_state.chat_sim_open = False
     st.session_state.chat_sim_result = None
+    st.session_state.chat_sim_bet = None
 
 
 if "supabase_user_code" not in st.session_state:
@@ -538,6 +539,7 @@ with st.sidebar:
         st.session_state.active_page = "chat"
         st.session_state.chat_sim_open = False
         st.session_state.chat_sim_result = None
+        st.session_state.chat_sim_bet = None
         st.rerun()
     if st.button("Simulação", use_container_width=True,
                  type="primary" if st.session_state.active_page == "simulacao" else "secondary"):
@@ -599,6 +601,8 @@ if "chat_sim_open" not in st.session_state:
     st.session_state.chat_sim_open = False
 if "chat_sim_result" not in st.session_state:
     st.session_state.chat_sim_result = None
+if "chat_sim_bet" not in st.session_state:
+    st.session_state.chat_sim_bet = None
 if "chat_sim_prefill" not in st.session_state:
     st.session_state.chat_sim_prefill = {
         "odd": 2.0, "stake": 10.0, "p_pct": 45.0,
@@ -1019,77 +1023,142 @@ if _page == "chat":
             unsafe_allow_html=True,
         )
         _pf = st.session_state.chat_sim_prefill
-        with st.form(key=f"chat_sim_form_v{_pf['ver']}", clear_on_submit=False):
-            cs1, cs2, cs3 = st.columns(3)
-            csim_odd = cs1.number_input(
-                "Odd", min_value=1.01, max_value=1000.0, value=float(_pf["odd"]), step=0.01, format="%.2f",
-                help="Número que aparece ao lado da aposta na casa.",
-            )
-            csim_stake = cs2.number_input(
-                "Valor por aposta (R$)", min_value=0.01, value=float(_pf["stake"]), step=1.0, format="%.2f",
-                help="Quanto você vai colocar em cada aposta.",
-            )
-            csim_p_pct = cs3.number_input(
-                "Sua estimativa de acerto (%)", min_value=0.1, max_value=99.9,
-                value=float(_pf.get("p_pct", 45.0)), step=1.0, format="%.1f",
-                help="Qual a chance, na sua avaliação, de essa aposta ser vencedora?",
-            )
-            cs4, cs5, cs6 = st.columns(3)
-            csim_n_bets = cs4.number_input(
-                "Quantas vezes repetir?", min_value=10, max_value=1000,
-                value=int(_pf.get("n_bets", 100)), step=10,
-                help="Número de apostas iguais que você quer simular.",
-            )
-            csim_bankroll = cs5.number_input(
-                "Dinheiro apostado (R$)", min_value=1.0,
-                value=float(_pf.get("bankroll", 200.0)), step=10.0, format="%.2f",
-                help="O total que você vai colocar nessas apostas ao longo das rodadas simuladas.",
-            )
-            csim_cdi = cs6.number_input(
-                "CDI anual estimado (%)", min_value=0.0, max_value=100.0,
-                value=CDI_ANUAL_PADRAO, step=0.01, format="%.2f",
-                help="Taxa da renda fixa para comparar.",
-            )
-            csim_name = st.text_input(
-                "Em que você está apostando? (opcional)",
-                placeholder="Ex: Flamengo vence, Gol no 1º tempo...",
-            )
-            csim_submitted = st.form_submit_button("Simular", use_container_width=True)
 
-        if csim_submitted:
-            import numpy as np
-            import plotly.graph_objects as go
-            _rng = np.random.default_rng()
-            _p          = csim_p_pct / 100.0
-            _lucro_win  = float(csim_stake) * (float(csim_odd) - 1.0)
-            _perda_lose = float(csim_stake)
-            _n_sims     = 1000
-            _n_bets     = int(csim_n_bets)
-            _bankroll   = float(csim_bankroll)
-            _all_finals: list[float] = []
-            _example_trajs: list[list[float]] = []
-            for _si in range(_n_sims):
-                _wins    = _rng.random(_n_bets) < _p
-                _changes = np.where(_wins, _lucro_win, -_perda_lose)
-                _traj    = _bankroll + np.cumsum(_changes)
-                _all_finals.append(float(_traj[-1]))
-                if _si < 20:
-                    _example_trajs.append([_bankroll] + _traj.tolist())
-            _arr        = np.array(_all_finals)
-            _mean_f     = float(np.mean(_arr))
-            _best_f     = float(np.max(_arr))
-            _worst_f    = float(np.min(_arr))
-            _pct_broke  = float(np.mean(_arr <= 0.0)) * 100.0
-            _pct_win    = float(np.mean(_arr > _bankroll)) * 100.0
-            _pct_loss   = 100.0 - _pct_win
-            _cdi_gain   = _bankroll * (csim_cdi / 100.0)
-            st.session_state.chat_sim_result = {
-                "name": csim_name, "odd": csim_odd, "stake": csim_stake,
-                "mean_f": _mean_f, "best_f": _best_f, "worst_f": _worst_f,
-                "pct_broke": _pct_broke, "pct_win": _pct_win, "pct_loss": _pct_loss,
-                "bankroll": _bankroll, "cdi_gain": _cdi_gain, "cdi_pct": csim_cdi,
-                "trajs": _example_trajs, "n_bets": _n_bets,
-            }
+        # --- Fase 1: form simples (odd + valor) ---
+        if not st.session_state.chat_sim_bet:
+            with st.form(key=f"chat_sim_form_v{_pf['ver']}", clear_on_submit=False):
+                cs1, cs2 = st.columns(2)
+                csim_odd = cs1.number_input(
+                    "Odd", min_value=1.01, max_value=1000.0, value=float(_pf["odd"]),
+                    step=0.01, format="%.2f",
+                    help="Número que aparece ao lado da aposta na casa.",
+                )
+                csim_stake = cs2.number_input(
+                    "Valor apostado (R$)", min_value=0.01, value=float(_pf["stake"]),
+                    step=1.0, format="%.2f",
+                    help="Quanto você vai colocar nessa aposta.",
+                )
+                csim_name = st.text_input(
+                    "Em que você está apostando? (opcional)",
+                    placeholder="Ex: Flamengo vence, Gol no 1º tempo...",
+                )
+                csim_submitted = st.form_submit_button("Ver resultado", use_container_width=True)
+
+            if csim_submitted:
+                st.session_state.chat_sim_bet = {
+                    "odd": csim_odd, "stake": csim_stake, "name": csim_name,
+                }
+                st.rerun()
+
+        # --- Fase 2: resultado de 1 cenário + conector + Monte Carlo ---
+        if st.session_state.chat_sim_bet:
+            _bet = st.session_state.chat_sim_bet
+            _ret = _bet["stake"] * _bet["odd"]
+            _luc = _ret - _bet["stake"]
+            _acc = "#1a6641" if _luc >= 0 else "rgba(22,59,44,0.45)"
+            _ps  = "+" if _luc >= 0 else ""
+            _sn  = _html.escape(_bet["name"]) if _bet["name"] else "Sua aposta"
+            st.markdown(
+                f"<div style='background:#fff;border:1px solid rgba(22,59,44,0.15);"
+                f"border-left:4px solid {_acc};border-radius:0 10px 10px 0;"
+                f"padding:16px 20px;margin:6px 0;'>"
+                f"<div style='font-family:Rajdhani,sans-serif;font-size:1.1rem;font-weight:700;"
+                f"color:#163b2c;margin-bottom:14px;'>{_sn}</div>"
+                f"<div style='display:grid;grid-template-columns:repeat(4,1fr);gap:12px;'>"
+                f"<div><div style='font-family:Rajdhani,sans-serif;font-size:0.72rem;font-weight:700;"
+                f"color:#163b2c;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;'>Odd</div>"
+                f"<div style='font-family:Rajdhani,sans-serif;font-size:1.25rem;font-weight:700;"
+                f"color:#163b2c;'>{_bet['odd']:.2f}</div></div>"
+                f"<div><div style='font-family:Rajdhani,sans-serif;font-size:0.72rem;font-weight:700;"
+                f"color:#163b2c;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;'>Aposta</div>"
+                f"<div style='font-family:Rajdhani,sans-serif;font-size:1.25rem;font-weight:700;"
+                f"color:#163b2c;'>R$ {_bet['stake']:.2f}</div></div>"
+                f"<div><div style='font-family:Rajdhani,sans-serif;font-size:0.72rem;font-weight:700;"
+                f"color:#163b2c;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;'>Retorno</div>"
+                f"<div style='font-family:Rajdhani,sans-serif;font-size:1.25rem;font-weight:700;"
+                f"color:{_acc};'>R$ {_ret:.2f}</div></div>"
+                f"<div><div style='font-family:Rajdhani,sans-serif;font-size:0.72rem;font-weight:700;"
+                f"color:#163b2c;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;'>Lucro</div>"
+                f"<div style='font-family:Rajdhani,sans-serif;font-size:1.25rem;font-weight:700;"
+                f"color:{_acc};'>{_ps}R$ {_luc:.2f}</div></div>"
+                f"</div></div>",
+                unsafe_allow_html=True,
+            )
+
+            # Conector
+            st.markdown(
+                "<div style='margin:20px 0 4px;padding:18px 22px;"
+                "background:linear-gradient(135deg,#f0f5f2 0%,#e8f5ee 100%);"
+                "border-radius:10px;border:1px solid rgba(22,59,44,0.2);border-left:4px solid #163b2c;'>"
+                "<div style='font-family:Rajdhani,sans-serif;font-size:1.0rem;font-weight:700;"
+                "color:#163b2c;margin-bottom:6px;'>E se você repetir essa aposta várias vezes?</div>"
+                "<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;color:#163b2c;line-height:1.5;'>"
+                "O simulador abaixo roda 1.000 cenários e mostra o que pode acontecer com o seu dinheiro — "
+                "o melhor caso, o pior e o resultado mais provável."
+                "</div></div>",
+                unsafe_allow_html=True,
+            )
+
+            # Formulário Monte Carlo (só aparece antes de rodar)
+            if not st.session_state.chat_sim_result:
+                with st.form(key="chat_sim_mc_form", clear_on_submit=False):
+                    csmc1, csmc2, csmc3, csmc4 = st.columns(4)
+                    csim_p_pct = csmc1.number_input(
+                        "Estimativa de acerto (%)", min_value=0.1, max_value=99.9,
+                        value=float(_pf.get("p_pct", 45.0)), step=1.0, format="%.1f",
+                        help="Qual a chance, na sua avaliação, de essa aposta ser vencedora?",
+                    )
+                    csim_n_bets = csmc2.number_input(
+                        "Quantas vezes repetir?", min_value=10, max_value=1000,
+                        value=int(_pf.get("n_bets", 100)), step=10,
+                        help="Número de apostas iguais que você quer simular.",
+                    )
+                    _def_bk = round(_bet["stake"] * float(_pf.get("n_bets", 100)), 2)
+                    csim_bankroll = csmc3.number_input(
+                        "Dinheiro total (R$)", min_value=1.0,
+                        value=float(_pf.get("bankroll", _def_bk)),
+                        step=10.0, format="%.2f",
+                        help="Total disponível para essas apostas.",
+                    )
+                    csim_cdi = csmc4.number_input(
+                        "CDI anual (%)", min_value=0.0, max_value=100.0,
+                        value=CDI_ANUAL_PADRAO, step=0.01, format="%.2f",
+                        help="Taxa da renda fixa para comparar.",
+                    )
+                    csim_mc_submitted = st.form_submit_button("Simular 1.000 cenários", use_container_width=True)
+
+                if csim_mc_submitted:
+                    import numpy as np
+                    import plotly.graph_objects as go
+                    _rng        = np.random.default_rng()
+                    _p          = csim_p_pct / 100.0
+                    _lucro_win  = _bet["stake"] * (_bet["odd"] - 1.0)
+                    _perda_lose = _bet["stake"]
+                    _n_sims     = 1000
+                    _n_bets     = int(csim_n_bets)
+                    _bankroll   = float(csim_bankroll)
+                    _all_finals = []
+                    _example_trajs = []
+                    for _si in range(_n_sims):
+                        _wins    = _rng.random(_n_bets) < _p
+                        _changes = np.where(_wins, _lucro_win, -_perda_lose)
+                        _traj    = _bankroll + np.cumsum(_changes)
+                        _all_finals.append(float(_traj[-1]))
+                        if _si < 20:
+                            _example_trajs.append([_bankroll] + _traj.tolist())
+                    _arr      = np.array(_all_finals)
+                    _pct_win  = float(np.mean(_arr > _bankroll)) * 100.0
+                    _cdi_gain = _bankroll * (csim_cdi / 100.0)
+                    st.session_state.chat_sim_result = {
+                        "name": _bet["name"], "odd": _bet["odd"], "stake": _bet["stake"],
+                        "mean_f": float(np.mean(_arr)), "best_f": float(np.max(_arr)),
+                        "worst_f": float(np.min(_arr)),
+                        "pct_broke": float(np.mean(_arr <= 0.0)) * 100.0,
+                        "pct_win": _pct_win, "pct_loss": 100.0 - _pct_win,
+                        "bankroll": _bankroll, "cdi_gain": _cdi_gain, "cdi_pct": csim_cdi,
+                        "trajs": _example_trajs, "n_bets": _n_bets,
+                    }
+                    st.rerun()
 
         if st.session_state.chat_sim_result:
             r = st.session_state.chat_sim_result
@@ -1172,6 +1241,7 @@ if _page == "chat":
         if st.button("Fechar simulador", key="close_chat_sim"):
             st.session_state.chat_sim_open = False
             st.session_state.chat_sim_result = None
+            st.session_state.chat_sim_bet = None
             st.rerun()
 
         st.divider()
