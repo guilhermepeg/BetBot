@@ -1053,18 +1053,16 @@ if _page == "chat":
         # --- Fase 2: resultado de 1 cenário + conector + Monte Carlo ---
         if st.session_state.chat_sim_bet:
             _bet = st.session_state.chat_sim_bet
-            _ret = _bet["stake"] * _bet["odd"]
-            _luc = _ret - _bet["stake"]
-            _acc = "#1a6641" if _luc >= 0 else "rgba(22,59,44,0.45)"
-            _ps  = "+" if _luc >= 0 else ""
+            _pot_profit = _bet["stake"] * (_bet["odd"] - 1.0)
+            _pot_return = _bet["stake"] * _bet["odd"]
             _sn  = _html.escape(_bet["name"]) if _bet["name"] else "Sua aposta"
             st.markdown(
                 f"<div style='background:#fff;border:1px solid rgba(22,59,44,0.15);"
-                f"border-left:4px solid {_acc};border-radius:0 10px 10px 0;"
+                f"border-left:4px solid #163b2c;border-radius:0 10px 10px 0;"
                 f"padding:16px 20px;margin:6px 0;'>"
                 f"<div style='font-family:Rajdhani,sans-serif;font-size:1.1rem;font-weight:700;"
                 f"color:#163b2c;margin-bottom:14px;'>{_sn}</div>"
-                f"<div style='display:grid;grid-template-columns:repeat(4,1fr);gap:12px;'>"
+                f"<div style='display:grid;grid-template-columns:1fr 1fr 1.4fr 1.4fr;gap:12px;'>"
                 f"<div><div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;"
                 f"color:#163b2c;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;'>Odd</div>"
                 f"<div style='font-family:Rajdhani,sans-serif;font-size:1.25rem;font-weight:700;"
@@ -1073,15 +1071,33 @@ if _page == "chat":
                 f"color:#163b2c;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;'>Aposta</div>"
                 f"<div style='font-family:Rajdhani,sans-serif;font-size:1.25rem;font-weight:700;"
                 f"color:#163b2c;'>R$ {_bet['stake']:.2f}</div></div>"
-                f"<div><div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;"
-                f"color:#163b2c;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;'>Retorno</div>"
+                f"<div style='background:#e8f5ee;border-radius:8px;padding:10px 14px;'>"
+                f"<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;"
+                f"color:#1a6641;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;'>Se ganhar</div>"
                 f"<div style='font-family:Rajdhani,sans-serif;font-size:1.25rem;font-weight:700;"
-                f"color:{_acc};'>R$ {_ret:.2f}</div></div>"
-                f"<div><div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;"
-                f"color:#163b2c;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;'>Lucro</div>"
+                f"color:#1a6641;'>+R$ {_pot_profit:.2f}</div>"
+                f"<div style='font-family:Rajdhani,sans-serif;font-size:0.78rem;color:#1a6641;'>"
+                f"recebe R$ {_pot_return:.2f}</div></div>"
+                f"<div style='background:#fdf0f0;border-radius:8px;padding:10px 14px;'>"
+                f"<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;"
+                f"color:rgba(140,30,30,0.9);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;'>Se perder</div>"
                 f"<div style='font-family:Rajdhani,sans-serif;font-size:1.25rem;font-weight:700;"
-                f"color:{_acc};'>{_ps}R$ {_luc:.2f}</div></div>"
+                f"color:rgba(160,40,40,0.9);'>-R$ {_bet['stake']:.2f}</div>"
+                f"<div style='font-family:Rajdhani,sans-serif;font-size:0.78rem;color:rgba(140,30,30,0.8);'>"
+                f"perde o valor apostado</div></div>"
                 f"</div></div>",
+                unsafe_allow_html=True,
+            )
+
+            # Disclaimer após o card
+            st.markdown(
+                "<div style='background:#fff8e8;border-radius:8px;padding:10px 14px;margin:10px 0;"
+                "border-left:3px solid #b8860b;'>"
+                "<span style='font-family:Rajdhani,sans-serif;font-size:0.9rem;color:#7a5a00;'>"
+                "Para a simulação abaixo, estamos assumindo que a chance de ganhar é "
+                "<b>igual</b> à chance de perder (50%). "
+                "Se você acha diferente, ajuste a probabilidade no formulário."
+                "</span></div>",
                 unsafe_allow_html=True,
             )
 
@@ -1101,30 +1117,26 @@ if _page == "chat":
 
             # Formulário Monte Carlo (só aparece antes de rodar)
             if not st.session_state.chat_sim_result:
-                st.markdown(
-                    "<div style='background:#fff8e8;border-radius:8px;padding:10px 14px;margin-bottom:10px;"
-                    "border-left:3px solid #b8860b;'>"
-                    "<span style='font-family:Rajdhani,sans-serif;font-size:0.9rem;color:#7a5a00;'>"
-                    "Vamos simular assumindo <b>igual chance de ganhar e de perder</b> (50%). "
-                    "Se você acha que tem mais ou menos chance, use a aba Simulação para ajustar."
-                    "</span></div>",
-                    unsafe_allow_html=True,
-                )
                 with st.form(key="chat_sim_mc_form", clear_on_submit=False):
-                    csmc1, csmc2, csmc3 = st.columns(3)
-                    csim_n_bets = csmc1.number_input(
+                    csmc1, csmc2, csmc3, csmc4 = st.columns(4)
+                    csim_p_pct = csmc1.number_input(
+                        "Chance de acerto (%)", min_value=0.1, max_value=99.9,
+                        value=50.0, step=1.0, format="%.1f",
+                        help="Qual a sua estimativa de chance de ganhar? 50% = igual chance de ganhar e perder.",
+                    )
+                    csim_n_bets = csmc2.number_input(
                         "Quantas vezes repetir?", min_value=10, max_value=1000,
                         value=int(_pf.get("n_bets", 100)), step=10,
                         help="Número de apostas iguais que você quer simular.",
                     )
                     _def_bk = round(_bet["stake"] * float(_pf.get("n_bets", 100)), 2)
-                    csim_bankroll = csmc2.number_input(
+                    csim_bankroll = csmc3.number_input(
                         "Dinheiro total (R$)", min_value=1.0,
                         value=float(_pf.get("bankroll", _def_bk)),
                         step=10.0, format="%.2f",
                         help="Quanto você tem disponível para fazer essas apostas no total.",
                     )
-                    csim_cdi = csmc3.number_input(
+                    csim_cdi = csmc4.number_input(
                         "CDI anual (%)", min_value=0.0, max_value=100.0,
                         value=CDI_ANUAL_PADRAO, step=0.01, format="%.2f",
                         help="Taxa da renda fixa para comparar.",
@@ -1135,7 +1147,7 @@ if _page == "chat":
                     import numpy as np
                     import plotly.graph_objects as go
                     _rng        = np.random.default_rng()
-                    _p          = 0.5
+                    _p          = csim_p_pct / 100.0
                     _lucro_win  = _bet["stake"] * (_bet["odd"] - 1.0)
                     _perda_lose = _bet["stake"]
                     _n_sims     = 1000
