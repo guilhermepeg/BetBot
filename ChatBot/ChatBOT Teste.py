@@ -1427,110 +1427,87 @@ elif _page == "simulacao":
                     st.session_state.sim_bets.pop(i)
                     st.rerun()
 
-        st.divider()
+        import itertools
 
-        # --- O que pode acontecer ---
-        st.markdown(
-            "<div style='display:flex;align-items:center;gap:12px;margin:24px 0 14px;'>"
-            "<div style='width:30px;height:30px;background:#163b2c;border-radius:50%;"
-            "display:flex;align-items:center;justify-content:center;flex-shrink:0;'>"
-            "<span style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;color:#fff;'>3</span>"
-            "</div>"
-            "<div style='font-family:Rajdhani,sans-serif;font-size:0.75rem;font-weight:700;"
-            "letter-spacing:2px;color:#163b2c;text-transform:uppercase;border-bottom:1px solid rgba(22,59,44,0.25);"
-            "flex:1;padding-bottom:5px;'>O que pode acontecer</div>"
-            "</div>",
-            unsafe_allow_html=True,
-        )
-        st.markdown(
-            "Para cada seleção que você adicionou, o BetBot calcula dois cenários: "
-            "o que acontece **se você acertar** (quanto recebe de volta) e o que acontece **se você errar** (quanto perde). "
-            "A \"chance calculada\" é só um número derivado da odd — quanto menor a odd, maior essa chance. "
-            "Não é uma previsão de quem vai ganhar."
-        )
+        n = len(st.session_state.sim_bets)
+        if n > 10:
+            st.warning(
+                f"Com {n} seleções seriam geradas {2**n:,} combinações. "
+                "O limite é 10 seleções para esta visualização. "
+                "Remova algumas seleções e tente novamente."
+            )
+        else:
+            outcomes = list(itertools.product([True, False], repeat=n))
 
-        if st.button("Calcular todos os cenários"):
-            import itertools
+            scenario_data = []
+            for outcome in outcomes:
+                labels = []
+                for j, won in enumerate(outcome):
+                    bet = st.session_state.sim_bets[j]
+                    short = bet["name"][:18] + ("…" if len(bet["name"]) > 18 else "")
+                    labels.append(f"Acerto: {short}" if won else f"Erro: {short}")
+                scenario_label = " | ".join(labels)
 
-            n = len(st.session_state.sim_bets)
-            if n > 10:
-                st.warning(
-                    f"Com {n} seleções seriam geradas {2**n:,} combinações. "
-                    "O limite é 10 seleções para esta visualização. "
-                    "Remova algumas seleções e tente novamente."
-                )
-            else:
-                outcomes = list(itertools.product([True, False], repeat=n))
+                prob = 1.0
+                for j, won in enumerate(outcome):
+                    p = 1 / st.session_state.sim_bets[j]["odd"]
+                    prob *= p if won else (1 - p)
 
-                scenario_data = []
-                for outcome in outcomes:
-                    labels = []
-                    for j, won in enumerate(outcome):
-                        bet = st.session_state.sim_bets[j]
-                        short = bet["name"][:18] + ("…" if len(bet["name"]) > 18 else "")
-                        labels.append(f"Acerto: {short}" if won else f"Erro: {short}")
-                    scenario_label = " | ".join(labels)
+                net = 0.0
+                for j, won in enumerate(outcome):
+                    bet = st.session_state.sim_bets[j]
+                    if won:
+                        net += bet["stake"] * (bet["odd"] - 1)
+                    else:
+                        net -= bet["stake"]
 
-                    prob = 1.0
-                    for j, won in enumerate(outcome):
-                        p = 1 / st.session_state.sim_bets[j]["odd"]
-                        prob *= p if won else (1 - p)
+                scenario_data.append({
+                    "scenario": scenario_label,
+                    "prob":     prob,
+                    "net":      net,
+                })
 
-                    net = 0.0
-                    for j, won in enumerate(outcome):
-                        bet = st.session_state.sim_bets[j]
-                        if won:
-                            net += bet["stake"] * (bet["odd"] - 1)
-                        else:
-                            net -= bet["stake"]
+            scenario_data.sort(key=lambda x: x["prob"], reverse=True)
 
-                    scenario_data.append({
-                        "scenario": scenario_label,
-                        "prob":     prob,
-                        "net":      net,
-                    })
+            total_staked = sum(b["stake"] for b in st.session_state.sim_bets)
 
-                scenario_data.sort(key=lambda x: x["prob"], reverse=True)
+            st.markdown(
+                f"<div style='background:#f0f5f2;border-radius:8px;padding:12px 16px;"
+                f"border-left:3px solid #163b2c;margin-bottom:8px;'>"
+                f"<span style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;"
+                f"color:#163b2c;'>Total apostado: R$ {total_staked:.2f}</span>"
+                f"</div>",
+                unsafe_allow_html=True
+            )
 
-                total_staked = sum(b["stake"] for b in st.session_state.sim_bets)
-
+            st.markdown("")
+            for s in scenario_data:
+                net_sign      = "+" if s["net"] >= 0 else ""
+                safe_scenario = _html.escape(s["scenario"])
+                net_color     = "#1a6641" if s["net"] >= 0 else "rgba(160,40,40,0.9)"
+                border_color  = "#1a6641" if s["net"] >= 0 else "rgba(160,40,40,0.5)"
                 st.markdown(
-                    f"<div style='background:#f0f5f2;border-radius:8px;padding:12px 16px;"
-                    f"border-left:3px solid #163b2c;margin-bottom:8px;'>"
-                    f"<span style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;"
-                    f"color:#163b2c;'>Total apostado: R$ {total_staked:.2f}</span>"
-                    f"</div>",
-                    unsafe_allow_html=True
+                    f"<div style='background:#fff;border:1px solid rgba(22,59,44,0.15);"
+                    f"border-left:4px solid {border_color};border-radius:0 10px 10px 0;"
+                    f"padding:16px 20px;margin:6px 0;'>"
+                    f"<div style='font-family:Rajdhani,sans-serif;font-size:1.05rem;font-weight:700;"
+                    f"color:#163b2c;margin-bottom:14px;'>{safe_scenario}</div>"
+                    f"<div style='display:grid;grid-template-columns:1fr 1fr;gap:12px;'>"
+                    f"<div>"
+                    f"<div style='font-family:Rajdhani,sans-serif;font-size:0.72rem;font-weight:700;"
+                    f"color:#163b2c;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;'>Chance calculada</div>"
+                    f"<div style='font-family:Rajdhani,sans-serif;font-size:1.25rem;font-weight:700;"
+                    f"color:#163b2c;'>{s['prob']*100:.2f}%</div>"
+                    f"</div>"
+                    f"<div>"
+                    f"<div style='font-family:Rajdhani,sans-serif;font-size:0.72rem;font-weight:700;"
+                    f"color:#163b2c;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;'>Resultado</div>"
+                    f"<div style='font-family:Rajdhani,sans-serif;font-size:1.25rem;font-weight:700;"
+                    f"color:{net_color};'>{net_sign}R$ {s['net']:.2f}</div>"
+                    f"</div>"
+                    f"</div></div>",
+                    unsafe_allow_html=True,
                 )
-
-                st.markdown("")
-                for s in scenario_data:
-                    net_sign      = "+" if s["net"] >= 0 else ""
-                    safe_scenario = _html.escape(s["scenario"])
-                    net_color     = "#1a6641" if s["net"] >= 0 else "rgba(160,40,40,0.9)"
-                    border_color  = "#1a6641" if s["net"] >= 0 else "rgba(160,40,40,0.5)"
-                    st.markdown(
-                        f"<div style='background:#fff;border:1px solid rgba(22,59,44,0.15);"
-                        f"border-left:4px solid {border_color};border-radius:0 8px 8px 0;"
-                        f"padding:14px 16px;margin:6px 0;'>"
-                        f"<div style='font-family:Rajdhani,sans-serif;font-size:0.95rem;font-weight:700;"
-                        f"color:#163b2c;margin-bottom:10px;'>{safe_scenario}</div>"
-                        f"<div style='display:flex;gap:24px;flex-wrap:wrap;'>"
-                        f"<div>"
-                        f"<div style='font-family:Rajdhani,sans-serif;font-size:0.72rem;font-weight:700;"
-                        f"color:#163b2c;text-transform:uppercase;letter-spacing:1px;margin-bottom:2px;'>Chance calculada</div>"
-                        f"<div style='font-family:Rajdhani,sans-serif;font-size:1.1rem;font-weight:700;"
-                        f"color:#163b2c;'>{s['prob']*100:.2f}%</div>"
-                        f"</div>"
-                        f"<div>"
-                        f"<div style='font-family:Rajdhani,sans-serif;font-size:0.72rem;font-weight:700;"
-                        f"color:#163b2c;text-transform:uppercase;letter-spacing:1px;margin-bottom:2px;'>Resultado</div>"
-                        f"<div style='font-family:Rajdhani,sans-serif;font-size:1.1rem;font-weight:700;"
-                        f"color:{net_color};'>{net_sign}R$ {s['net']:.2f}</div>"
-                        f"</div>"
-                        f"</div></div>",
-                        unsafe_allow_html=True,
-                    )
 
         # --- Conector: Simulação de Longo Prazo ---
         st.markdown(
