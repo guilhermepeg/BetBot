@@ -1177,6 +1177,7 @@ if _page == "chat":
                     st.rerun()
 
         if st.session_state.chat_sim_result:
+            import plotly.graph_objects as go
             r = st.session_state.chat_sim_result
             _bk = r["bankroll"]
 
