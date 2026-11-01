@@ -591,7 +591,10 @@ if "chat_sim_open" not in st.session_state:
 if "chat_sim_result" not in st.session_state:
     st.session_state.chat_sim_result = None
 if "chat_sim_prefill" not in st.session_state:
-    st.session_state.chat_sim_prefill = {"odd": 2.0, "stake": 10.0, "ver": 0}
+    st.session_state.chat_sim_prefill = {
+        "odd": 2.0, "stake": 10.0, "p_pct": 45.0,
+        "n_bets": 100, "bankroll": 200.0, "ver": 0,
+    }
 
 
 # --- Real AI engine (Anthropic Claude) ---
@@ -998,74 +1001,162 @@ if _page == "chat":
             "<div style='display:flex;align-items:center;gap:12px;margin:0 0 14px;'>"
             "<div style='width:30px;height:30px;background:#163b2c;border-radius:50%;"
             "display:flex;align-items:center;justify-content:center;flex-shrink:0;'>"
-            "<span style='font-family:Rajdhani,sans-serif;font-size:0.75rem;font-weight:700;'>⚡</span>"
+            "<span style='font-family:Rajdhani,sans-serif;font-size:0.75rem;font-weight:700;color:#fff;'>⚡</span>"
             "</div>"
             "<div style='font-family:Rajdhani,sans-serif;font-size:0.95rem;font-weight:700;"
             "color:#163b2c;flex:1;padding-bottom:5px;border-bottom:1px solid rgba(22,59,44,0.25);'>"
-            "Simulador rápido</div>"
+            "Simulador</div>"
             "</div>",
             unsafe_allow_html=True,
         )
-        _pf  = st.session_state.chat_sim_prefill
+        _pf = st.session_state.chat_sim_prefill
         with st.form(key=f"chat_sim_form_v{_pf['ver']}", clear_on_submit=False):
-            cs1, cs2 = st.columns(2)
+            cs1, cs2, cs3 = st.columns(3)
             csim_odd = cs1.number_input(
                 "Odd", min_value=1.01, max_value=1000.0, value=float(_pf["odd"]), step=0.01, format="%.2f",
                 help="Número que aparece ao lado da aposta na casa.",
             )
             csim_stake = cs2.number_input(
-                "Valor apostado (R$)", min_value=0.01, value=float(_pf["stake"]), step=1.0, format="%.2f",
+                "Valor por aposta (R$)", min_value=0.01, value=float(_pf["stake"]), step=1.0, format="%.2f",
+                help="Quanto você vai colocar em cada aposta.",
             )
-            csim_name = st.text_input("Em que você está apostando? (opcional)", placeholder="Ex: Flamengo vence, Gol no 1º tempo...")
-            csim_submitted = st.form_submit_button("Calcular", use_container_width=True)
+            csim_p_pct = cs3.number_input(
+                "Sua estimativa de acerto (%)", min_value=0.1, max_value=99.9,
+                value=float(_pf.get("p_pct", 45.0)), step=1.0, format="%.1f",
+                help="Qual a chance, na sua avaliação, de essa aposta ser vencedora?",
+            )
+            cs4, cs5, cs6 = st.columns(3)
+            csim_n_bets = cs4.number_input(
+                "Quantas vezes repetir?", min_value=10, max_value=1000,
+                value=int(_pf.get("n_bets", 100)), step=10,
+                help="Número de apostas iguais que você quer simular.",
+            )
+            csim_bankroll = cs5.number_input(
+                "Dinheiro apostado (R$)", min_value=1.0,
+                value=float(_pf.get("bankroll", 200.0)), step=10.0, format="%.2f",
+                help="O total que você vai colocar nessas apostas ao longo das rodadas simuladas.",
+            )
+            csim_cdi = cs6.number_input(
+                "CDI anual estimado (%)", min_value=0.0, max_value=100.0,
+                value=CDI_ANUAL_PADRAO, step=0.01, format="%.2f",
+                help="Taxa da renda fixa para comparar.",
+            )
+            csim_name = st.text_input(
+                "Em que você está apostando? (opcional)",
+                placeholder="Ex: Flamengo vence, Gol no 1º tempo...",
+            )
+            csim_submitted = st.form_submit_button("Simular", use_container_width=True)
 
         if csim_submitted:
-            csim_return = csim_stake * csim_odd
-            csim_profit = csim_return - csim_stake
-            csim_impl_prob = 1 / csim_odd * 100
+            import numpy as np
+            import plotly.graph_objects as go
+            _rng = np.random.default_rng()
+            _p          = csim_p_pct / 100.0
+            _lucro_win  = float(csim_stake) * (float(csim_odd) - 1.0)
+            _perda_lose = float(csim_stake)
+            _n_sims     = 1000
+            _n_bets     = int(csim_n_bets)
+            _bankroll   = float(csim_bankroll)
+            _all_finals: list[float] = []
+            _example_trajs: list[list[float]] = []
+            for _si in range(_n_sims):
+                _wins    = _rng.random(_n_bets) < _p
+                _changes = np.where(_wins, _lucro_win, -_perda_lose)
+                _traj    = _bankroll + np.cumsum(_changes)
+                _all_finals.append(float(_traj[-1]))
+                if _si < 20:
+                    _example_trajs.append([_bankroll] + _traj.tolist())
+            _arr        = np.array(_all_finals)
+            _mean_f     = float(np.mean(_arr))
+            _best_f     = float(np.max(_arr))
+            _worst_f    = float(np.min(_arr))
+            _pct_broke  = float(np.mean(_arr <= 0.0)) * 100.0
+            _pct_win    = float(np.mean(_arr > _bankroll)) * 100.0
+            _pct_loss   = 100.0 - _pct_win
+            _cdi_gain   = _bankroll * (csim_cdi / 100.0)
             st.session_state.chat_sim_result = {
-                "name": csim_name,
-                "odd": csim_odd,
-                "stake": csim_stake,
-                "total_return": csim_return,
-                "profit": csim_profit,
-                "impl_prob": csim_impl_prob,
+                "name": csim_name, "odd": csim_odd, "stake": csim_stake,
+                "mean_f": _mean_f, "best_f": _best_f, "worst_f": _worst_f,
+                "pct_broke": _pct_broke, "pct_win": _pct_win, "pct_loss": _pct_loss,
+                "bankroll": _bankroll, "cdi_gain": _cdi_gain, "cdi_pct": csim_cdi,
+                "trajs": _example_trajs, "n_bets": _n_bets,
             }
 
         if st.session_state.chat_sim_result:
             r = st.session_state.chat_sim_result
-            cr1, cr2, cr3 = st.columns(3)
-            cr1.markdown(
-                f"<div style='background:#e8f5ee;border-radius:8px;padding:12px 14px;"
-                f"border-left:3px solid #1a6641;'>"
-                f"<div style='font-family:Rajdhani,sans-serif;font-size:0.75rem;font-weight:700;"
-                f"color:#163b2c;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;'>Retorno total</div>"
-                f"<div style='font-family:Rajdhani,sans-serif;font-size:1.4rem;font-weight:700;"
-                f"color:#1a6641;'>R$ {r['total_return']:.2f}</div>"
-                f"<div style='font-family:Rajdhani,sans-serif;font-size:0.82rem;color:#163b2c;margin-top:2px;'>"
-                f"+R$ {r['profit']:.2f} de lucro</div></div>",
+            _bk = r["bankroll"]
+
+            # --- Cards de resultado ---
+            _best_sign  = "+" if r["best_f"]  >= _bk else ""
+            _mean_sign  = "+" if r["mean_f"]  >= _bk else ""
+            _worst_sign = "+" if r["worst_f"] >= _bk else ""
+            def _mini_card(label, value, color):
+                return (
+                    f"<div style='background:#fff;border:1px solid rgba(22,59,44,0.12);"
+                    f"border-left:4px solid {color};border-radius:0 8px 8px 0;padding:12px 14px;'>"
+                    f"<div style='font-family:Rajdhani,sans-serif;font-size:0.72rem;font-weight:700;"
+                    f"color:#0f2a1e;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;'>{label}</div>"
+                    f"<div style='font-family:Rajdhani,sans-serif;font-size:1.25rem;font-weight:700;"
+                    f"color:{color};word-break:break-word;'>{value}</div>"
+                    f"</div>"
+                )
+            rc1, rc2, rc3, rc4 = st.columns(4)
+            rc1.markdown(_mini_card("Melhor cenário", f"R$ {r['best_f']:.2f}", "#1a6641"), unsafe_allow_html=True)
+            rc2.markdown(_mini_card("Média dos cenários", f"R$ {r['mean_f']:.2f}", "#163b2c" if r["mean_f"] >= _bk else "rgba(160,40,40,0.9)"), unsafe_allow_html=True)
+            rc3.markdown(_mini_card("Pior cenário", f"R$ {r['worst_f']:.2f}", "rgba(160,40,40,0.9)"), unsafe_allow_html=True)
+            rc4.markdown(_mini_card("Zerou a banca", f"{r['pct_broke']:.1f}%", "rgba(160,40,40,0.9)" if r["pct_broke"] > 0 else "#1a6641"), unsafe_allow_html=True)
+
+            # --- Gráfico de trajetórias ---
+            _win_colors = ["#1a6641","#2196F3","#9C27B0","#FF6F00","#00838F","#E91E63","#33691E","#1565C0","#6A1B9A","#AD1457","#0277BD","#558B2F","#F57F17","#4527A0","#00695C","#283593","#827717","#BF360C","#01579B","#1B5E20"]
+            _fig = go.Figure()
+            for _i, _traj in enumerate(r["trajs"]):
+                _xv = list(range(len(_traj)))
+                if _traj[-1] > _bk:
+                    _fig.add_trace(go.Scatter(x=_xv, y=_traj, mode="lines", line=dict(color=_win_colors[_i % len(_win_colors)], width=2), name=f"Cenário {_i+1} ✓", opacity=0.9))
+                else:
+                    _fig.add_trace(go.Scatter(x=_xv, y=_traj, mode="lines", line=dict(color="rgba(150,150,150,0.2)", width=1), showlegend=False))
+            _fig.add_hline(y=_bk, line_dash="dot", line_color="rgba(22,59,44,0.5)", line_width=1.5)
+            _fig.update_layout(
+                margin=dict(l=0, r=0, t=10, b=10), paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
+                hovermode=False,
+                xaxis=dict(showgrid=True, gridcolor="rgba(22,59,44,0.08)", title="Aposta nº", fixedrange=True),
+                yaxis=dict(showgrid=True, gridcolor="rgba(22,59,44,0.08)", title="Saldo (R$)", fixedrange=True),
+                legend=dict(orientation="h", yanchor="bottom", y=-0.3, xanchor="left", x=0, font=dict(size=10)),
+                height=320,
+            )
+            st.plotly_chart(_fig, use_container_width=True, config={"displayModeBar": False})
+
+            # --- Conclusão ---
+            _n_win  = int(round(r["pct_win"]  * 10))
+            _n_loss = int(round(r["pct_loss"] * 10))
+            if r["pct_win"] >= 50:
+                _concl = f"Na maioria dos cenários ({r['pct_win']:.0f}%), o saldo final ficou acima de R$ {_bk:.2f}. Em {r['pct_loss']:.0f}% houve perda."
+            else:
+                _concl = f"Na maioria dos cenários ({r['pct_loss']:.0f}%), o saldo final ficou abaixo de R$ {_bk:.2f}. Apenas em {r['pct_win']:.0f}% houve lucro."
+            st.markdown(
+                f"<div style='background:#fff;border:1px solid rgba(22,59,44,0.15);border-radius:10px;padding:16px 20px;margin-top:10px;'>"
+                f"<div style='display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;'>"
+                f"<div style='background:#e8f5ee;border-radius:8px;padding:12px 14px;border-left:4px solid #1a6641;'>"
+                f"<div style='font-family:Rajdhani,sans-serif;font-size:0.72rem;font-weight:700;color:#1a6641;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;'>Cenários com lucro</div>"
+                f"<div style='font-family:Rajdhani,sans-serif;font-size:1.6rem;font-weight:700;color:#1a6641;'>{r['pct_win']:.0f}%</div>"
+                f"<div style='font-family:Rajdhani,sans-serif;font-size:0.78rem;color:#1a6641;'>({_n_win} de 1.000)</div></div>"
+                f"<div style='background:#fdf0f0;border-radius:8px;padding:12px 14px;border-left:4px solid rgba(160,40,40,0.6);'>"
+                f"<div style='font-family:Rajdhani,sans-serif;font-size:0.72rem;font-weight:700;color:rgba(140,30,30,0.9);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;'>Cenários com perda</div>"
+                f"<div style='font-family:Rajdhani,sans-serif;font-size:1.6rem;font-weight:700;color:rgba(160,40,40,0.9);'>{r['pct_loss']:.0f}%</div>"
+                f"<div style='font-family:Rajdhani,sans-serif;font-size:0.78rem;color:rgba(140,30,30,0.8);'>({_n_loss} de 1.000)</div></div>"
+                f"</div>"
+                f"<div style='font-family:Rajdhani,sans-serif;font-size:0.92rem;color:#0f2a1e;line-height:1.5;border-top:1px solid rgba(22,59,44,0.1);padding-top:10px;'>{_concl}</div>"
+                f"</div>",
                 unsafe_allow_html=True,
             )
-            cr2.markdown(
-                f"<div style='background:#fdf0f0;border-radius:8px;padding:12px 14px;"
-                f"border-left:3px solid rgba(160,40,40,0.5);'>"
-                f"<div style='font-family:Rajdhani,sans-serif;font-size:0.75rem;font-weight:700;"
-                f"color:#163b2c;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;'>Perda se errar</div>"
-                f"<div style='font-family:Rajdhani,sans-serif;font-size:1.4rem;font-weight:700;"
-                f"color:rgba(160,40,40,0.9);'>R$ {r['stake']:.2f}</div>"
-                f"<div style='font-family:Rajdhani,sans-serif;font-size:0.82rem;color:#163b2c;margin-top:2px;'>"
-                f"valor apostado</div></div>",
-                unsafe_allow_html=True,
-            )
-            cr3.markdown(
-                f"<div style='background:#f0f5f2;border-radius:8px;padding:12px 14px;"
-                f"border-left:3px solid #163b2c;'>"
-                f"<div style='font-family:Rajdhani,sans-serif;font-size:0.75rem;font-weight:700;"
-                f"color:#163b2c;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;'>Chance calculada</div>"
-                f"<div style='font-family:Rajdhani,sans-serif;font-size:1.4rem;font-weight:700;"
-                f"color:#163b2c;'>{r['impl_prob']:.1f}%</div>"
-                f"<div style='font-family:Rajdhani,sans-serif;font-size:0.82rem;color:#163b2c;margin-top:2px;'>"
-                f"referência da odd {r['odd']:.2f}</div></div>",
+
+            # --- CDI ---
+            st.markdown(
+                f"<div style='background:#f0f5f2;border-radius:8px;padding:12px 16px;margin-top:10px;'>"
+                f"<div style='font-family:Rajdhani,sans-serif;font-size:0.78rem;font-weight:700;color:#0f2a1e;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;'>E se você investisse em renda fixa?</div>"
+                f"<div style='font-family:Rajdhani,sans-serif;font-size:0.92rem;color:#0f2a1e;'>"
+                f"Com CDI de {r['cdi_pct']:.2f}% ao ano, R$ {_bk:.2f} renderia <b>R$ {r['cdi_gain']:.2f}</b> em 1 ano — sem risco de perda.</div>"
+                f"</div>",
                 unsafe_allow_html=True,
             )
 
@@ -1209,7 +1300,7 @@ elif _page == "simulacao":
 
     # --- Formulário para adicionar aposta ---
     with st.form(key="sim_form", clear_on_submit=True):
-        sel_name = st.text_input("Nome da seleção", placeholder="Ex: Flamengo vence o jogo")
+        sel_name = st.text_input("Em que você está apostando?", placeholder="Ex: Flamengo vence o jogo")
         c1, c2 = st.columns(2)
         sel_odd   = c1.number_input(
             "Odd", min_value=1.01, max_value=1000.0, value=2.00, step=0.01, format="%.2f",
@@ -1249,7 +1340,7 @@ elif _page == "simulacao":
         })
         st.rerun()
     elif sel_add:
-        st.warning("Preencha o nome da seleção.")
+        st.warning("Preencha o que você está apostando.")
 
     # --- Lista de seleções ---
     if st.session_state.sim_bets:
