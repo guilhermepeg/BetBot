@@ -1451,7 +1451,7 @@ elif _page == "simulacao":
                     f"padding:16px 20px;margin:6px 0;'>"
                     f"<div style='font-family:Rajdhani,sans-serif;font-size:1.15rem;font-weight:700;"
                     f"color:#163b2c;margin-bottom:14px;'>{safe_name}</div>"
-                    f"<div style='display:grid;grid-template-columns:repeat(4,1fr);gap:12px;'>"
+                    f"<div style='display:grid;grid-template-columns:1fr 1fr 1.4fr 1.4fr;gap:12px;'>"
                     f"<div>"
                     f"<div style='font-family:Rajdhani,sans-serif;font-size:0.72rem;font-weight:700;"
                     f"color:#163b2c;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;'>Odd</div>"
@@ -1464,17 +1464,21 @@ elif _page == "simulacao":
                     f"<div style='font-family:Rajdhani,sans-serif;font-size:1.25rem;font-weight:700;"
                     f"color:#163b2c;'>R$ {bet['stake']:.2f}</div>"
                     f"</div>"
-                    f"<div>"
+                    f"<div style='background:#e8f5ee;border-radius:8px;padding:10px 14px;'>"
                     f"<div style='font-family:Rajdhani,sans-serif;font-size:0.72rem;font-weight:700;"
-                    f"color:#163b2c;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;'>Retorno</div>"
+                    f"color:#1a6641;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;'>Se ganhar</div>"
                     f"<div style='font-family:Rajdhani,sans-serif;font-size:1.25rem;font-weight:700;"
-                    f"color:{accent};'>R$ {pot_return:.2f}</div>"
+                    f"color:#1a6641;'>+R$ {pot_profit:.2f}</div>"
+                    f"<div style='font-family:Rajdhani,sans-serif;font-size:0.78rem;color:#1a6641;'>"
+                    f"recebe R$ {pot_return:.2f}</div>"
                     f"</div>"
-                    f"<div>"
+                    f"<div style='background:#fdf0f0;border-radius:8px;padding:10px 14px;'>"
                     f"<div style='font-family:Rajdhani,sans-serif;font-size:0.72rem;font-weight:700;"
-                    f"color:#163b2c;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;'>Lucro</div>"
+                    f"color:rgba(140,30,30,0.9);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;'>Se perder</div>"
                     f"<div style='font-family:Rajdhani,sans-serif;font-size:1.25rem;font-weight:700;"
-                    f"color:{accent};'>{profit_sign}R$ {pot_profit:.2f}</div>"
+                    f"color:rgba(160,40,40,0.9);'>-R$ {bet['stake']:.2f}</div>"
+                    f"<div style='font-family:Rajdhani,sans-serif;font-size:0.78rem;color:rgba(140,30,30,0.8);'>"
+                    f"perde o valor apostado</div>"
                     f"</div>"
                     f"</div></div>",
                     unsafe_allow_html=True,
@@ -1496,88 +1500,6 @@ elif _page == "simulacao":
                 if st.button("✕", key=f"del_{i}", help="Remover"):
                     st.session_state.sim_bets.pop(i)
                     st.rerun()
-
-        import itertools
-
-        n = len(st.session_state.sim_bets)
-        if n > 10:
-            st.warning(
-                f"Com {n} seleções seriam geradas {2**n:,} combinações. "
-                "O limite é 10 seleções para esta visualização. "
-                "Remova algumas seleções e tente novamente."
-            )
-        else:
-            outcomes = list(itertools.product([True, False], repeat=n))
-
-            scenario_data = []
-            for outcome in outcomes:
-                labels = []
-                for j, won in enumerate(outcome):
-                    bet = st.session_state.sim_bets[j]
-                    short = bet["name"][:18] + ("…" if len(bet["name"]) > 18 else "")
-                    labels.append(f"Acerto: {short}" if won else f"Erro: {short}")
-                scenario_label = " | ".join(labels)
-
-                prob = 1.0
-                for j, won in enumerate(outcome):
-                    p = 1 / st.session_state.sim_bets[j]["odd"]
-                    prob *= p if won else (1 - p)
-
-                net = 0.0
-                for j, won in enumerate(outcome):
-                    bet = st.session_state.sim_bets[j]
-                    if won:
-                        net += bet["stake"] * (bet["odd"] - 1)
-                    else:
-                        net -= bet["stake"]
-
-                scenario_data.append({
-                    "scenario": scenario_label,
-                    "prob":     prob,
-                    "net":      net,
-                })
-
-            scenario_data.sort(key=lambda x: x["prob"], reverse=True)
-
-            total_staked = sum(b["stake"] for b in st.session_state.sim_bets)
-
-            st.markdown(
-                f"<div style='background:#f0f5f2;border-radius:8px;padding:12px 16px;"
-                f"border-left:3px solid #163b2c;margin-bottom:8px;'>"
-                f"<span style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;"
-                f"color:#163b2c;'>Total apostado: R$ {total_staked:.2f}</span>"
-                f"</div>",
-                unsafe_allow_html=True
-            )
-
-            st.markdown("")
-            for s in scenario_data:
-                net_sign      = "+" if s["net"] >= 0 else ""
-                safe_scenario = _html.escape(s["scenario"])
-                net_color     = "#1a6641" if s["net"] >= 0 else "rgba(160,40,40,0.9)"
-                border_color  = "#1a6641" if s["net"] >= 0 else "rgba(160,40,40,0.5)"
-                st.markdown(
-                    f"<div style='background:#fff;border:1px solid rgba(22,59,44,0.15);"
-                    f"border-left:4px solid {border_color};border-radius:0 10px 10px 0;"
-                    f"padding:16px 20px;margin:6px 0;'>"
-                    f"<div style='font-family:Rajdhani,sans-serif;font-size:1.05rem;font-weight:700;"
-                    f"color:#163b2c;margin-bottom:14px;'>{safe_scenario}</div>"
-                    f"<div style='display:grid;grid-template-columns:1fr 1fr;gap:12px;'>"
-                    f"<div>"
-                    f"<div style='font-family:Rajdhani,sans-serif;font-size:0.72rem;font-weight:700;"
-                    f"color:#163b2c;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;'>Chance calculada</div>"
-                    f"<div style='font-family:Rajdhani,sans-serif;font-size:1.25rem;font-weight:700;"
-                    f"color:#163b2c;'>{s['prob']*100:.2f}%</div>"
-                    f"</div>"
-                    f"<div>"
-                    f"<div style='font-family:Rajdhani,sans-serif;font-size:0.72rem;font-weight:700;"
-                    f"color:#163b2c;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;'>Resultado</div>"
-                    f"<div style='font-family:Rajdhani,sans-serif;font-size:1.25rem;font-weight:700;"
-                    f"color:{net_color};'>{net_sign}R$ {s['net']:.2f}</div>"
-                    f"</div>"
-                    f"</div></div>",
-                    unsafe_allow_html=True,
-                )
 
         # --- Conector: Simulação de Longo Prazo ---
         st.markdown(
