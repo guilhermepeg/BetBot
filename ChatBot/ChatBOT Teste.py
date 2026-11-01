@@ -1094,7 +1094,7 @@ if _page == "chat":
                 "<div style='background:#fff8e8;border-radius:8px;padding:10px 14px;margin:10px 0;"
                 "border-left:3px solid #b8860b;'>"
                 "<span style='font-family:Rajdhani,sans-serif;font-size:0.9rem;color:#7a5a00;'>"
-                "Para a simulação abaixo, estamos assumindo que a chance de ganhar é "
+                "Para a simulação acima, estamos assumindo que a chance de ganhar é "
                 "<b>igual</b> à chance de perder (50%). "
                 "Se você acha diferente, ajuste a probabilidade no formulário."
                 "</span></div>",
