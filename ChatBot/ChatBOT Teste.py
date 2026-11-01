@@ -1101,26 +1101,30 @@ if _page == "chat":
 
             # Formulário Monte Carlo (só aparece antes de rodar)
             if not st.session_state.chat_sim_result:
+                st.markdown(
+                    "<div style='background:#fff8e8;border-radius:8px;padding:10px 14px;margin-bottom:10px;"
+                    "border-left:3px solid #b8860b;'>"
+                    "<span style='font-family:Rajdhani,sans-serif;font-size:0.9rem;color:#7a5a00;'>"
+                    "Vamos simular assumindo <b>igual chance de ganhar e de perder</b> (50%). "
+                    "Se você acha que tem mais ou menos chance, use a aba Simulação para ajustar."
+                    "</span></div>",
+                    unsafe_allow_html=True,
+                )
                 with st.form(key="chat_sim_mc_form", clear_on_submit=False):
-                    csmc1, csmc2, csmc3, csmc4 = st.columns(4)
-                    csim_p_pct = csmc1.number_input(
-                        "Estimativa de acerto (%)", min_value=0.1, max_value=99.9,
-                        value=float(_pf.get("p_pct", 45.0)), step=1.0, format="%.1f",
-                        help="Qual a chance, na sua avaliação, de essa aposta ser vencedora?",
-                    )
-                    csim_n_bets = csmc2.number_input(
+                    csmc1, csmc2, csmc3 = st.columns(3)
+                    csim_n_bets = csmc1.number_input(
                         "Quantas vezes repetir?", min_value=10, max_value=1000,
                         value=int(_pf.get("n_bets", 100)), step=10,
                         help="Número de apostas iguais que você quer simular.",
                     )
                     _def_bk = round(_bet["stake"] * float(_pf.get("n_bets", 100)), 2)
-                    csim_bankroll = csmc3.number_input(
+                    csim_bankroll = csmc2.number_input(
                         "Dinheiro total (R$)", min_value=1.0,
                         value=float(_pf.get("bankroll", _def_bk)),
                         step=10.0, format="%.2f",
                         help="Quanto você tem disponível para fazer essas apostas no total.",
                     )
-                    csim_cdi = csmc4.number_input(
+                    csim_cdi = csmc3.number_input(
                         "CDI anual (%)", min_value=0.0, max_value=100.0,
                         value=CDI_ANUAL_PADRAO, step=0.01, format="%.2f",
                         help="Taxa da renda fixa para comparar.",
@@ -1131,7 +1135,7 @@ if _page == "chat":
                     import numpy as np
                     import plotly.graph_objects as go
                     _rng        = np.random.default_rng()
-                    _p          = csim_p_pct / 100.0
+                    _p          = 0.5
                     _lucro_win  = _bet["stake"] * (_bet["odd"] - 1.0)
                     _perda_lose = _bet["stake"]
                     _n_sims     = 1000
@@ -1364,8 +1368,15 @@ elif _page == "simulacao":
         "<div style='background:#f0f5f2;border-radius:8px;padding:14px 18px;margin-bottom:16px;"
         "border-left:3px solid #163b2c;'>"
         "<div style='font-family:Rajdhani,sans-serif;font-size:1rem;color:#163b2c;line-height:1.6;'>"
-        "Informe a odd e o valor — veja o quanto ganha se acertar e o quanto perde se errar. "
-        "Depois pode simular o que aconteceria repetindo essa aposta várias vezes."
+        "Está assistindo a um jogo e quer entender melhor os riscos e os possíveis retornos de uma "
+        "aposta esportiva? Nesta aba, você pode simular diferentes cenários para visualizar quanto "
+        "poderia ganhar ou perder de acordo com a odd oferecida pela casa de apostas e o valor apostado."
+        "<br><br>"
+        "Por exemplo, se sua <b>aposta</b> for <b>Flamengo vence</b>, a odd for <b>2,50</b> e o valor "
+        "da aposta for <b>R$&nbsp;20</b>, o simulador mostrará que o retorno total seria de <b>R$&nbsp;50</b> "
+        "em caso de acerto (incluindo os R$&nbsp;20 apostados), enquanto a perda seria de <b>R$&nbsp;20</b> "
+        "em caso de erro. A proposta é facilitar a compreensão dos valores envolvidos e dos riscos "
+        "financeiros, sem prever o resultado da partida ou recomendar a realização da aposta."
         "</div></div>",
         unsafe_allow_html=True,
     )
