@@ -1559,17 +1559,6 @@ elif _page == "simulacao":
             "</div>",
             unsafe_allow_html=True,
         )
-        st.markdown(
-            "<div style='background:#f0f5f2;border-radius:8px;padding:14px 16px;margin-bottom:16px;"
-            "border-left:4px solid #163b2c;'>"
-            "<p style='font-family:Rajdhani,sans-serif;font-size:1rem;color:#163b2c;margin:0;line-height:1.5;'>"
-            "Se você fizer a <b>mesma aposta 100 vezes seguidas</b>, o que acontece com o seu dinheiro? "
-            "O simulador roda 1.000 cenários e mostra o melhor caso, o pior e o resultado mais provável. "
-            "Você informa a chance que <i>você</i> estima de acertar — não é a probabilidade da casa, é a sua avaliação."
-            "</p></div>",
-            unsafe_allow_html=True,
-        )
-
         with st.form(key="monte_carlo_form", clear_on_submit=False):
             st.markdown("**Dados da aposta que você quer repetir:**")
             mc1, mc2, mc3 = st.columns(3)
