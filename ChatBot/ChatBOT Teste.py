@@ -1497,6 +1497,17 @@ elif _page == "simulacao":
                     st.session_state.sim_bets.pop(i)
                     st.rerun()
 
+        # Aviso sobre probabilidade (logo abaixo dos cards de resultado)
+        st.markdown(
+            "<div style='background:#fff8e8;border-radius:8px;padding:10px 14px;margin:14px 0;"
+            "border-left:3px solid #b8860b;'>"
+            "<span style='font-family:Rajdhani,sans-serif;font-size:0.9rem;color:#7a5a00;'>"
+            "A simulação usa a sua estimativa de chance de acerto. "
+            "Se não souber, use <b>50%</b> — igual chance de ganhar e de perder."
+            "</span></div>",
+            unsafe_allow_html=True,
+        )
+
         # --- Conector: Simulação de Longo Prazo ---
         st.markdown(
             "<div style='margin:28px 0 0;padding:20px 24px;"
@@ -1522,15 +1533,6 @@ elif _page == "simulacao":
             "letter-spacing:2px;color:#163b2c;text-transform:uppercase;border-bottom:1px solid rgba(22,59,44,0.25);"
             "flex:1;padding-bottom:5px;'>Simulação de longo prazo</div>"
             "</div>",
-            unsafe_allow_html=True,
-        )
-        st.markdown(
-            "<div style='background:#fff8e8;border-radius:8px;padding:10px 14px;margin-bottom:14px;"
-            "border-left:3px solid #b8860b;'>"
-            "<span style='font-family:Rajdhani,sans-serif;font-size:0.9rem;color:#7a5a00;'>"
-            "A simulação usa a sua estimativa de chance de acerto. "
-            "Se não souber, use <b>50%</b> — igual chance de ganhar e de perder."
-            "</span></div>",
             unsafe_allow_html=True,
         )
         with st.form(key="monte_carlo_form", clear_on_submit=False):
