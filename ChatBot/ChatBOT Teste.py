@@ -455,7 +455,7 @@ components.html("""
 # --- Session state ---
 WELCOME_MSG_TEXT = (
     "Olá! Sou o BetBot, uma ferramenta de análise de apostas esportivas. "
-    "Posso explicar como as apostas funcionam, o que são odds, gestão de banca e muito mais — "
+    "Posso explicar como as apostas funcionam, o que são odds, como gerenciar seu dinheiro e muito mais — "
     "sem recomendar apostar ou não apostar. "
     "Se quiser calcular o retorno de uma aposta, é só pedir — abro o simulador aqui mesmo no chat."
 )
@@ -1065,19 +1065,19 @@ if _page == "chat":
                 f"<div style='font-family:Rajdhani,sans-serif;font-size:1.1rem;font-weight:700;"
                 f"color:#163b2c;margin-bottom:14px;'>{_sn}</div>"
                 f"<div style='display:grid;grid-template-columns:repeat(4,1fr);gap:12px;'>"
-                f"<div><div style='font-family:Rajdhani,sans-serif;font-size:0.72rem;font-weight:700;"
+                f"<div><div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;"
                 f"color:#163b2c;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;'>Odd</div>"
                 f"<div style='font-family:Rajdhani,sans-serif;font-size:1.25rem;font-weight:700;"
                 f"color:#163b2c;'>{_bet['odd']:.2f}</div></div>"
-                f"<div><div style='font-family:Rajdhani,sans-serif;font-size:0.72rem;font-weight:700;"
+                f"<div><div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;"
                 f"color:#163b2c;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;'>Aposta</div>"
                 f"<div style='font-family:Rajdhani,sans-serif;font-size:1.25rem;font-weight:700;"
                 f"color:#163b2c;'>R$ {_bet['stake']:.2f}</div></div>"
-                f"<div><div style='font-family:Rajdhani,sans-serif;font-size:0.72rem;font-weight:700;"
+                f"<div><div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;"
                 f"color:#163b2c;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;'>Retorno</div>"
                 f"<div style='font-family:Rajdhani,sans-serif;font-size:1.25rem;font-weight:700;"
                 f"color:{_acc};'>R$ {_ret:.2f}</div></div>"
-                f"<div><div style='font-family:Rajdhani,sans-serif;font-size:0.72rem;font-weight:700;"
+                f"<div><div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;"
                 f"color:#163b2c;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;'>Lucro</div>"
                 f"<div style='font-family:Rajdhani,sans-serif;font-size:1.25rem;font-weight:700;"
                 f"color:{_acc};'>{_ps}R$ {_luc:.2f}</div></div>"
@@ -1118,7 +1118,7 @@ if _page == "chat":
                         "Dinheiro total (R$)", min_value=1.0,
                         value=float(_pf.get("bankroll", _def_bk)),
                         step=10.0, format="%.2f",
-                        help="Total disponível para essas apostas.",
+                        help="Quanto você tem disponível para fazer essas apostas no total.",
                     )
                     csim_cdi = csmc4.number_input(
                         "CDI anual (%)", min_value=0.0, max_value=100.0,
@@ -1172,7 +1172,7 @@ if _page == "chat":
                 return (
                     f"<div style='background:#fff;border:1px solid rgba(22,59,44,0.12);"
                     f"border-left:4px solid {color};border-radius:0 8px 8px 0;padding:12px 14px;'>"
-                    f"<div style='font-family:Rajdhani,sans-serif;font-size:0.72rem;font-weight:700;"
+                    f"<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;"
                     f"color:#0f2a1e;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;'>{label}</div>"
                     f"<div style='font-family:Rajdhani,sans-serif;font-size:1.25rem;font-weight:700;"
                     f"color:{color};word-break:break-word;'>{value}</div>"
@@ -1182,7 +1182,7 @@ if _page == "chat":
             rc1.markdown(_mini_card("Melhor cenário", f"R$ {r['best_f']:.2f}", "#1a6641"), unsafe_allow_html=True)
             rc2.markdown(_mini_card("Média dos cenários", f"R$ {r['mean_f']:.2f}", "#163b2c" if r["mean_f"] >= _bk else "rgba(160,40,40,0.9)"), unsafe_allow_html=True)
             rc3.markdown(_mini_card("Pior cenário", f"R$ {r['worst_f']:.2f}", "rgba(160,40,40,0.9)"), unsafe_allow_html=True)
-            rc4.markdown(_mini_card("Zerou a banca", f"{r['pct_broke']:.1f}%", "rgba(160,40,40,0.9)" if r["pct_broke"] > 0 else "#1a6641"), unsafe_allow_html=True)
+            rc4.markdown(_mini_card("Ficou no zero", f"{r['pct_broke']:.1f}%", "rgba(160,40,40,0.9)" if r["pct_broke"] > 0 else "#1a6641"), unsafe_allow_html=True)
 
             # --- Gráfico de trajetórias ---
             _win_colors = ["#1a6641","#2196F3","#9C27B0","#FF6F00","#00838F","#E91E63","#33691E","#1565C0","#6A1B9A","#AD1457","#0277BD","#558B2F","#F57F17","#4527A0","#00695C","#283593","#827717","#BF360C","#01579B","#1B5E20"]
@@ -1215,11 +1215,11 @@ if _page == "chat":
                 f"<div style='background:#fff;border:1px solid rgba(22,59,44,0.15);border-radius:10px;padding:16px 20px;margin-top:10px;'>"
                 f"<div style='display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;'>"
                 f"<div style='background:#e8f5ee;border-radius:8px;padding:12px 14px;border-left:4px solid #1a6641;'>"
-                f"<div style='font-family:Rajdhani,sans-serif;font-size:0.72rem;font-weight:700;color:#1a6641;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;'>Cenários com lucro</div>"
+                f"<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;color:#1a6641;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;'>Cenários com lucro</div>"
                 f"<div style='font-family:Rajdhani,sans-serif;font-size:1.6rem;font-weight:700;color:#1a6641;'>{r['pct_win']:.0f}%</div>"
                 f"<div style='font-family:Rajdhani,sans-serif;font-size:0.78rem;color:#1a6641;'>({_n_win} de 1.000)</div></div>"
                 f"<div style='background:#fdf0f0;border-radius:8px;padding:12px 14px;border-left:4px solid rgba(160,40,40,0.6);'>"
-                f"<div style='font-family:Rajdhani,sans-serif;font-size:0.72rem;font-weight:700;color:rgba(140,30,30,0.9);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;'>Cenários com perda</div>"
+                f"<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;color:rgba(140,30,30,0.9);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;'>Cenários com perda</div>"
                 f"<div style='font-family:Rajdhani,sans-serif;font-size:1.6rem;font-weight:700;color:rgba(160,40,40,0.9);'>{r['pct_loss']:.0f}%</div>"
                 f"<div style='font-family:Rajdhani,sans-serif;font-size:0.78rem;color:rgba(140,30,30,0.8);'>({_n_loss} de 1.000)</div></div>"
                 f"</div>"
@@ -1364,15 +1364,8 @@ elif _page == "simulacao":
         "<div style='background:#f0f5f2;border-radius:8px;padding:14px 18px;margin-bottom:16px;"
         "border-left:3px solid #163b2c;'>"
         "<div style='font-family:Rajdhani,sans-serif;font-size:1rem;color:#163b2c;line-height:1.6;'>"
-        "Está assistindo a um jogo e quer entender melhor os riscos e os possíveis retornos de uma aposta esportiva? "
-        "Nesta aba, você pode simular diferentes cenários para visualizar quanto poderia ganhar ou perder de acordo "
-        "com a odd oferecida pela casa de apostas e o valor apostado."
-        "<br><br>"
-        "Por exemplo, se sua seleção for <b>Flamengo vence</b>, a odd for <b>2,50</b> e o valor da aposta for <b>R$ 20</b>, "
-        "o simulador mostrará que o retorno total seria de <b>R$ 50</b> em caso de acerto (incluindo os R$ 20 apostados), "
-        "enquanto a perda seria de <b>R$ 20</b> em caso de erro. "
-        "A proposta é facilitar a compreensão dos valores envolvidos e dos riscos financeiros, "
-        "sem prever o resultado da partida ou recomendar a realização da aposta."
+        "Informe a odd e o valor — veja o quanto ganha se acertar e o quanto perde se errar. "
+        "Depois pode simular o que aconteceria repetindo essa aposta várias vezes."
         "</div></div>",
         unsafe_allow_html=True,
     )
@@ -1383,45 +1376,24 @@ elif _page == "simulacao":
         c1, c2 = st.columns(2)
         sel_odd   = c1.number_input(
             "Odd", min_value=1.01, max_value=1000.0, value=2.00, step=0.01, format="%.2f",
-            help="Odds maiores podem pagar mais, mas geralmente indicam uma chance implícita menor.",
+            help="O número que a casa de apostas mostra para essa aposta.",
         )
         sel_stake = c2.number_input("Valor apostado (R$)", min_value=0.01, value=10.0, step=1.0, format="%.2f")
-        d1, d2 = st.columns([1, 2])
-        sel_p_pct = d1.number_input(
-            "Sua estimativa de chance (%)",
-            min_value=0.0, max_value=100.0, value=0.0, step=1.0, format="%.1f",
-            help="Opcional. Preencha para calcular o valor esperado desta aposta.",
-        )
-        sel_other_odds_str = d2.text_input(
-            "Odds dos outros resultados do mercado",
-            placeholder="Ex: 2.50, 3.10 (opcional, para calcular a margem)",
-            help="Opcional. Informe as odds dos demais resultados, separadas por vírgula.",
-        )
         sel_add = st.form_submit_button("Adicionar aposta", use_container_width=True)
 
     if sel_add and sel_name.strip():
-        other_odds: list[float] = []
-        for tok in sel_other_odds_str.split(","):
-            tok = tok.strip()
-            if tok:
-                try:
-                    v = float(tok.replace(",", "."))
-                    if v > 1.0:
-                        other_odds.append(v)
-                except ValueError:
-                    pass
         st.session_state.sim_bets.append({
             "name":       sel_name.strip(),
             "odd":        sel_odd,
             "stake":      sel_stake,
-            "p_estimate": sel_p_pct / 100.0 if sel_p_pct > 0 else None,
-            "other_odds": other_odds,
+            "p_estimate": None,
+            "other_odds": [],
         })
         st.rerun()
     elif sel_add:
         st.warning("Preencha o que você está apostando.")
 
-    # --- Lista de seleções ---
+    # --- Lista de apostas ---
     if st.session_state.sim_bets:
         st.markdown(
             "<div style='display:flex;align-items:center;gap:12px;margin:24px 0 14px;'>"
@@ -1453,19 +1425,19 @@ elif _page == "simulacao":
                     f"color:#163b2c;margin-bottom:14px;'>{safe_name}</div>"
                     f"<div style='display:grid;grid-template-columns:1fr 1fr 1.4fr 1.4fr;gap:12px;'>"
                     f"<div>"
-                    f"<div style='font-family:Rajdhani,sans-serif;font-size:0.72rem;font-weight:700;"
+                    f"<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;"
                     f"color:#163b2c;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;'>Odd</div>"
                     f"<div style='font-family:Rajdhani,sans-serif;font-size:1.25rem;font-weight:700;"
                     f"color:#163b2c;'>{bet['odd']:.2f}</div>"
                     f"</div>"
                     f"<div>"
-                    f"<div style='font-family:Rajdhani,sans-serif;font-size:0.72rem;font-weight:700;"
+                    f"<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;"
                     f"color:#163b2c;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;'>Aposta</div>"
                     f"<div style='font-family:Rajdhani,sans-serif;font-size:1.25rem;font-weight:700;"
                     f"color:#163b2c;'>R$ {bet['stake']:.2f}</div>"
                     f"</div>"
                     f"<div style='background:#e8f5ee;border-radius:8px;padding:10px 14px;'>"
-                    f"<div style='font-family:Rajdhani,sans-serif;font-size:0.72rem;font-weight:700;"
+                    f"<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;"
                     f"color:#1a6641;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;'>Se ganhar</div>"
                     f"<div style='font-family:Rajdhani,sans-serif;font-size:1.25rem;font-weight:700;"
                     f"color:#1a6641;'>+R$ {pot_profit:.2f}</div>"
@@ -1473,7 +1445,7 @@ elif _page == "simulacao":
                     f"recebe R$ {pot_return:.2f}</div>"
                     f"</div>"
                     f"<div style='background:#fdf0f0;border-radius:8px;padding:10px 14px;'>"
-                    f"<div style='font-family:Rajdhani,sans-serif;font-size:0.72rem;font-weight:700;"
+                    f"<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;"
                     f"color:rgba(140,30,30,0.9);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;'>Se perder</div>"
                     f"<div style='font-family:Rajdhani,sans-serif;font-size:1.25rem;font-weight:700;"
                     f"color:rgba(160,40,40,0.9);'>-R$ {bet['stake']:.2f}</div>"
@@ -1553,8 +1525,8 @@ elif _page == "simulacao":
                 help="Número de apostas iguais que você quer simular.",
             )
             mc_bankroll = mc5.number_input(
-                "Dinheiro apostado (R$)", min_value=1.0, value=200.0, step=10.0, format="%.2f",
-                help="O total que você vai colocar nessas apostas ao longo das rodadas simuladas.",
+                "Dinheiro total (R$)", min_value=1.0, value=200.0, step=10.0, format="%.2f",
+                help="Quanto você tem disponível para fazer essas apostas no total.",
             )
             mc_cdi_rate = mc6.number_input(
                 "CDI anual estimado (%)", min_value=0.0, max_value=100.0, value=CDI_ANUAL_PADRAO, step=0.01, format="%.2f",
@@ -1600,10 +1572,10 @@ elif _page == "simulacao":
 
             st.markdown(
                 "<div style='background:#163b2c;border-radius:8px;padding:14px 18px;margin:16px 0;'>"
-                "<div style='font-family:Rajdhani,sans-serif;font-size:0.6rem;letter-spacing:3px;"
-                "color:rgba(255,255,255,0.6);text-transform:uppercase;'>1.000 simulações</div>"
-                f"<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;color:#fff;margin-top:3px;'>"
-                f"{n_bets} apostas &nbsp;·&nbsp; odd {mc_odd:.2f} &nbsp;·&nbsp; banca R$ {bankroll:.2f}"
+                "<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;"
+                "color:rgba(255,255,255,0.75);text-transform:uppercase;letter-spacing:1px;'>1.000 simulações</div>"
+                f"<div style='font-family:Rajdhani,sans-serif;font-size:1.05rem;font-weight:600;color:#fff;margin-top:4px;'>"
+                f"{n_bets} apostas &nbsp;·&nbsp; odd {mc_odd:.2f} &nbsp;·&nbsp; total R$ {bankroll:.2f}"
                 f"</div></div>",
                 unsafe_allow_html=True,
             )
@@ -1633,7 +1605,7 @@ elif _page == "simulacao":
             st.markdown("<div style='margin-top:8px;'></div>", unsafe_allow_html=True)
             if pct_broke > 0:
                 st.warning(
-                    f"Em {pct_broke:.1f}% dos cenários simulados a banca zerou antes de terminar as apostas. "
+                    f"Em {pct_broke:.1f}% dos cenários simulados o dinheiro acabou antes de terminar as apostas. "
                     "Isso significa que, com a chance que você informou, há risco real de perder tudo."
                 )
             st.caption("Resultados baseados na chance que você estimou. Não representam previsões reais.")
@@ -1750,7 +1722,7 @@ elif _page == "simulacao":
                 f"<div style='font-family:Rajdhani,sans-serif;font-size:1.5rem;font-weight:700;"
                 f"color:{_mean_color};'>R$ {mean_gain:+.2f}</div>"
                 f"<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;color:{_mean_color};margin-top:3px;'>"
-                f"sobre a banca inicial</div></div>",
+                f"sobre o total inicial</div></div>",
                 unsafe_allow_html=True,
             )
             c3.markdown(
@@ -1889,8 +1861,8 @@ elif _page == "simulacao":
             "<div style='background:#f0f5f2;border-radius:8px;padding:16px 20px;margin:10px 0;"
             "border:1px dashed rgba(22,59,44,0.3);text-align:center;'>"
             "<span style='font-family:Rajdhani,sans-serif;font-size:1rem;color:#163b2c;'>"
-            "Nenhuma seleção adicionada ainda. Preencha o formulário acima e clique em "
-            "<b>Adicionar</b> para começar."
+            "Nenhuma aposta adicionada ainda. Preencha o formulário acima e clique em "
+            "<b>Adicionar aposta</b> para começar."
             "</span></div>",
             unsafe_allow_html=True,
         )
@@ -2104,19 +2076,19 @@ elif _page == "historico":
                     f"</div>"
                     f"<div style='display:grid;grid-template-columns:repeat(3,1fr);gap:12px;'>"
                     f"<div>"
-                    f"<div style='font-family:Rajdhani,sans-serif;font-size:0.72rem;font-weight:700;"
+                    f"<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;"
                     f"color:#0f2a1e;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;'>Apostado</div>"
                     f"<div style='font-family:Rajdhani,sans-serif;font-size:1.25rem;font-weight:700;"
                     f"color:#0f2a1e;'>R$ {bet['stake']:.2f}</div>"
                     f"</div>"
                     f"<div>"
-                    f"<div style='font-family:Rajdhani,sans-serif;font-size:0.72rem;font-weight:700;"
+                    f"<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;"
                     f"color:#0f2a1e;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;'>Total recebido</div>"
                     f"<div style='font-family:Rajdhani,sans-serif;font-size:1.25rem;font-weight:700;"
                     f"color:#0f2a1e;'>R$ {bet['gross_return']:.2f}</div>"
                     f"</div>"
                     f"<div>"
-                    f"<div style='font-family:Rajdhani,sans-serif;font-size:0.72rem;font-weight:700;"
+                    f"<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;"
                     f"color:#0f2a1e;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;'>Lucro / Prejuízo</div>"
                     f"<div style='font-family:Rajdhani,sans-serif;font-size:1.25rem;font-weight:700;"
                     f"color:{net_color};'>{net_sign}R$ {net:.2f}</div>"
