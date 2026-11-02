@@ -1592,40 +1592,40 @@ elif _page == "simulacao":
         if st.session_state.sim_show_mc is True and st.session_state.sim_prob_step == 2:
             mc_run = False
 
-            st.markdown(
-                "<div style='display:flex;align-items:center;gap:12px;margin:16px 0 14px;'>"
-                "<div style='width:30px;height:30px;background:#163b2c;border-radius:50%;"
-                "display:flex;align-items:center;justify-content:center;flex-shrink:0;'>"
-                "<span style='font-size:1rem;color:#fff;'>→</span>"
-                "</div>"
-                "<div style='font-family:Rajdhani,sans-serif;font-size:0.75rem;font-weight:700;"
-                "letter-spacing:2px;color:#163b2c;text-transform:uppercase;"
-                "border-bottom:1px solid rgba(22,59,44,0.25);flex:1;padding-bottom:5px;'>"
-                "Vamos ver o que acontece se repetir essa aposta várias vezes.</div>"
-                "</div>",
-                unsafe_allow_html=True,
-            )
-
-            st.markdown(
-                "<div style='margin:28px 0 0;padding:20px 24px;"
-                "background:linear-gradient(135deg,#f0f5f2 0%,#e8f5ee 100%);"
-                "border-radius:10px;border:1px solid rgba(22,59,44,0.2);border-left:4px solid #163b2c;'>"
-                "<div style='font-family:Rajdhani,sans-serif;font-size:0.95rem;color:#163b2c;line-height:1.6;'>"
-                "Imagine repetir essa mesma aposta dezenas ou centenas de vezes seguidas. "
-                "O simulador roda <b>1.000 cenários diferentes</b> para mostrar o leque do que pode acontecer "
-                "com o seu dinheiro — do pior ao melhor caso — e compara com o quanto ele renderia "
-                "na <b>renda fixa</b> no mesmo período."
-                "</div>"
-                "<div style='font-family:Rajdhani,sans-serif;font-size:0.88rem;color:#163b2c;"
-                "line-height:1.5;margin-top:12px;border-top:1px solid rgba(22,59,44,0.18);"
-                "padding-top:10px;'>"
-                "Para simular, preencha os campos abaixo: a odd e o valor de cada aposta, "
-                "quantas vezes você quer repetir, quanto tem disponível no total e a taxa CDI "
-                "para a comparação com a renda fixa."
-                "</div></div>",
-                unsafe_allow_html=True,
-            )
             if not st.session_state.get("sim_mc_result"):
+                st.markdown(
+                    "<div style='display:flex;align-items:center;gap:12px;margin:16px 0 14px;'>"
+                    "<div style='width:30px;height:30px;background:#163b2c;border-radius:50%;"
+                    "display:flex;align-items:center;justify-content:center;flex-shrink:0;'>"
+                    "<span style='font-size:1rem;color:#fff;'>→</span>"
+                    "</div>"
+                    "<div style='font-family:Rajdhani,sans-serif;font-size:0.75rem;font-weight:700;"
+                    "letter-spacing:2px;color:#163b2c;text-transform:uppercase;"
+                    "border-bottom:1px solid rgba(22,59,44,0.25);flex:1;padding-bottom:5px;'>"
+                    "Vamos ver o que acontece se repetir essa aposta várias vezes.</div>"
+                    "</div>",
+                    unsafe_allow_html=True,
+                )
+
+                st.markdown(
+                    "<div style='margin:28px 0 0;padding:20px 24px;"
+                    "background:linear-gradient(135deg,#f0f5f2 0%,#e8f5ee 100%);"
+                    "border-radius:10px;border:1px solid rgba(22,59,44,0.2);border-left:4px solid #163b2c;'>"
+                    "<div style='font-family:Rajdhani,sans-serif;font-size:0.95rem;color:#163b2c;line-height:1.6;'>"
+                    "Imagine repetir essa mesma aposta dezenas ou centenas de vezes seguidas. "
+                    "O simulador roda <b>1.000 cenários diferentes</b> para mostrar o leque do que pode acontecer "
+                    "com o seu dinheiro — do pior ao melhor caso — e compara com o quanto ele renderia "
+                    "na <b>renda fixa</b> no mesmo período."
+                    "</div>"
+                    "<div style='font-family:Rajdhani,sans-serif;font-size:0.88rem;color:#163b2c;"
+                    "line-height:1.5;margin-top:12px;border-top:1px solid rgba(22,59,44,0.18);"
+                    "padding-top:10px;'>"
+                    "Para simular, preencha os campos abaixo: a odd e o valor de cada aposta, "
+                    "quantas vezes você quer repetir, quanto tem disponível no total e a taxa CDI "
+                    "para a comparação com a renda fixa."
+                    "</div></div>",
+                    unsafe_allow_html=True,
+                )
                 st.markdown("<div style='margin-top:20px;'></div>", unsafe_allow_html=True)
                 with st.form(key="monte_carlo_form", clear_on_submit=False):
                     st.markdown("**Dados da aposta que você quer repetir:**")
