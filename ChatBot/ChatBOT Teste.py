@@ -1206,21 +1206,39 @@ if _page == "chat":
                         unsafe_allow_html=True,
                     )
 
-                st.markdown(
-                    f"<div style='margin:20px 0 4px;padding:18px 22px;"
-                    f"background:linear-gradient(135deg,#f0f5f2 0%,#e8f5ee 100%);"
-                    f"border-radius:10px;border:1px solid rgba(22,59,44,0.2);border-left:4px solid #163b2c;'>"
-                    f"<div style='font-family:Rajdhani,sans-serif;font-size:1.0rem;font-weight:700;"
-                    f"color:#163b2c;margin-bottom:6px;'>E se você repetir essa aposta várias vezes?</div>"
-                    f"<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;color:#163b2c;line-height:1.5;'>"
-                    f"Ao repetir a mesma aposta várias vezes, o resultado pode variar bastante. "
-                    f"O simulador abaixo mostra 1.000 cenários possíveis para o seu dinheiro "
-                    f"— e compara com o quanto ele renderia na renda fixa no mesmo período."
-                    f"</div></div>",
-                    unsafe_allow_html=True,
-                )
+                # Gate: pergunta antes de mostrar a simulação de longo prazo
+                if st.session_state.chat_show_traj is None:
+                    st.markdown(
+                        "<div style='font-family:Rajdhani,sans-serif;font-size:1rem;font-weight:600;"
+                        "color:#163b2c;margin:18px 0 10px;'>"
+                        "Quer visualizar como o seu dinheiro pode se comportar ao longo do tempo, "
+                        "repetindo essa aposta várias vezes?</div>",
+                        unsafe_allow_html=True,
+                    )
+                    _tg1, _tg2 = st.columns(2)
+                    if _tg1.button("Sim", key="chat_traj_sim", use_container_width=True):
+                        st.session_state.chat_show_traj = True
+                        st.rerun()
+                    if _tg2.button("Não", key="chat_traj_nao", use_container_width=True):
+                        st.session_state.chat_show_traj = False
+                        st.rerun()
 
-                if not st.session_state.chat_sim_result:
+                if st.session_state.chat_show_traj is True:
+                    st.markdown(
+                        f"<div style='margin:20px 0 4px;padding:18px 22px;"
+                        f"background:linear-gradient(135deg,#f0f5f2 0%,#e8f5ee 100%);"
+                        f"border-radius:10px;border:1px solid rgba(22,59,44,0.2);border-left:4px solid #163b2c;'>"
+                        f"<div style='font-family:Rajdhani,sans-serif;font-size:1.0rem;font-weight:700;"
+                        f"color:#163b2c;margin-bottom:6px;'>E se você repetir essa aposta várias vezes?</div>"
+                        f"<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;color:#163b2c;line-height:1.5;'>"
+                        f"Ao repetir a mesma aposta várias vezes, o resultado pode variar bastante. "
+                        f"O simulador abaixo mostra 1.000 cenários possíveis para o seu dinheiro "
+                        f"— e compara com o quanto ele renderia na renda fixa no mesmo período."
+                        f"</div></div>",
+                        unsafe_allow_html=True,
+                    )
+
+                if st.session_state.chat_show_traj is True and not st.session_state.chat_sim_result:
                     with st.form(key="chat_sim_mc_form", clear_on_submit=False):
                         csmc1, csmc2, csmc3, csmc4 = st.columns(4)
                         csim_p_pct = csmc1.number_input(
@@ -1307,41 +1325,25 @@ if _page == "chat":
             rc3.markdown(_mini_card("Pior cenário", f"R$ {r['worst_f']:.2f}", "rgba(160,40,40,0.9)"), unsafe_allow_html=True)
             rc4.markdown(_mini_card("Ficou no zero", f"{r['pct_broke']:.1f}%", "rgba(160,40,40,0.9)" if r["pct_broke"] > 0 else "#1a6641"), unsafe_allow_html=True)
 
-            # --- Gate: gráfico de trajetórias ---
-            if st.session_state.chat_show_traj is None:
-                st.markdown(
-                    "<div style='font-family:Rajdhani,sans-serif;font-size:1rem;font-weight:600;"
-                    "color:#163b2c;margin:18px 0 10px;'>"
-                    "Quer visualizar como o seu dinheiro pode se comportar ao longo das apostas?</div>",
-                    unsafe_allow_html=True,
-                )
-                _tg1, _tg2 = st.columns(2)
-                if _tg1.button("Sim", key="chat_traj_sim", use_container_width=True):
-                    st.session_state.chat_show_traj = True
-                    st.rerun()
-                if _tg2.button("Não", key="chat_traj_nao", use_container_width=True):
-                    st.session_state.chat_show_traj = False
-                    st.rerun()
-
-            if st.session_state.chat_show_traj is True:
-                _win_colors = ["#1a6641","#2196F3","#9C27B0","#FF6F00","#00838F","#E91E63","#33691E","#1565C0","#6A1B9A","#AD1457","#0277BD","#558B2F","#F57F17","#4527A0","#00695C","#283593","#827717","#BF360C","#01579B","#1B5E20"]
-                _fig = go.Figure()
-                for _i, _traj in enumerate(r["trajs"]):
-                    _xv = list(range(len(_traj)))
-                    if _traj[-1] > _bk:
-                        _fig.add_trace(go.Scatter(x=_xv, y=_traj, mode="lines", line=dict(color=_win_colors[_i % len(_win_colors)], width=2), name=f"Cenário {_i+1} ✓", opacity=0.9))
-                    else:
-                        _fig.add_trace(go.Scatter(x=_xv, y=_traj, mode="lines", line=dict(color="rgba(150,150,150,0.2)", width=1), showlegend=False))
-                _fig.add_hline(y=_bk, line_dash="dot", line_color="rgba(22,59,44,0.5)", line_width=1.5)
-                _fig.update_layout(
-                    margin=dict(l=0, r=0, t=10, b=10), paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
-                    hovermode=False,
-                    xaxis=dict(showgrid=True, gridcolor="rgba(22,59,44,0.08)", title="Aposta nº", fixedrange=True),
-                    yaxis=dict(showgrid=True, gridcolor="rgba(22,59,44,0.08)", title="Saldo (R$)", fixedrange=True),
-                    legend=dict(orientation="h", yanchor="bottom", y=-0.3, xanchor="left", x=0, font=dict(size=10)),
-                    height=320,
-                )
-                st.plotly_chart(_fig, use_container_width=True, config={"displayModeBar": False})
+            # --- Gráfico de trajetórias (usuario ja disse Sim ao long-run) ---
+            _win_colors = ["#1a6641","#2196F3","#9C27B0","#FF6F00","#00838F","#E91E63","#33691E","#1565C0","#6A1B9A","#AD1457","#0277BD","#558B2F","#F57F17","#4527A0","#00695C","#283593","#827717","#BF360C","#01579B","#1B5E20"]
+            _fig = go.Figure()
+            for _i, _traj in enumerate(r["trajs"]):
+                _xv = list(range(len(_traj)))
+                if _traj[-1] > _bk:
+                    _fig.add_trace(go.Scatter(x=_xv, y=_traj, mode="lines", line=dict(color=_win_colors[_i % len(_win_colors)], width=2), name=f"Cenário {_i+1} ✓", opacity=0.9))
+                else:
+                    _fig.add_trace(go.Scatter(x=_xv, y=_traj, mode="lines", line=dict(color="rgba(150,150,150,0.2)", width=1), showlegend=False))
+            _fig.add_hline(y=_bk, line_dash="dot", line_color="rgba(22,59,44,0.5)", line_width=1.5)
+            _fig.update_layout(
+                margin=dict(l=0, r=0, t=10, b=10), paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
+                hovermode=False,
+                xaxis=dict(showgrid=True, gridcolor="rgba(22,59,44,0.08)", title="Aposta nº", fixedrange=True),
+                yaxis=dict(showgrid=True, gridcolor="rgba(22,59,44,0.08)", title="Saldo (R$)", fixedrange=True),
+                legend=dict(orientation="h", yanchor="bottom", y=-0.3, xanchor="left", x=0, font=dict(size=10)),
+                height=320,
+            )
+            st.plotly_chart(_fig, use_container_width=True, config={"displayModeBar": False})
 
             # --- Conclusão ---
             _n_win  = int(round(r["pct_win"]  * 10))
@@ -1676,6 +1678,7 @@ elif _page == "simulacao":
 
         if st.session_state.sim_prob_step == 2:
             # PASSO 2: card EV (quando custom) + conector + formulário Monte Carlo
+            mc_run = False
             _prob_label = f"{st.session_state.sim_final_prob:.0f}%"
 
             if st.session_state.sim_chose_custom and st.session_state.sim_bets:
@@ -1729,68 +1732,85 @@ elif _page == "simulacao":
                         unsafe_allow_html=True,
                     )
 
-            st.markdown(
-                f"<div style='margin:28px 0 0;padding:20px 24px;"
-                f"background:linear-gradient(135deg,#f0f5f2 0%,#e8f5ee 100%);"
-                f"border-radius:10px;border:1px solid rgba(22,59,44,0.2);border-left:4px solid #163b2c;'>"
-                f"<div style='font-family:Rajdhani,sans-serif;font-size:1.05rem;font-weight:700;"
-                f"color:#163b2c;margin-bottom:8px;'>E se você fizer essa mesma aposta 100 vezes seguidas?</div>"
-                f"<div style='font-family:Rajdhani,sans-serif;font-size:0.95rem;color:#163b2c;line-height:1.5;'>"
-                f"Ao repetir a mesma aposta várias vezes, o resultado pode variar bastante. "
-                f"O simulador abaixo mostra 1.000 cenários possíveis para o seu dinheiro "
-                f"— e compara com o quanto ele renderia na renda fixa no mesmo período."
-                f"</div></div>",
-                unsafe_allow_html=True,
-            )
-            st.markdown(
-                "<div style='display:flex;align-items:center;gap:12px;margin:20px 0 14px;'>"
-                "<div style='width:30px;height:30px;background:#163b2c;border-radius:50%;"
-                "display:flex;align-items:center;justify-content:center;flex-shrink:0;'>"
-                "<span style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;color:#fff;'>4</span>"
-                "</div>"
-                "<div style='font-family:Rajdhani,sans-serif;font-size:0.75rem;font-weight:700;"
-                "letter-spacing:2px;color:#163b2c;text-transform:uppercase;border-bottom:1px solid rgba(22,59,44,0.25);"
-                "flex:1;padding-bottom:5px;'>Simulação de longo prazo</div>"
-                "</div>",
-                unsafe_allow_html=True,
-            )
-            with st.form(key="monte_carlo_form", clear_on_submit=False):
-                st.markdown("**Dados da aposta que você quer repetir:**")
-                mc1, mc2, mc3 = st.columns(3)
-                mc_odd      = mc1.number_input(
-                    "Odd", min_value=1.01, max_value=1000.0,
-                    value=float(st.session_state.sim_bets[0]["odd"]) if st.session_state.sim_bets else 2.00,
-                    step=0.01, format="%.2f",
-                    help="O número que a casa de apostas mostra para essa aposta.",
+            # --- Gate: simulação de longo prazo ---
+            if st.session_state.sim_show_traj is None:
+                st.markdown(
+                    "<div style='font-family:Rajdhani,sans-serif;font-size:1rem;font-weight:600;"
+                    "color:#163b2c;margin:18px 0 10px;'>"
+                    "Quer visualizar como o seu dinheiro pode se comportar ao longo do tempo, "
+                    "repetindo essa aposta várias vezes?</div>",
+                    unsafe_allow_html=True,
                 )
-                mc_stake    = mc2.number_input(
-                    "Valor por aposta (R$)", min_value=0.01,
-                    value=float(st.session_state.sim_bets[0]["stake"]) if st.session_state.sim_bets else 10.0,
-                    step=1.0, format="%.2f",
-                    help="Quanto você vai colocar em cada uma das apostas.",
+                _stg1, _stg2 = st.columns(2)
+                if _stg1.button("Sim", key="sim_traj_sim", use_container_width=True):
+                    st.session_state.sim_show_traj = True
+                    st.rerun()
+                if _stg2.button("Não", key="sim_traj_nao", use_container_width=True):
+                    st.session_state.sim_show_traj = False
+                    st.rerun()
+
+            if st.session_state.sim_show_traj is True:
+                st.markdown(
+                    f"<div style='margin:28px 0 0;padding:20px 24px;"
+                    f"background:linear-gradient(135deg,#f0f5f2 0%,#e8f5ee 100%);"
+                    f"border-radius:10px;border:1px solid rgba(22,59,44,0.2);border-left:4px solid #163b2c;'>"
+                    f"<div style='font-family:Rajdhani,sans-serif;font-size:1.05rem;font-weight:700;"
+                    f"color:#163b2c;margin-bottom:8px;'>E se você fizer essa mesma aposta 100 vezes seguidas?</div>"
+                    f"<div style='font-family:Rajdhani,sans-serif;font-size:0.95rem;color:#163b2c;line-height:1.5;'>"
+                    f"Ao repetir a mesma aposta várias vezes, o resultado pode variar bastante. "
+                    f"O simulador abaixo mostra 1.000 cenários possíveis para o seu dinheiro "
+                    f"— e compara com o quanto ele renderia na renda fixa no mesmo período."
+                    f"</div></div>",
+                    unsafe_allow_html=True,
                 )
-                mc_p_pct    = mc3.number_input(
-                    "Chance de acerto (%)", min_value=0.1, max_value=99.9,
-                    value=float(st.session_state.sim_final_prob), step=1.0, format="%.1f",
-                    help="Sua estimativa de chance de ganhar. Pré-preenchida com o valor que você escolheu.",
+                st.markdown(
+                    "<div style='display:flex;align-items:center;gap:12px;margin:20px 0 14px;'>"
+                    "<div style='width:30px;height:30px;background:#163b2c;border-radius:50%;"
+                    "display:flex;align-items:center;justify-content:center;flex-shrink:0;'>"
+                    "<span style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;color:#fff;'>4</span>"
+                    "</div>"
+                    "<div style='font-family:Rajdhani,sans-serif;font-size:0.75rem;font-weight:700;"
+                    "letter-spacing:2px;color:#163b2c;text-transform:uppercase;border-bottom:1px solid rgba(22,59,44,0.25);"
+                    "flex:1;padding-bottom:5px;'>Simulação de longo prazo</div>"
+                    "</div>",
+                    unsafe_allow_html=True,
                 )
-                mc4, mc5, mc6 = st.columns(3)
-                mc_n_bets   = mc4.number_input(
-                    "Quantas vezes vai repetir?", min_value=10, max_value=1000, value=100, step=10,
-                    help="Número de apostas iguais que você quer simular.",
-                )
-                mc_bankroll = mc5.number_input(
-                    "Dinheiro total (R$)", min_value=1.0, value=200.0, step=10.0, format="%.2f",
-                    help="Quanto você tem disponível para fazer essas apostas no total.",
-                )
-                mc_cdi_rate = mc6.number_input(
-                    "CDI anual estimado (%)", min_value=0.0, max_value=100.0, value=CDI_ANUAL_PADRAO, step=0.01, format="%.2f",
-                    help="Taxa do CDI (renda fixa) para comparar com as apostas.",
-                )
-                mc_run = st.form_submit_button("Simular")
+                with st.form(key="monte_carlo_form", clear_on_submit=False):
+                    st.markdown("**Dados da aposta que você quer repetir:**")
+                    mc1, mc2, mc3 = st.columns(3)
+                    mc_odd      = mc1.number_input(
+                        "Odd", min_value=1.01, max_value=1000.0,
+                        value=float(st.session_state.sim_bets[0]["odd"]) if st.session_state.sim_bets else 2.00,
+                        step=0.01, format="%.2f",
+                        help="O número que a casa de apostas mostra para essa aposta.",
+                    )
+                    mc_stake    = mc2.number_input(
+                        "Valor por aposta (R$)", min_value=0.01,
+                        value=float(st.session_state.sim_bets[0]["stake"]) if st.session_state.sim_bets else 10.0,
+                        step=1.0, format="%.2f",
+                        help="Quanto você vai colocar em cada uma das apostas.",
+                    )
+                    mc_p_pct    = mc3.number_input(
+                        "Chance de acerto (%)", min_value=0.1, max_value=99.9,
+                        value=float(st.session_state.sim_final_prob), step=1.0, format="%.1f",
+                        help="Sua estimativa de chance de ganhar. Pré-preenchida com o valor que você escolheu.",
+                    )
+                    mc4, mc5, mc6 = st.columns(3)
+                    mc_n_bets   = mc4.number_input(
+                        "Quantas vezes vai repetir?", min_value=10, max_value=1000, value=100, step=10,
+                        help="Número de apostas iguais que você quer simular.",
+                    )
+                    mc_bankroll = mc5.number_input(
+                        "Dinheiro total (R$)", min_value=1.0, value=200.0, step=10.0, format="%.2f",
+                        help="Quanto você tem disponível para fazer essas apostas no total.",
+                    )
+                    mc_cdi_rate = mc6.number_input(
+                        "CDI anual estimado (%)", min_value=0.0, max_value=100.0, value=CDI_ANUAL_PADRAO, step=0.01, format="%.2f",
+                        help="Taxa do CDI (renda fixa) para comparar com as apostas.",
+                    )
+                    mc_run = st.form_submit_button("Simular")
 
         if st.session_state.sim_prob_step == 2 and mc_run:
-            st.session_state.sim_show_traj = None
             import numpy as np
             import pandas as pd
             import plotly.graph_objects as go
@@ -1992,22 +2012,6 @@ elif _page == "simulacao":
                 f"{delta_sign} do que o CDI</div></div>",
                 unsafe_allow_html=True,
             )
-
-            # --- Gate: gráfico de trajetórias ---
-            if st.session_state.sim_show_traj is None:
-                st.markdown(
-                    "<div style='font-family:Rajdhani,sans-serif;font-size:1rem;font-weight:600;"
-                    "color:#163b2c;margin:18px 0 10px;'>"
-                    "Quer visualizar como o seu dinheiro pode se comportar ao longo das apostas?</div>",
-                    unsafe_allow_html=True,
-                )
-                _stg1, _stg2 = st.columns(2)
-                if _stg1.button("Sim", key="sim_traj_sim", use_container_width=True):
-                    st.session_state.sim_show_traj = True
-                    st.rerun()
-                if _stg2.button("Não", key="sim_traj_nao", use_container_width=True):
-                    st.session_state.sim_show_traj = False
-                    st.rerun()
 
             if st.session_state.sim_show_traj is True:
                 st.markdown(
