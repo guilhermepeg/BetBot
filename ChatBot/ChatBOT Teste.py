@@ -1816,7 +1816,7 @@ elif _page == "simulacao":
 
             # --- Gráfico divergente: melhor / média / pior ---
             st.markdown(
-                "<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;"
+                "<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;font-weight:900;"
                 "letter-spacing:2px;color:#163b2c;text-transform:uppercase;margin:20px 0 6px;'>"
                 "Comparação visual: ganho ou perda</div>",
                 unsafe_allow_html=True,
