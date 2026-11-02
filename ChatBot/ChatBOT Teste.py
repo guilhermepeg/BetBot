@@ -701,10 +701,12 @@ Regras de conteúdo:
 - O usuário pode fazer perguntas vagas — interprete a intenção e responda da forma mais útil.
 - Se a pergunta não tiver relação com apostas esportivas (ex: receitas, programação, saúde),
   informe educadamente e redirecione para o escopo da ferramenta.
-- Quando o usuário pedir para simular, calcular, ou ver quanto pode ganhar ou perder: pergunte
-  exatamente isso — "Quer que eu abra o simulador para você ou prefere me contar o que quer
-  simular e eu faço o cálculo aqui?" — e aguarde a resposta. Se quiser o simulador aberto,
-  diga que ele será carregado logo abaixo no chat. NUNCA peça para ir a outra aba.
+- Quando o usuário pedir para simular, calcular, ou ver quanto pode ganhar ou perder: responda
+  com entusiasmo (ex: "Ótimo! Vou abrir o simulador para você...") explicando brevemente o que
+  ele faz, e no meio da resposta inclua a pergunta: "Quer que eu abra o simulador para você ou
+  prefere me contar o que quer simular e eu faço o cálculo aqui?" — aguarde a resposta antes de
+  abrir qualquer coisa. Se o usuário confirmar que quer o simulador, diga que ele será carregado
+  logo abaixo no chat. Se preferir descrever, faça o cálculo em texto. NUNCA peça para ir a outra aba.
 - Ao mencionar a estimativa de chance da odd, avise que é uma referência numérica, não uma
   previsão real.
 - Nunca incentive apostas irresponsáveis; quando relevante, reforce jogo responsável.
@@ -1431,8 +1433,9 @@ if _page == "chat":
                     active_chat["title"] = user_input.strip()[:40] or attachments[0]["name"][:40]
                 st.session_state.chats.sort(key=lambda chat: chat["updated_at"], reverse=True)
                 st.session_state.chat_attachment_version += 1
-                _SIM_KW = {"simul", "calcul", "quanto ganharia", "quanto perderia",
-                           "retorno", "odd", "simule", "me simul"}
+                _SIM_KW = {"abre o simulador", "abra o simulador", "abre para mim",
+                           "sim, abre", "sim abre", "quero o simulador",
+                           "sim quero o simul", "abre o simul"}
                 if any(kw in message_text.lower() for kw in _SIM_KW):
                     st.session_state.chat_sim_open = True
                     _odd_m = re.search(r'\b(?:odd|cota)\s*(?:de\s*)?(\d+(?:[.,]\d+)?)', message_text, re.I)
