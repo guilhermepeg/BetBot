@@ -1908,11 +1908,11 @@ elif _page == "simulacao":
                 )
                 st.markdown(
                     f"O simulador rodou 1.000 situações diferentes e escolheu algumas para mostrar no gráfico. "
-                    f"**Cada linha colorida é uma dessas situações** — como se você apostasse {_smr['n_bets']} vezes "
+                    f"Cada linha é uma dessas situações, ou seja, é como se você apostasse {_smr['n_bets']} vezes "
                     f"seguidas, começando com R$ {_smr_bk:.2f}. "
-                    f"Linhas que sobem mostram situações em que o saldo cresceu. "
-                    f"Linhas que descem mostram situações em que o saldo caiu. "
-                    f"Isso não é uma previsão — é só para mostrar o que pode acontecer em cada caminho possível."
+                    f"Linhas coloridas mostram as situações em que você ganhou dinheiro. "
+                    f"Linhas cinzas mostram situações em que você perdeu. "
+                    f"É importante destacar, que isso não é uma previsão, é só para mostrar o que pode acontecer em cada caminho possível."
                 )
                 _win_colors = [
                     "#1a6641","#2196F3","#9C27B0","#FF6F00","#00838F",
@@ -1947,14 +1947,14 @@ elif _page == "simulacao":
                     line_width=1.5,
                 )
                 fig.update_layout(
-                    margin=dict(l=0, r=0, t=10, b=10),
+                    margin=dict(l=0, r=0, t=10, b=90),
                     paper_bgcolor="rgba(0,0,0,0)",
                     plot_bgcolor="rgba(0,0,0,0)",
                     hovermode=False,
                     xaxis=dict(showgrid=True, gridcolor="rgba(22,59,44,0.08)", title="Aposta nº", fixedrange=True),
                     yaxis=dict(showgrid=True, gridcolor="rgba(22,59,44,0.08)", title="Saldo (R$)", fixedrange=True),
                     legend=dict(
-                        orientation="h", yanchor="bottom", y=-0.25,
+                        orientation="h", yanchor="top", y=-0.18,
                         xanchor="left", x=0, font=dict(size=11),
                     ),
                     height=380,
