@@ -622,6 +622,10 @@ if "sim_chose_custom" not in st.session_state:
     st.session_state.sim_chose_custom = False
 if "chat_chose_custom" not in st.session_state:
     st.session_state.chat_chose_custom = False
+if "chat_show_traj" not in st.session_state:
+    st.session_state.chat_show_traj = None
+if "sim_show_traj" not in st.session_state:
+    st.session_state.sim_show_traj = None
 
 
 # --- Real AI engine (Anthropic Claude) ---
@@ -1065,6 +1069,8 @@ if _page == "chat":
                 st.session_state.chat_prob_step = 0
                 st.session_state.chat_final_prob = 50.0
                 st.session_state.chat_chose_custom = False
+                st.session_state.chat_sim_result = None
+                st.session_state.chat_show_traj = None
                 st.rerun()
 
         # --- Fase 2: resultado de 1 cenário + conector + Monte Carlo ---
@@ -1301,25 +1307,41 @@ if _page == "chat":
             rc3.markdown(_mini_card("Pior cenário", f"R$ {r['worst_f']:.2f}", "rgba(160,40,40,0.9)"), unsafe_allow_html=True)
             rc4.markdown(_mini_card("Ficou no zero", f"{r['pct_broke']:.1f}%", "rgba(160,40,40,0.9)" if r["pct_broke"] > 0 else "#1a6641"), unsafe_allow_html=True)
 
-            # --- Gráfico de trajetórias ---
-            _win_colors = ["#1a6641","#2196F3","#9C27B0","#FF6F00","#00838F","#E91E63","#33691E","#1565C0","#6A1B9A","#AD1457","#0277BD","#558B2F","#F57F17","#4527A0","#00695C","#283593","#827717","#BF360C","#01579B","#1B5E20"]
-            _fig = go.Figure()
-            for _i, _traj in enumerate(r["trajs"]):
-                _xv = list(range(len(_traj)))
-                if _traj[-1] > _bk:
-                    _fig.add_trace(go.Scatter(x=_xv, y=_traj, mode="lines", line=dict(color=_win_colors[_i % len(_win_colors)], width=2), name=f"Cenário {_i+1} ✓", opacity=0.9))
-                else:
-                    _fig.add_trace(go.Scatter(x=_xv, y=_traj, mode="lines", line=dict(color="rgba(150,150,150,0.2)", width=1), showlegend=False))
-            _fig.add_hline(y=_bk, line_dash="dot", line_color="rgba(22,59,44,0.5)", line_width=1.5)
-            _fig.update_layout(
-                margin=dict(l=0, r=0, t=10, b=10), paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
-                hovermode=False,
-                xaxis=dict(showgrid=True, gridcolor="rgba(22,59,44,0.08)", title="Aposta nº", fixedrange=True),
-                yaxis=dict(showgrid=True, gridcolor="rgba(22,59,44,0.08)", title="Saldo (R$)", fixedrange=True),
-                legend=dict(orientation="h", yanchor="bottom", y=-0.3, xanchor="left", x=0, font=dict(size=10)),
-                height=320,
-            )
-            st.plotly_chart(_fig, use_container_width=True, config={"displayModeBar": False})
+            # --- Gate: gráfico de trajetórias ---
+            if st.session_state.chat_show_traj is None:
+                st.markdown(
+                    "<div style='font-family:Rajdhani,sans-serif;font-size:1rem;font-weight:600;"
+                    "color:#163b2c;margin:18px 0 10px;'>"
+                    "Quer visualizar como o seu dinheiro pode se comportar ao longo das apostas?</div>",
+                    unsafe_allow_html=True,
+                )
+                _tg1, _tg2 = st.columns(2)
+                if _tg1.button("Sim", key="chat_traj_sim", use_container_width=True):
+                    st.session_state.chat_show_traj = True
+                    st.rerun()
+                if _tg2.button("Não", key="chat_traj_nao", use_container_width=True):
+                    st.session_state.chat_show_traj = False
+                    st.rerun()
+
+            if st.session_state.chat_show_traj is True:
+                _win_colors = ["#1a6641","#2196F3","#9C27B0","#FF6F00","#00838F","#E91E63","#33691E","#1565C0","#6A1B9A","#AD1457","#0277BD","#558B2F","#F57F17","#4527A0","#00695C","#283593","#827717","#BF360C","#01579B","#1B5E20"]
+                _fig = go.Figure()
+                for _i, _traj in enumerate(r["trajs"]):
+                    _xv = list(range(len(_traj)))
+                    if _traj[-1] > _bk:
+                        _fig.add_trace(go.Scatter(x=_xv, y=_traj, mode="lines", line=dict(color=_win_colors[_i % len(_win_colors)], width=2), name=f"Cenário {_i+1} ✓", opacity=0.9))
+                    else:
+                        _fig.add_trace(go.Scatter(x=_xv, y=_traj, mode="lines", line=dict(color="rgba(150,150,150,0.2)", width=1), showlegend=False))
+                _fig.add_hline(y=_bk, line_dash="dot", line_color="rgba(22,59,44,0.5)", line_width=1.5)
+                _fig.update_layout(
+                    margin=dict(l=0, r=0, t=10, b=10), paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
+                    hovermode=False,
+                    xaxis=dict(showgrid=True, gridcolor="rgba(22,59,44,0.08)", title="Aposta nº", fixedrange=True),
+                    yaxis=dict(showgrid=True, gridcolor="rgba(22,59,44,0.08)", title="Saldo (R$)", fixedrange=True),
+                    legend=dict(orientation="h", yanchor="bottom", y=-0.3, xanchor="left", x=0, font=dict(size=10)),
+                    height=320,
+                )
+                st.plotly_chart(_fig, use_container_width=True, config={"displayModeBar": False})
 
             # --- Conclusão ---
             _n_win  = int(round(r["pct_win"]  * 10))
@@ -1363,6 +1385,7 @@ if _page == "chat":
             st.session_state.chat_prob_step = 0
             st.session_state.chat_final_prob = 50.0
             st.session_state.chat_chose_custom = False
+            st.session_state.chat_show_traj = None
             st.rerun()
 
         st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
@@ -1521,6 +1544,7 @@ elif _page == "simulacao":
         st.session_state.sim_prob_step = 0
         st.session_state.sim_final_prob = 50.0
         st.session_state.sim_chose_custom = False
+        st.session_state.sim_show_traj = None
         st.rerun()
     elif sel_add:
         st.warning("Preencha o que você está apostando.")
@@ -1606,6 +1630,7 @@ elif _page == "simulacao":
                     st.session_state.sim_prob_step = 0
                     st.session_state.sim_final_prob = 50.0
                     st.session_state.sim_chose_custom = False
+                    st.session_state.sim_show_traj = None
                     st.rerun()
 
         # --- PASSO 0: aviso + pergunta sobre probabilidade ---
@@ -1765,6 +1790,7 @@ elif _page == "simulacao":
                 mc_run = st.form_submit_button("Simular")
 
         if st.session_state.sim_prob_step == 2 and mc_run:
+            st.session_state.sim_show_traj = None
             import numpy as np
             import pandas as pd
             import plotly.graph_objects as go
@@ -1967,68 +1993,84 @@ elif _page == "simulacao":
                 unsafe_allow_html=True,
             )
 
-            # --- Trajetórias ---
-            st.markdown(
-                "<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;"
-                "letter-spacing:2px;color:#163b2c;text-transform:uppercase;margin:20px 0 8px;"
-                "border-bottom:1px solid rgba(22,59,44,0.2);padding-bottom:5px;'>"
-                "Como seu dinheiro pode se comportar ao longo das apostas</div>",
-                unsafe_allow_html=True,
-            )
-            st.markdown(
-                f"O simulador rodou 1.000 situações diferentes e escolheu algumas para mostrar no gráfico. "
-                f"**Cada linha colorida é uma dessas situações** — como se você apostasse {n_bets} vezes "
-                f"seguidas, começando com R$ {bankroll:.2f}. "
-                f"Linhas que sobem mostram situações em que o saldo cresceu. "
-                f"Linhas que descem mostram situações em que o saldo caiu. "
-                f"Isso não é uma previsão — é só para mostrar o que pode acontecer em cada caminho possível."
-            )
-            _win_colors = [
-                "#1a6641","#2196F3","#9C27B0","#FF6F00","#00838F",
-                "#E91E63","#33691E","#1565C0","#6A1B9A","#AD1457",
-                "#0277BD","#558B2F","#F57F17","#4527A0","#00695C",
-                "#283593","#827717","#BF360C","#01579B","#1B5E20",
-            ]
-            fig = go.Figure()
-            for i, traj in enumerate(example_trajs):
-                x_vals = list(range(len(traj)))
-                final_val = traj[-1]
-                if final_val > bankroll:
-                    fig.add_trace(go.Scatter(
-                        x=x_vals, y=traj,
-                        mode="lines",
-                        line=dict(color=_win_colors[i % len(_win_colors)], width=2),
-                        name=f"Cenário {i+1} ✓",
-                        opacity=0.9,
-                    ))
-                else:
-                    fig.add_trace(go.Scatter(
-                        x=x_vals, y=traj,
-                        mode="lines",
-                        line=dict(color="rgba(150,150,150,0.25)", width=1),
-                        name=f"Cenário {i+1}",
-                        showlegend=False,
-                    ))
-            fig.add_hline(
-                y=bankroll,
-                line_dash="dot",
-                line_color="rgba(22,59,44,0.5)",
-                line_width=1.5,
-            )
-            fig.update_layout(
-                margin=dict(l=0, r=0, t=10, b=10),
-                paper_bgcolor="rgba(0,0,0,0)",
-                plot_bgcolor="rgba(0,0,0,0)",
-                hovermode=False,
-                xaxis=dict(showgrid=True, gridcolor="rgba(22,59,44,0.08)", title="Aposta nº", fixedrange=True),
-                yaxis=dict(showgrid=True, gridcolor="rgba(22,59,44,0.08)", title="Saldo (R$)", fixedrange=True),
-                legend=dict(
-                    orientation="h", yanchor="bottom", y=-0.25,
-                    xanchor="left", x=0, font=dict(size=11),
-                ),
-                height=380,
-            )
-            st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
+            # --- Gate: gráfico de trajetórias ---
+            if st.session_state.sim_show_traj is None:
+                st.markdown(
+                    "<div style='font-family:Rajdhani,sans-serif;font-size:1rem;font-weight:600;"
+                    "color:#163b2c;margin:18px 0 10px;'>"
+                    "Quer visualizar como o seu dinheiro pode se comportar ao longo das apostas?</div>",
+                    unsafe_allow_html=True,
+                )
+                _stg1, _stg2 = st.columns(2)
+                if _stg1.button("Sim", key="sim_traj_sim", use_container_width=True):
+                    st.session_state.sim_show_traj = True
+                    st.rerun()
+                if _stg2.button("Não", key="sim_traj_nao", use_container_width=True):
+                    st.session_state.sim_show_traj = False
+                    st.rerun()
+
+            if st.session_state.sim_show_traj is True:
+                st.markdown(
+                    "<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;"
+                    "letter-spacing:2px;color:#163b2c;text-transform:uppercase;margin:20px 0 8px;"
+                    "border-bottom:1px solid rgba(22,59,44,0.2);padding-bottom:5px;'>"
+                    "Como seu dinheiro pode se comportar ao longo das apostas</div>",
+                    unsafe_allow_html=True,
+                )
+                st.markdown(
+                    f"O simulador rodou 1.000 situações diferentes e escolheu algumas para mostrar no gráfico. "
+                    f"**Cada linha colorida é uma dessas situações** — como se você apostasse {n_bets} vezes "
+                    f"seguidas, começando com R$ {bankroll:.2f}. "
+                    f"Linhas que sobem mostram situações em que o saldo cresceu. "
+                    f"Linhas que descem mostram situações em que o saldo caiu. "
+                    f"Isso não é uma previsão — é só para mostrar o que pode acontecer em cada caminho possível."
+                )
+                _win_colors = [
+                    "#1a6641","#2196F3","#9C27B0","#FF6F00","#00838F",
+                    "#E91E63","#33691E","#1565C0","#6A1B9A","#AD1457",
+                    "#0277BD","#558B2F","#F57F17","#4527A0","#00695C",
+                    "#283593","#827717","#BF360C","#01579B","#1B5E20",
+                ]
+                fig = go.Figure()
+                for i, traj in enumerate(example_trajs):
+                    x_vals = list(range(len(traj)))
+                    final_val = traj[-1]
+                    if final_val > bankroll:
+                        fig.add_trace(go.Scatter(
+                            x=x_vals, y=traj,
+                            mode="lines",
+                            line=dict(color=_win_colors[i % len(_win_colors)], width=2),
+                            name=f"Cenário {i+1} ✓",
+                            opacity=0.9,
+                        ))
+                    else:
+                        fig.add_trace(go.Scatter(
+                            x=x_vals, y=traj,
+                            mode="lines",
+                            line=dict(color="rgba(150,150,150,0.25)", width=1),
+                            name=f"Cenário {i+1}",
+                            showlegend=False,
+                        ))
+                fig.add_hline(
+                    y=bankroll,
+                    line_dash="dot",
+                    line_color="rgba(22,59,44,0.5)",
+                    line_width=1.5,
+                )
+                fig.update_layout(
+                    margin=dict(l=0, r=0, t=10, b=10),
+                    paper_bgcolor="rgba(0,0,0,0)",
+                    plot_bgcolor="rgba(0,0,0,0)",
+                    hovermode=False,
+                    xaxis=dict(showgrid=True, gridcolor="rgba(22,59,44,0.08)", title="Aposta nº", fixedrange=True),
+                    yaxis=dict(showgrid=True, gridcolor="rgba(22,59,44,0.08)", title="Saldo (R$)", fixedrange=True),
+                    legend=dict(
+                        orientation="h", yanchor="bottom", y=-0.25,
+                        xanchor="left", x=0, font=dict(size=11),
+                    ),
+                    height=380,
+                )
+                st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
 
             # --- Conclusão do Monte Carlo ---
             pct_win  = float(np.mean(arr > bankroll)) * 100.0
@@ -2088,6 +2130,7 @@ elif _page == "simulacao":
             st.session_state.sim_prob_step = 0
             st.session_state.sim_final_prob = 50.0
             st.session_state.sim_chose_custom = False
+            st.session_state.sim_show_traj = None
             st.rerun()
     else:
         st.markdown(
