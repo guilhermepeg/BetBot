@@ -624,6 +624,8 @@ if "chat_show_traj" not in st.session_state:
     st.session_state.chat_show_traj = None
 if "sim_show_traj" not in st.session_state:
     st.session_state.sim_show_traj = None
+if "sim_show_mc" not in st.session_state:
+    st.session_state.sim_show_mc = None
 if "sim_mc_result" not in st.session_state:
     st.session_state.sim_mc_result = None
 
@@ -1562,6 +1564,7 @@ elif _page == "simulacao":
                     st.session_state.sim_chose_custom = False
                     st.session_state.sim_show_traj = None
                     st.session_state.sim_mc_result = None
+                    st.session_state.sim_show_mc = None
                     st.rerun()
 
         st.markdown(
@@ -1574,7 +1577,21 @@ elif _page == "simulacao":
             unsafe_allow_html=True,
         )
 
-        if st.session_state.sim_prob_step == 2:
+        if st.session_state.sim_show_mc is None:
+            st.markdown(
+                "<div style='font-family:Rajdhani,sans-serif;font-size:1rem;font-weight:600;"
+                "color:#163b2c;margin:16px 0 10px;'>Quer saber o que acontece se repetir essa aposta várias vezes?</div>",
+                unsafe_allow_html=True,
+            )
+            _smc1, _smc2 = st.columns(2)
+            if _smc1.button("Sim", key="sim_show_mc_sim", use_container_width=True):
+                st.session_state.sim_show_mc = True
+                st.rerun()
+            if _smc2.button("Não", key="sim_show_mc_nao", use_container_width=True):
+                st.session_state.sim_show_mc = False
+                st.rerun()
+
+        if st.session_state.sim_show_mc is True and st.session_state.sim_prob_step == 2:
             mc_run = False
 
             st.markdown(
@@ -1645,7 +1662,7 @@ elif _page == "simulacao":
                 )
                 mc_run = st.form_submit_button("Simular")
 
-        if st.session_state.sim_prob_step == 2 and mc_run:
+        if st.session_state.sim_show_mc is True and st.session_state.sim_prob_step == 2 and mc_run:
             import numpy as np
             import pandas as pd
             import plotly.graph_objects as go
@@ -2004,6 +2021,7 @@ elif _page == "simulacao":
             st.session_state.sim_chose_custom = False
             st.session_state.sim_show_traj = None
             st.session_state.sim_mc_result = None
+            st.session_state.sim_show_mc = None
             st.rerun()
     else:
         st.markdown(
