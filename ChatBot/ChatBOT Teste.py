@@ -542,6 +542,7 @@ with st.sidebar:
         st.session_state.chat_sim_open = False
         st.session_state.chat_sim_result = None
         st.session_state.chat_sim_bet = None
+        st.session_state.chat_show_mc = None
         st.rerun()
     if st.button("Simulação", use_container_width=True,
                  type="primary" if st.session_state.active_page == "simulacao" else "secondary"):
@@ -622,6 +623,8 @@ if "chat_chose_custom" not in st.session_state:
     st.session_state.chat_chose_custom = False
 if "chat_show_traj" not in st.session_state:
     st.session_state.chat_show_traj = None
+if "chat_show_mc" not in st.session_state:
+    st.session_state.chat_show_mc = None
 if "sim_show_traj" not in st.session_state:
     st.session_state.sim_show_traj = None
 if "sim_show_mc" not in st.session_state:
@@ -1073,6 +1076,7 @@ if _page == "chat":
                 st.session_state.chat_chose_custom = False
                 st.session_state.chat_sim_result = None
                 st.session_state.chat_show_traj = None
+                st.session_state.chat_show_mc = None
                 st.rerun()
 
         # --- Fase 2: resultado de 1 cenário + conector + Monte Carlo ---
@@ -1129,6 +1133,35 @@ if _page == "chat":
             _chat_mc_submitted = False
             if st.session_state.chat_prob_step == 2:
                 st.markdown(
+                    "<div style='display:flex;align-items:center;gap:12px;margin:16px 0 14px;'>"
+                    "<div style='width:30px;height:30px;background:#163b2c;border-radius:50%;"
+                    "display:flex;align-items:center;justify-content:center;flex-shrink:0;'>"
+                    "<span style='font-size:1rem;color:#fff;'>→</span>"
+                    "</div>"
+                    "<div style='font-family:Rajdhani,sans-serif;font-size:0.75rem;font-weight:700;"
+                    "letter-spacing:2px;color:#163b2c;text-transform:uppercase;"
+                    "border-bottom:1px solid rgba(22,59,44,0.25);flex:1;padding-bottom:5px;'>"
+                    "Vamos ver o que acontece se repetir essa aposta várias vezes.</div>"
+                    "</div>",
+                    unsafe_allow_html=True,
+                )
+
+                if st.session_state.chat_show_mc is None:
+                    st.markdown(
+                        "<div style='font-family:Rajdhani,sans-serif;font-size:1rem;font-weight:600;"
+                        "color:#163b2c;margin:16px 0 10px;'>Quer saber o que acontece se repetir essa aposta várias vezes?</div>",
+                        unsafe_allow_html=True,
+                    )
+                    _cmc1, _cmc2 = st.columns(2)
+                    if _cmc1.button("Sim", key="chat_show_mc_sim", use_container_width=True):
+                        st.session_state.chat_show_mc = True
+                        st.rerun()
+                    if _cmc2.button("Não", key="chat_show_mc_nao", use_container_width=True):
+                        st.session_state.chat_show_mc = False
+                        st.rerun()
+
+                if st.session_state.chat_show_mc is True and not st.session_state.chat_sim_result:
+                    st.markdown(
                         "<div style='margin:20px 0 4px;padding:18px 22px;"
                         "background:linear-gradient(135deg,#f0f5f2 0%,#e8f5ee 100%);"
                         "border-radius:10px;border:1px solid rgba(22,59,44,0.2);border-left:4px solid #163b2c;'>"
@@ -1147,8 +1180,7 @@ if _page == "chat":
                         "</div></div>",
                         unsafe_allow_html=True,
                     )
-
-                if not st.session_state.chat_sim_result:
+                    st.markdown("<div style='margin-top:20px;'></div>", unsafe_allow_html=True)
                     with st.form(key="chat_sim_mc_form", clear_on_submit=False):
                         csmc1, csmc2, csmc3, csmc4 = st.columns(4)
                         csim_p_pct = csmc1.number_input(
@@ -1253,6 +1285,19 @@ if _page == "chat":
                     st.rerun()
 
             if st.session_state.chat_show_traj is True:
+                st.markdown(
+                    "<div style='display:flex;align-items:center;gap:12px;margin:20px 0 14px;'>"
+                    "<div style='width:30px;height:30px;background:#163b2c;border-radius:50%;"
+                    "display:flex;align-items:center;justify-content:center;flex-shrink:0;'>"
+                    "<span style='font-size:1rem;color:#fff;'>↗</span>"
+                    "</div>"
+                    "<div style='font-family:Rajdhani,sans-serif;font-size:0.75rem;font-weight:700;"
+                    "letter-spacing:2px;color:#163b2c;text-transform:uppercase;"
+                    "border-bottom:1px solid rgba(22,59,44,0.25);flex:1;padding-bottom:5px;'>"
+                    "Como seu dinheiro pode se comportar ao longo das apostas</div>"
+                    "</div>",
+                    unsafe_allow_html=True,
+                )
                 # --- Gráfico de trajetórias ---
                 _win_colors = ["#1a6641","#2196F3","#9C27B0","#FF6F00","#00838F","#E91E63","#33691E","#1565C0","#6A1B9A","#AD1457","#0277BD","#558B2F","#F57F17","#4527A0","#00695C","#283593","#827717","#BF360C","#01579B","#1B5E20"]
                 _fig = go.Figure()
@@ -1264,11 +1309,11 @@ if _page == "chat":
                         _fig.add_trace(go.Scatter(x=_xv, y=_traj, mode="lines", line=dict(color="rgba(150,150,150,0.2)", width=1), showlegend=False))
                 _fig.add_hline(y=_bk, line_dash="dot", line_color="rgba(22,59,44,0.5)", line_width=1.5)
                 _fig.update_layout(
-                    margin=dict(l=0, r=0, t=10, b=10), paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
+                    margin=dict(l=0, r=0, t=10, b=90), paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
                     hovermode=False,
                     xaxis=dict(showgrid=True, gridcolor="rgba(22,59,44,0.08)", title="Aposta nº", fixedrange=True),
                     yaxis=dict(showgrid=True, gridcolor="rgba(22,59,44,0.08)", title="Saldo (R$)", fixedrange=True),
-                    legend=dict(orientation="h", yanchor="bottom", y=-0.3, xanchor="left", x=0, font=dict(size=10)),
+                    legend=dict(orientation="h", yanchor="top", y=-0.18, xanchor="left", x=0, font=dict(size=10)),
                     height=320,
                 )
                 st.plotly_chart(_fig, use_container_width=True, config={"displayModeBar": False})
@@ -1312,6 +1357,7 @@ if _page == "chat":
             st.session_state.chat_sim_open = False
             st.session_state.chat_sim_result = None
             st.session_state.chat_sim_bet = None
+            st.session_state.chat_show_mc = None
             st.session_state.chat_prob_step = 2
             st.session_state.chat_final_prob = 50.0
             st.session_state.chat_chose_custom = False
