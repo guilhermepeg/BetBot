@@ -618,6 +618,10 @@ if "chat_prob_step" not in st.session_state:
     st.session_state.chat_prob_step = 0
 if "chat_final_prob" not in st.session_state:
     st.session_state.chat_final_prob = 50.0
+if "sim_chose_custom" not in st.session_state:
+    st.session_state.sim_chose_custom = False
+if "chat_chose_custom" not in st.session_state:
+    st.session_state.chat_chose_custom = False
 
 
 # --- Real AI engine (Anthropic Claude) ---
@@ -1060,6 +1064,7 @@ if _page == "chat":
                 }
                 st.session_state.chat_prob_step = 0
                 st.session_state.chat_final_prob = 50.0
+                st.session_state.chat_chose_custom = False
                 st.rerun()
 
         # --- Fase 2: resultado de 1 cenário + conector + Monte Carlo ---
@@ -1122,10 +1127,12 @@ if _page == "chat":
                 _cp1, _cp2 = st.columns(2)
                 if _cp1.button("Sim", key="chat_btn_prob_sim", use_container_width=True):
                     st.session_state.chat_prob_step = 1
+                    st.session_state.chat_chose_custom = True
                     st.rerun()
                 if _cp2.button("Não", key="chat_btn_prob_nao", use_container_width=True):
                     st.session_state.chat_prob_step = 2
                     st.session_state.chat_final_prob = 50.0
+                    st.session_state.chat_chose_custom = False
                     st.rerun()
 
             elif st.session_state.chat_prob_step == 1:
@@ -1140,10 +1147,33 @@ if _page == "chat":
                         st.session_state.chat_prob_step = 2
                         st.rerun()
 
-            # PASSO 2: conector + Monte Carlo
+            # PASSO 2: card EV (quando custom) + conector + Monte Carlo
             _chat_mc_submitted = False
             if st.session_state.chat_prob_step == 2:
                 _chat_prob_label = f"{st.session_state.chat_final_prob:.0f}%"
+
+                if st.session_state.chat_chose_custom:
+                    _ev_p = st.session_state.chat_final_prob / 100.0
+                    _ev = _ev_p * _pot_profit - (1 - _ev_p) * _bet["stake"]
+                    _ev_sign = "+" if _ev >= 0 else ""
+                    _ev_bg = "#f0fff4" if _ev >= 0 else "#fff5f5"
+                    _ev_bc = "#1a6641" if _ev >= 0 else "rgba(160,40,40,0.9)"
+                    _ev_label = "Resultado esperado por aposta" if _ev >= 0 else "Perda esperada por aposta"
+                    st.markdown(
+                        f"<div style='background:{_ev_bg};border:1px solid rgba(22,59,44,0.12);"
+                        f"border-left:4px solid {_ev_bc};border-radius:0 8px 8px 0;"
+                        f"padding:14px 18px;margin:14px 0 4px;'>"
+                        f"<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;"
+                        f"color:#0f2a1e;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;'>"
+                        f"Com {st.session_state.chat_final_prob:.0f}% de chance — {_ev_label}</div>"
+                        f"<div style='font-family:Rajdhani,sans-serif;font-size:1.4rem;font-weight:700;"
+                        f"color:{_ev_bc};'>{_ev_sign}R$ {abs(_ev):.2f} por aposta</div>"
+                        f"<div style='font-family:Rajdhani,sans-serif;font-size:0.82rem;color:#555;margin-top:4px;'>"
+                        f"Média esperada considerando ganhos e perdas com essa probabilidade.</div>"
+                        f"</div>",
+                        unsafe_allow_html=True,
+                    )
+
                 st.markdown(
                     f"<div style='margin:20px 0 4px;padding:18px 22px;"
                     f"background:linear-gradient(135deg,#f0f5f2 0%,#e8f5ee 100%);"
@@ -1151,8 +1181,9 @@ if _page == "chat":
                     f"<div style='font-family:Rajdhani,sans-serif;font-size:1.0rem;font-weight:700;"
                     f"color:#163b2c;margin-bottom:6px;'>E se você repetir essa aposta várias vezes?</div>"
                     f"<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;color:#163b2c;line-height:1.5;'>"
-                    f"O simulador abaixo roda 1.000 cenários usando <b>{_chat_prob_label} de chance de ganhar</b> "
-                    f"e mostra o que pode acontecer com o seu dinheiro."
+                    f"Ao repetir a mesma aposta várias vezes, o resultado pode variar bastante. "
+                    f"O simulador abaixo mostra 1.000 cenários possíveis para o seu dinheiro "
+                    f"— e compara com o quanto ele renderia na renda fixa no mesmo período."
                     f"</div></div>",
                     unsafe_allow_html=True,
                 )
@@ -1230,7 +1261,8 @@ if _page == "chat":
             def _mini_card(label, value, color):
                 return (
                     f"<div style='background:#fff;border:1px solid rgba(22,59,44,0.12);"
-                    f"border-left:4px solid {color};border-radius:0 8px 8px 0;padding:12px 14px;'>"
+                    f"border-left:4px solid {color};border-radius:0 8px 8px 0;padding:12px 14px;"
+                    f"min-height:88px;display:flex;flex-direction:column;justify-content:space-between;'>"
                     f"<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;"
                     f"color:#0f2a1e;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;'>{label}</div>"
                     f"<div style='font-family:Rajdhani,sans-serif;font-size:1.25rem;font-weight:700;"
@@ -1297,14 +1329,17 @@ if _page == "chat":
                 unsafe_allow_html=True,
             )
 
+        st.markdown("<div style='height:8px'></div>", unsafe_allow_html=True)
         if st.button("Fechar simulador", key="close_chat_sim"):
             st.session_state.chat_sim_open = False
             st.session_state.chat_sim_result = None
             st.session_state.chat_sim_bet = None
             st.session_state.chat_prob_step = 0
             st.session_state.chat_final_prob = 50.0
+            st.session_state.chat_chose_custom = False
             st.rerun()
 
+        st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
         st.divider()
     # ---- fim mini-simulador ----
 
@@ -1459,6 +1494,7 @@ elif _page == "simulacao":
         })
         st.session_state.sim_prob_step = 0
         st.session_state.sim_final_prob = 50.0
+        st.session_state.sim_chose_custom = False
         st.rerun()
     elif sel_add:
         st.warning("Preencha o que você está apostando.")
@@ -1543,6 +1579,7 @@ elif _page == "simulacao":
                     st.session_state.sim_bets.pop(i)
                     st.session_state.sim_prob_step = 0
                     st.session_state.sim_final_prob = 50.0
+                    st.session_state.sim_chose_custom = False
                     st.rerun()
 
         # --- PASSO 0: aviso + pergunta sobre probabilidade ---
@@ -1565,10 +1602,12 @@ elif _page == "simulacao":
             _pb1, _pb2 = st.columns(2)
             if _pb1.button("Sim", key="btn_prob_sim", use_container_width=True):
                 st.session_state.sim_prob_step = 1
+                st.session_state.sim_chose_custom = True
                 st.rerun()
             if _pb2.button("Não", key="btn_prob_nao", use_container_width=True):
                 st.session_state.sim_prob_step = 2
                 st.session_state.sim_final_prob = 50.0
+                st.session_state.sim_chose_custom = False
                 st.rerun()
 
         elif st.session_state.sim_prob_step == 1:
@@ -1585,8 +1624,35 @@ elif _page == "simulacao":
                     st.rerun()
 
         if st.session_state.sim_prob_step == 2:
-            # PASSO 2: conector + formulário Monte Carlo
+            # PASSO 2: card EV (quando custom) + conector + formulário Monte Carlo
             _prob_label = f"{st.session_state.sim_final_prob:.0f}%"
+
+            if st.session_state.sim_chose_custom and st.session_state.sim_bets:
+                _ev_p2 = st.session_state.sim_final_prob / 100.0
+                _ev_total = sum(
+                    _ev_p2 * _sb["stake"] * (_sb["odd"] - 1.0) - (1 - _ev_p2) * _sb["stake"]
+                    for _sb in st.session_state.sim_bets
+                )
+                _ev_sign2 = "+" if _ev_total >= 0 else ""
+                _ev_bg2 = "#f0fff4" if _ev_total >= 0 else "#fff5f5"
+                _ev_bc2 = "#1a6641" if _ev_total >= 0 else "rgba(160,40,40,0.9)"
+                _n_bets2 = len(st.session_state.sim_bets)
+                _ev_suffix = "por aposta" if _n_bets2 == 1 else f"no total das {_n_bets2} apostas"
+                st.markdown(
+                    f"<div style='background:{_ev_bg2};border:1px solid rgba(22,59,44,0.12);"
+                    f"border-left:4px solid {_ev_bc2};border-radius:0 8px 8px 0;"
+                    f"padding:14px 18px;margin:14px 0 4px;'>"
+                    f"<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;"
+                    f"color:#0f2a1e;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;'>"
+                    f"Com {st.session_state.sim_final_prob:.0f}% de chance — resultado esperado</div>"
+                    f"<div style='font-family:Rajdhani,sans-serif;font-size:1.4rem;font-weight:700;"
+                    f"color:{_ev_bc2};'>{_ev_sign2}R$ {abs(_ev_total):.2f} {_ev_suffix}</div>"
+                    f"<div style='font-family:Rajdhani,sans-serif;font-size:0.82rem;color:#555;margin-top:4px;'>"
+                    f"Média esperada considerando ganhos e perdas com essa probabilidade.</div>"
+                    f"</div>",
+                    unsafe_allow_html=True,
+                )
+
             st.markdown(
                 f"<div style='margin:28px 0 0;padding:20px 24px;"
                 f"background:linear-gradient(135deg,#f0f5f2 0%,#e8f5ee 100%);"
@@ -1594,8 +1660,9 @@ elif _page == "simulacao":
                 f"<div style='font-family:Rajdhani,sans-serif;font-size:1.05rem;font-weight:700;"
                 f"color:#163b2c;margin-bottom:8px;'>E se você fizer essa mesma aposta 100 vezes seguidas?</div>"
                 f"<div style='font-family:Rajdhani,sans-serif;font-size:0.95rem;color:#163b2c;line-height:1.5;'>"
-                f"O simulador abaixo roda 1.000 cenários usando <b>{_prob_label} de chance de ganhar</b> "
-                f"e mostra o que pode acontecer com o seu dinheiro."
+                f"Ao repetir a mesma aposta várias vezes, o resultado pode variar bastante. "
+                f"O simulador abaixo mostra 1.000 cenários possíveis para o seu dinheiro "
+                f"— e compara com o quanto ele renderia na renda fixa no mesmo período."
                 f"</div></div>",
                 unsafe_allow_html=True,
             )
@@ -1969,6 +2036,7 @@ elif _page == "simulacao":
             st.session_state.sim_bets = []
             st.session_state.sim_prob_step = 0
             st.session_state.sim_final_prob = 50.0
+            st.session_state.sim_chose_custom = False
             st.rerun()
     else:
         st.markdown(
