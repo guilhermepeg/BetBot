@@ -1046,8 +1046,8 @@ if _page == "chat":
             "display:flex;align-items:center;justify-content:center;flex-shrink:0;'>"
             "<span style='font-family:Rajdhani,sans-serif;font-size:0.9rem;font-weight:900;color:#fff;'>⚡</span>"
             "</div>"
-            "<div style='font-family:Rajdhani,sans-serif;font-size:0.95rem;font-weight:700;"
-            "color:#163b2c;flex:1;padding-bottom:5px;border-bottom:1px solid rgba(22,59,44,0.25);'>"
+            "<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;font-weight:900;"
+            "letter-spacing:2px;color:#163b2c;text-transform:uppercase;flex:1;padding-bottom:5px;border-bottom:1px solid rgba(22,59,44,0.25);'>"
             "Simulador</div>"
             "</div>",
             unsafe_allow_html=True,
@@ -1486,8 +1486,9 @@ elif _page == "simulacao":
         "display:flex;align-items:center;justify-content:center;flex-shrink:0;'>"
         "<span style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;color:#fff;'>1</span>"
         "</div>"
-        "<div style='font-family:Rajdhani,sans-serif;font-size:0.95rem;font-weight:700;"
-        "color:#163b2c;flex:1;padding-bottom:5px;border-bottom:1px solid rgba(22,59,44,0.25);'>"
+        "<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;font-weight:900;"
+        "letter-spacing:2px;color:#163b2c;text-transform:uppercase;"
+        "flex:1;padding-bottom:5px;border-bottom:1px solid rgba(22,59,44,0.25);'>"
         "Dados da aposta</div>"
         "</div>",
         unsafe_allow_html=True,
@@ -2117,8 +2118,8 @@ elif _page == "historico":
         "display:flex;align-items:center;justify-content:center;flex-shrink:0;'>"
         "<span style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;color:#fff;'>1</span>"
         "</div>"
-        "<div style='font-family:Rajdhani,sans-serif;font-size:0.95rem;font-weight:700;"
-        "color:#163b2c;flex:1;padding-bottom:5px;border-bottom:1px solid rgba(22,59,44,0.25);'>"
+        "<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;font-weight:900;"
+        "letter-spacing:2px;color:#163b2c;text-transform:uppercase;flex:1;padding-bottom:5px;border-bottom:1px solid rgba(22,59,44,0.25);'>"
         "Registrar resultado</div>"
         "</div>",
         unsafe_allow_html=True,
@@ -2204,8 +2205,8 @@ elif _page == "historico":
             "display:flex;align-items:center;justify-content:center;flex-shrink:0;'>"
             "<span style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;color:#fff;'>2</span>"
             "</div>"
-            "<div style='font-family:Rajdhani,sans-serif;font-size:0.95rem;font-weight:700;"
-            "color:#163b2c;flex:1;padding-bottom:5px;border-bottom:1px solid rgba(22,59,44,0.25);'>"
+            "<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;font-weight:900;"
+            "letter-spacing:2px;color:#163b2c;text-transform:uppercase;flex:1;padding-bottom:5px;border-bottom:1px solid rgba(22,59,44,0.25);'>"
             "Desempenho das bets</div>"
             "</div>",
             unsafe_allow_html=True,
@@ -2250,8 +2251,8 @@ elif _page == "historico":
             "display:flex;align-items:center;justify-content:center;flex-shrink:0;'>"
             "<span style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;color:#fff;'>3</span>"
             "</div>"
-            "<div style='font-family:Rajdhani,sans-serif;font-size:0.95rem;font-weight:700;"
-            "color:#163b2c;flex:1;padding-bottom:5px;border-bottom:1px solid rgba(22,59,44,0.25);'>"
+            "<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;font-weight:900;"
+            "letter-spacing:2px;color:#163b2c;text-transform:uppercase;flex:1;padding-bottom:5px;border-bottom:1px solid rgba(22,59,44,0.25);'>"
             "Comparação com CDI</div>"
             "</div>",
             unsafe_allow_html=True,
@@ -2275,8 +2276,8 @@ elif _page == "historico":
             "display:flex;align-items:center;justify-content:center;flex-shrink:0;'>"
             "<span style='font-family:Rajdhani,sans-serif;font-size:0.7rem;font-weight:700;color:#fff;'>4</span>"
             "</div>"
-            "<div style='font-family:Rajdhani,sans-serif;font-size:0.95rem;font-weight:700;"
-            "color:#163b2c;flex:1;padding-bottom:5px;border-bottom:1px solid rgba(22,59,44,0.25);'>"
+            "<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;font-weight:900;"
+            "letter-spacing:2px;color:#163b2c;text-transform:uppercase;flex:1;padding-bottom:5px;border-bottom:1px solid rgba(22,59,44,0.25);'>"
             "Lançamentos</div>"
             "</div>",
             unsafe_allow_html=True,
