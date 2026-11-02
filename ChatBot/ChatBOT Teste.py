@@ -1625,41 +1625,42 @@ elif _page == "simulacao":
                 "</div></div>",
                 unsafe_allow_html=True,
             )
-            st.markdown("<div style='margin-top:20px;'></div>", unsafe_allow_html=True)
-            with st.form(key="monte_carlo_form", clear_on_submit=False):
-                st.markdown("**Dados da aposta que você quer repetir:**")
-                mc1, mc2, mc3 = st.columns(3)
-                mc_odd      = mc1.number_input(
-                    "Odd", min_value=1.01, max_value=1000.0,
-                    value=float(st.session_state.sim_bets[0]["odd"]) if st.session_state.sim_bets else 2.00,
-                    step=0.01, format="%.2f",
-                    help="O número que a casa de apostas mostra para essa aposta.",
-                )
-                mc_stake    = mc2.number_input(
-                    "Valor por aposta (R$)", min_value=0.01,
-                    value=float(st.session_state.sim_bets[0]["stake"]) if st.session_state.sim_bets else 10.0,
-                    step=1.0, format="%.2f",
-                    help="Quanto você vai colocar em cada uma das apostas.",
-                )
-                mc_p_pct    = mc3.number_input(
-                    "Chance de acerto (%)", min_value=0.1, max_value=99.9,
-                    value=float(st.session_state.sim_final_prob), step=1.0, format="%.1f",
-                    help="Sua estimativa de chance de ganhar. Pré-preenchida com o valor que você escolheu.",
-                )
-                mc4, mc5, mc6 = st.columns(3)
-                mc_n_bets   = mc4.number_input(
-                    "Quantas vezes vai repetir?", min_value=10, max_value=1000, value=100, step=10,
-                    help="Número de apostas iguais que você quer simular.",
-                )
-                mc_bankroll = mc5.number_input(
-                    "Dinheiro total (R$)", min_value=1.0, value=200.0, step=10.0, format="%.2f",
-                    help="Quanto você tem disponível para fazer essas apostas no total.",
-                )
-                mc_cdi_rate = mc6.number_input(
-                    "CDI anual estimado (%)", min_value=0.0, max_value=100.0, value=CDI_ANUAL_PADRAO, step=0.01, format="%.2f",
-                    help="Taxa do CDI (renda fixa) para comparar com as apostas.",
-                )
-                mc_run = st.form_submit_button("Simular")
+            if not st.session_state.get("sim_mc_result"):
+                st.markdown("<div style='margin-top:20px;'></div>", unsafe_allow_html=True)
+                with st.form(key="monte_carlo_form", clear_on_submit=False):
+                    st.markdown("**Dados da aposta que você quer repetir:**")
+                    mc1, mc2, mc3 = st.columns(3)
+                    mc_odd      = mc1.number_input(
+                        "Odd", min_value=1.01, max_value=1000.0,
+                        value=float(st.session_state.sim_bets[0]["odd"]) if st.session_state.sim_bets else 2.00,
+                        step=0.01, format="%.2f",
+                        help="O número que a casa de apostas mostra para essa aposta.",
+                    )
+                    mc_stake    = mc2.number_input(
+                        "Valor por aposta (R$)", min_value=0.01,
+                        value=float(st.session_state.sim_bets[0]["stake"]) if st.session_state.sim_bets else 10.0,
+                        step=1.0, format="%.2f",
+                        help="Quanto você vai colocar em cada uma das apostas.",
+                    )
+                    mc_p_pct    = mc3.number_input(
+                        "Chance de acerto (%)", min_value=0.1, max_value=99.9,
+                        value=float(st.session_state.sim_final_prob), step=1.0, format="%.1f",
+                        help="Sua estimativa de chance de ganhar. Pré-preenchida com o valor que você escolheu.",
+                    )
+                    mc4, mc5, mc6 = st.columns(3)
+                    mc_n_bets   = mc4.number_input(
+                        "Quantas vezes vai repetir?", min_value=10, max_value=1000, value=100, step=10,
+                        help="Número de apostas iguais que você quer simular.",
+                    )
+                    mc_bankroll = mc5.number_input(
+                        "Dinheiro total (R$)", min_value=1.0, value=200.0, step=10.0, format="%.2f",
+                        help="Quanto você tem disponível para fazer essas apostas no total.",
+                    )
+                    mc_cdi_rate = mc6.number_input(
+                        "CDI anual estimado (%)", min_value=0.0, max_value=100.0, value=CDI_ANUAL_PADRAO, step=0.01, format="%.2f",
+                        help="Taxa do CDI (renda fixa) para comparar com as apostas.",
+                    )
+                    mc_run = st.form_submit_button("Simular")
 
         if st.session_state.sim_show_mc is True and st.session_state.sim_prob_step == 2 and mc_run:
             import numpy as np
