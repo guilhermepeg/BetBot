@@ -1294,7 +1294,7 @@ if _page == "chat":
 
             if st.session_state.chat_show_traj is True:
                 st.markdown(
-                    "<div style='display:flex;align-items:center;gap:12px;margin:20px 0 14px;'>"
+                    "<div style='display:flex;align-items:center;gap:12px;margin:36px 0 22px;'>"
                     "<div style='width:30px;height:30px;background:#163b2c;border-radius:50%;"
                     "display:flex;align-items:center;justify-content:center;flex-shrink:0;'>"
                     "<span style='font-size:1rem;color:#fff;'>↗</span>"
@@ -1959,7 +1959,7 @@ elif _page == "simulacao":
 
             if st.session_state.sim_show_traj is True:
                 st.markdown(
-                    "<div style='display:flex;align-items:center;gap:12px;margin:20px 0 14px;'>"
+                    "<div style='display:flex;align-items:center;gap:12px;margin:36px 0 22px;'>"
                     "<div style='width:30px;height:30px;background:#163b2c;border-radius:50%;"
                     "display:flex;align-items:center;justify-content:center;flex-shrink:0;'>"
                     "<span style='font-size:1rem;color:#fff;'>↗</span>"
