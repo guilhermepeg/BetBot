@@ -1115,9 +1115,61 @@ if _page == "chat":
             )
 
             # Disclaimer após o card
+            st.markdown(
+                "<div style='background:#fff8e8;border-radius:8px;padding:12px 16px;margin:10px 0;"
+                "border-left:3px solid #b8860b;'>"
+                "<span style='font-family:Rajdhani,sans-serif;font-size:0.95rem;color:#7a5a00;'>"
+                "Para os resultados acima, assumimos que a chance de ganhar é <b>exatamente igual</b> "
+                "à chance de perder (50%)."
+                "</span></div>",
+                unsafe_allow_html=True,
+            )
+
             # conector + Monte Carlo
             _chat_mc_submitted = False
             if st.session_state.chat_prob_step == 2:
+                _ev_p = st.session_state.chat_final_prob / 100.0
+                _ev_custom = _ev_p * _pot_profit - (1 - _ev_p) * _bet["stake"]
+                _ev_50 = 0.5 * _pot_profit - 0.5 * _bet["stake"]
+                _ev_diff = _ev_custom - _ev_50
+                _diff_sign = "+" if _ev_diff >= 0 else ""
+                _diff_bc = "#1a6641" if _ev_diff >= 0 else "rgba(160,40,40,0.9)"
+                _diff_label = "a mais em resultado esperado" if _ev_diff >= 0 else "a menos em resultado esperado"
+                _ev_custom_sign = "+" if _ev_custom >= 0 else ""
+                _ev_custom_color = "#1a6641" if _ev_custom >= 0 else "rgba(160,40,40,0.9)"
+                _ev_word = "ganha" if _ev_custom >= 0 else "perde"
+                _chat_ev_inner = (
+                    f"<div style='background:#fff;border:1px solid rgba(22,59,44,0.15);"
+                    f"border-left:4px solid #163b2c;border-radius:0 10px 10px 0;"
+                    f"padding:18px 22px;margin:14px 0 4px;'>"
+                    f"<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;"
+                    f"color:#163b2c;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;'>"
+                    f"Com {st.session_state.chat_final_prob:.0f}% de chance — resultado por aposta</div>"
+                    f"<div style='font-family:Rajdhani,sans-serif;font-size:1rem;color:#1a2e23;line-height:1.8;'>"
+                    f"Com <b>{st.session_state.chat_final_prob:.0f}%</b> de chance de ganhar e "
+                    f"<b>{100 - st.session_state.chat_final_prob:.0f}%</b> de perder: "
+                    f"em {st.session_state.chat_final_prob:.0f} de cada 100 apostas você embolsa "
+                    f"<b style='color:#1a6641;'>+R$ {_pot_profit:.2f}</b>, "
+                    f"nas outras <b>{100 - st.session_state.chat_final_prob:.0f}</b> você perde "
+                    f"<b style='color:rgba(160,40,40,0.9);'>R$ {_bet['stake']:.2f}</b>."
+                    f"</div>"
+                    f"<div style='font-family:Rajdhani,sans-serif;font-size:0.95rem;color:{_ev_custom_color};"
+                    f"line-height:1.6;margin-top:10px;border-top:1px solid rgba(22,59,44,0.12);padding-top:10px;'>"
+                    f"Resultado esperado por aposta: <b>{_ev_custom_sign}R$ {abs(_ev_custom):.2f}</b>"
+                    f" — na média, cada aposta nesse cenário <b>{_ev_word}</b> esse valor."
+                    f"</div>"
+                )
+                if abs(_ev_diff) > 0.005:
+                    _chat_ev_inner += (
+                        f"<div style='font-family:Rajdhani,sans-serif;font-size:0.88rem;color:{_diff_bc};"
+                        f"line-height:1.5;margin-top:8px;'>"
+                        f"Comparando com 50% de chance: o resultado esperado é "
+                        f"<b>{_diff_sign}R$ {abs(_ev_diff):.2f}</b> {_diff_label} por aposta."
+                        f"</div>"
+                    )
+                _chat_ev_inner += "</div>"
+                st.markdown(_chat_ev_inner, unsafe_allow_html=True)
+
                 st.markdown(
                         "<div style='margin:20px 0 4px;padding:18px 22px;"
                         "background:linear-gradient(135deg,#f0f5f2 0%,#e8f5ee 100%);"
@@ -1556,8 +1608,64 @@ elif _page == "simulacao":
                     st.session_state.sim_mc_result = None
                     st.rerun()
 
+        st.markdown(
+            "<div style='background:#fff8e8;border-radius:8px;padding:12px 16px;margin:14px 0;"
+            "border-left:3px solid #b8860b;'>"
+            "<span style='font-family:Rajdhani,sans-serif;font-size:0.95rem;color:#7a5a00;'>"
+            "Para os resultados acima, assumimos que a chance de ganhar é <b>exatamente igual</b> "
+            "à chance de perder (50%)."
+            "</span></div>",
+            unsafe_allow_html=True,
+        )
+
         if st.session_state.sim_prob_step == 2:
             mc_run = False
+
+            if st.session_state.sim_bets:
+                _ev_p2 = st.session_state.sim_final_prob / 100.0
+                for _sb in st.session_state.sim_bets:
+                    _sb_profit = _sb["stake"] * (_sb["odd"] - 1.0)
+                    _sb_ev_custom = _ev_p2 * _sb_profit - (1 - _ev_p2) * _sb["stake"]
+                    _sb_ev_50 = 0.5 * _sb_profit - 0.5 * _sb["stake"]
+                    _sb_diff = _sb_ev_custom - _sb_ev_50
+                    _sb_diff_sign = "+" if _sb_diff >= 0 else ""
+                    _sb_diff_bc = "#1a6641" if _sb_diff >= 0 else "rgba(160,40,40,0.9)"
+                    _sb_diff_label = "a mais em resultado esperado" if _sb_diff >= 0 else "a menos em resultado esperado"
+                    _safe_sb_name = _html.escape(_sb["name"])
+                    _sb_ev_sign = "+" if _sb_ev_custom >= 0 else ""
+                    _sb_ev_color = "#1a6641" if _sb_ev_custom >= 0 else "rgba(160,40,40,0.9)"
+                    _sb_ev_word = "ganha" if _sb_ev_custom >= 0 else "perde"
+                    _sb_inner = (
+                        f"<div style='background:#fff;border:1px solid rgba(22,59,44,0.15);"
+                        f"border-left:4px solid #163b2c;border-radius:0 10px 10px 0;"
+                        f"padding:18px 22px;margin:10px 0 4px;'>"
+                        f"<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;"
+                        f"color:#163b2c;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;'>"
+                        f"Com {st.session_state.sim_final_prob:.0f}% de chance — {_safe_sb_name}</div>"
+                        f"<div style='font-family:Rajdhani,sans-serif;font-size:1rem;color:#1a2e23;line-height:1.8;'>"
+                        f"Com <b>{st.session_state.sim_final_prob:.0f}%</b> de chance de ganhar e "
+                        f"<b>{100 - st.session_state.sim_final_prob:.0f}%</b> de perder: "
+                        f"em {st.session_state.sim_final_prob:.0f} de cada 100 apostas você embolsa "
+                        f"<b style='color:#1a6641;'>+R$ {_sb_profit:.2f}</b>, "
+                        f"nas outras <b>{100 - st.session_state.sim_final_prob:.0f}</b> você perde "
+                        f"<b style='color:rgba(160,40,40,0.9);'>R$ {_sb['stake']:.2f}</b>."
+                        f"</div>"
+                        f"<div style='font-family:Rajdhani,sans-serif;font-size:0.95rem;color:{_sb_ev_color};"
+                        f"line-height:1.6;margin-top:10px;border-top:1px solid rgba(22,59,44,0.12);padding-top:10px;'>"
+                        f"Resultado esperado por aposta: <b>{_sb_ev_sign}R$ {abs(_sb_ev_custom):.2f}</b>"
+                        f" — na média, cada aposta nesse cenário <b>{_sb_ev_word}</b> esse valor."
+                        f"</div>"
+                    )
+                    if abs(_sb_diff) > 0.005:
+                        _sb_inner += (
+                            f"<div style='font-family:Rajdhani,sans-serif;font-size:0.88rem;color:{_sb_diff_bc};"
+                            f"line-height:1.5;margin-top:8px;'>"
+                            f"Comparando com 50% de chance: o resultado esperado é "
+                            f"<b>{_sb_diff_sign}R$ {abs(_sb_diff):.2f}</b> {_sb_diff_label} por aposta."
+                            f"</div>"
+                        )
+                    _sb_inner += "</div>"
+                    st.markdown(_sb_inner, unsafe_allow_html=True)
 
             st.markdown(
                 "<div style='margin:28px 0 0;padding:20px 24px;"
