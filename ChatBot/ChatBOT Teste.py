@@ -1428,19 +1428,18 @@ if _page == "chat":
                 if attachments:
                     user_message["attachments"] = attachments
                 st.session_state.messages.append(user_message)
-                with st.spinner("BetBot está analisando..."):
-                    response = get_bot_response(st.session_state.messages)
-                st.session_state.messages.append({"role": "assistant", "content": response})
                 active_chat = get_active_chat()
                 active_chat["updated_at"] = datetime.now().isoformat(timespec="seconds")
                 if active_chat["title"] == "Novo chat":
                     active_chat["title"] = user_input.strip()[:40] or attachments[0]["name"][:40]
                 st.session_state.chats.sort(key=lambda chat: chat["updated_at"], reverse=True)
                 st.session_state.chat_attachment_version += 1
-                _SIM_KW = {"abre o simulador", "abra o simulador", "abre para mim",
-                           "sim, abre", "sim abre", "quero o simulador",
-                           "sim quero o simul", "abre o simul"}
-                if any(kw in message_text.lower() for kw in _SIM_KW):
+                _msg_lower = message_text.lower().strip()
+                _SIM_KW_EXACT = {"abre", "abra", "sim, abre", "sim abre", "sim quero",
+                                 "abre para mim", "quero o simulador"}
+                _SIM_KW_IN = {"abre o simulador", "abra o simulador", "abre o simul",
+                              "sim quero o simul"}
+                if _msg_lower in _SIM_KW_EXACT or any(kw in _msg_lower for kw in _SIM_KW_IN):
                     st.session_state.chat_sim_open = True
                     _odd_m = re.search(r'\b(?:odd|cota)\s*(?:de\s*)?(\d+(?:[.,]\d+)?)', message_text, re.I)
                     _stk_m = re.search(r'(?:r\$\s*|valor\s*(?:apostado\s*)?(?:de\s*)?)(\d[\d.,]*)', message_text, re.I)
@@ -1452,6 +1451,10 @@ if _page == "chat":
                             "stake": max(0.01, _new_stake or st.session_state.chat_sim_prefill["stake"]),
                             "ver":   st.session_state.chat_sim_prefill["ver"] + 1,
                         }
+                else:
+                    with st.spinner("BetBot está analisando..."):
+                        response = get_bot_response(st.session_state.messages)
+                    st.session_state.messages.append({"role": "assistant", "content": response})
                 _supabase_save(
                     st.session_state.supabase_user_code,
                     st.session_state.chats,
