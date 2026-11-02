@@ -1127,9 +1127,9 @@ if _page == "chat":
 
             # Disclaimer após o card
             st.markdown(
-                "<div style='background:#fff8e8;border-radius:8px;padding:12px 16px;margin:10px 0;"
-                "border-left:3px solid #b8860b;'>"
-                "<span style='font-family:Rajdhani,sans-serif;font-size:0.95rem;color:#7a5a00;'>"
+                "<div style='background:#e8f5ee;border-radius:8px;padding:12px 16px;margin:10px 0;"
+                "border-left:3px solid #1a6641;'>"
+                "<span style='font-family:Rajdhani,sans-serif;font-size:0.95rem;color:#163b2c;'>"
                 "Para os resultados acima, assumimos que a chance de ganhar é <b>exatamente igual</b> "
                 "à chance de perder (50%)."
                 "</span></div>",
@@ -1562,30 +1562,36 @@ elif _page == "simulacao":
             col_card, col_del = st.columns([12, 1])
             with col_card:
                 st.markdown(
-                    f"<div style='background:#163b2c;border-radius:8px 8px 0 0;padding:14px 18px;'>"
+                    f"<div style='background:#163b2c;border-radius:8px;padding:14px 18px;margin-bottom:8px;'>"
                     f"<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;"
                     f"color:rgba(255,255,255,0.75);text-transform:uppercase;letter-spacing:1px;'>{safe_name}</div>"
                     f"<div style='font-family:Rajdhani,sans-serif;font-size:1.05rem;font-weight:600;color:#fff;margin-top:4px;'>"
                     f"odd {bet['odd']:.2f} &nbsp;·&nbsp; aposta R$ {bet['stake']:.2f}"
-                    f"</div></div>"
-                    f"<div style='display:grid;grid-template-columns:1fr 1fr;border:1px solid rgba(22,59,44,0.15);"
-                    f"border-top:none;border-radius:0 0 8px 8px;overflow:hidden;margin-bottom:6px;'>"
-                    f"<div style='background:#e8f5ee;padding:14px 16px;border-left:3px solid #1a6641;'>"
+                    f"</div></div>",
+                    unsafe_allow_html=True,
+                )
+                _bc1, _bc2 = st.columns(2)
+                _bc1.markdown(
+                    f"<div style='background:#e8f5ee;border-radius:8px;padding:14px 16px;"
+                    f"border-left:3px solid #1a6641;'>"
                     f"<div style='font-family:Rajdhani,sans-serif;font-size:0.8rem;font-weight:700;"
                     f"color:#163b2c;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;'>Se ganhar</div>"
                     f"<div style='font-family:Rajdhani,sans-serif;font-size:1.5rem;font-weight:700;"
                     f"color:#163b2c;'>+R$ {pot_profit:.2f}</div>"
                     f"<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;color:#1a6641;margin-top:3px;'>"
                     f"recebe R$ {pot_return:.2f}</div>"
-                    f"</div>"
-                    f"<div style='background:#fdf0f0;padding:14px 16px;border-left:3px solid rgba(160,40,40,0.5);'>"
+                    f"</div>",
+                    unsafe_allow_html=True,
+                )
+                _bc2.markdown(
+                    f"<div style='background:#fdf0f0;border-radius:8px;padding:14px 16px;"
+                    f"border-left:3px solid rgba(160,40,40,0.5);'>"
                     f"<div style='font-family:Rajdhani,sans-serif;font-size:0.8rem;font-weight:700;"
                     f"color:#163b2c;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;'>Se perder</div>"
                     f"<div style='font-family:Rajdhani,sans-serif;font-size:1.5rem;font-weight:700;"
                     f"color:#163b2c;'>-R$ {bet['stake']:.2f}</div>"
                     f"<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;color:rgba(160,40,40,0.9);margin-top:3px;'>"
                     f"perde o valor apostado</div>"
-                    f"</div>"
                     f"</div>",
                     unsafe_allow_html=True,
                 )
@@ -1614,9 +1620,9 @@ elif _page == "simulacao":
                     st.rerun()
 
         st.markdown(
-            "<div style='background:#fff8e8;border-radius:8px;padding:12px 16px;margin:14px 0;"
-            "border-left:3px solid #b8860b;'>"
-            "<span style='font-family:Rajdhani,sans-serif;font-size:0.95rem;color:#7a5a00;'>"
+            "<div style='background:#e8f5ee;border-radius:8px;padding:12px 16px;margin:14px 0;"
+            "border-left:3px solid #1a6641;'>"
+            "<span style='font-family:Rajdhani,sans-serif;font-size:0.95rem;color:#163b2c;'>"
             "Para os resultados acima, assumimos que a chance de ganhar é <b>exatamente igual</b> "
             "à chance de perder (50%)."
             "</span></div>",
