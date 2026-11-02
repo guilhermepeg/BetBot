@@ -1215,34 +1215,35 @@ if _page == "chat":
             if csim_mc_submitted:
                     import numpy as np
                     import plotly.graph_objects as go
-                    _rng        = np.random.default_rng()
-                    _p          = csim_p_pct / 100.0
-                    _lucro_win  = _bet["stake"] * (_bet["odd"] - 1.0)
-                    _perda_lose = _bet["stake"]
-                    _n_sims     = 1000
-                    _n_bets     = int(csim_n_bets)
-                    _bankroll   = float(csim_bankroll)
-                    _all_finals = []
-                    _example_trajs = []
-                    for _si in range(_n_sims):
-                        _wins    = _rng.random(_n_bets) < _p
-                        _changes = np.where(_wins, _lucro_win, -_perda_lose)
-                        _traj    = _bankroll + np.cumsum(_changes)
-                        _all_finals.append(float(_traj[-1]))
-                        if _si < 20:
-                            _example_trajs.append([_bankroll] + _traj.tolist())
-                    _arr      = np.array(_all_finals)
-                    _pct_win  = float(np.mean(_arr > _bankroll)) * 100.0
-                    _cdi_gain = _bankroll * (csim_cdi / 100.0)
-                    st.session_state.chat_sim_result = {
-                        "name": _bet["name"], "odd": _bet["odd"], "stake": _bet["stake"],
-                        "mean_f": float(np.mean(_arr)), "best_f": float(np.max(_arr)),
-                        "worst_f": float(np.min(_arr)),
-                        "pct_broke": float(np.mean(_arr <= 0.0)) * 100.0,
-                        "pct_win": _pct_win, "pct_loss": 100.0 - _pct_win,
-                        "bankroll": _bankroll, "cdi_gain": _cdi_gain, "cdi_pct": csim_cdi,
-                        "trajs": _example_trajs, "n_bets": _n_bets,
-                    }
+                    with st.spinner("Calculando 1.000 cenários..."):
+                        _rng        = np.random.default_rng()
+                        _p          = csim_p_pct / 100.0
+                        _lucro_win  = _bet["stake"] * (_bet["odd"] - 1.0)
+                        _perda_lose = _bet["stake"]
+                        _n_sims     = 1000
+                        _n_bets     = int(csim_n_bets)
+                        _bankroll   = float(csim_bankroll)
+                        _all_finals = []
+                        _example_trajs = []
+                        for _si in range(_n_sims):
+                            _wins    = _rng.random(_n_bets) < _p
+                            _changes = np.where(_wins, _lucro_win, -_perda_lose)
+                            _traj    = _bankroll + np.cumsum(_changes)
+                            _all_finals.append(float(_traj[-1]))
+                            if _si < 20:
+                                _example_trajs.append([_bankroll] + _traj.tolist())
+                        _arr      = np.array(_all_finals)
+                        _pct_win  = float(np.mean(_arr > _bankroll)) * 100.0
+                        _cdi_gain = _bankroll * (csim_cdi / 100.0)
+                        st.session_state.chat_sim_result = {
+                            "name": _bet["name"], "odd": _bet["odd"], "stake": _bet["stake"],
+                            "mean_f": float(np.mean(_arr)), "best_f": float(np.max(_arr)),
+                            "worst_f": float(np.min(_arr)),
+                            "pct_broke": float(np.mean(_arr <= 0.0)) * 100.0,
+                            "pct_win": _pct_win, "pct_loss": 100.0 - _pct_win,
+                            "bankroll": _bankroll, "cdi_gain": _cdi_gain, "cdi_pct": csim_cdi,
+                            "trajs": _example_trajs, "n_bets": _n_bets,
+                        }
                     st.rerun()
 
         if st.session_state.chat_sim_result:
@@ -1708,50 +1709,51 @@ elif _page == "simulacao":
             import pandas as pd
             import plotly.graph_objects as go
 
-            rng = np.random.default_rng()
-            p          = mc_p_pct / 100.0
-            lucro_win  = float(mc_stake) * (float(mc_odd) - 1.0)
-            perda_lose = float(mc_stake)
-            n_sims     = 1000
-            n_bets     = int(mc_n_bets)
-            bankroll   = float(mc_bankroll)
-            cdi_rate   = mc_cdi_rate / 100.0
+            with st.spinner("Calculando 1.000 cenários..."):
+                rng = np.random.default_rng()
+                p          = mc_p_pct / 100.0
+                lucro_win  = float(mc_stake) * (float(mc_odd) - 1.0)
+                perda_lose = float(mc_stake)
+                n_sims     = 1000
+                n_bets     = int(mc_n_bets)
+                bankroll   = float(mc_bankroll)
+                cdi_rate   = mc_cdi_rate / 100.0
 
-            all_finals: list[float] = []
-            example_trajs: list[list[float]] = []
+                all_finals: list[float] = []
+                example_trajs: list[list[float]] = []
 
-            for sim_i in range(n_sims):
-                wins    = rng.random(n_bets) < p
-                changes = np.where(wins, lucro_win, -perda_lose)
-                traj    = bankroll + np.cumsum(changes)
-                all_finals.append(float(traj[-1]))
-                if sim_i < 20:
-                    example_trajs.append([bankroll] + traj.tolist())
+                for sim_i in range(n_sims):
+                    wins    = rng.random(n_bets) < p
+                    changes = np.where(wins, lucro_win, -perda_lose)
+                    traj    = bankroll + np.cumsum(changes)
+                    all_finals.append(float(traj[-1]))
+                    if sim_i < 20:
+                        example_trajs.append([bankroll] + traj.tolist())
 
-            arr      = np.array(all_finals)
-            mean_f   = float(np.mean(arr))
-            best_f   = float(np.max(arr))
-            worst_f  = float(np.min(arr))
-            pct_broke = float(np.mean(arr <= 0.0)) * 100.0
+                arr      = np.array(all_finals)
+                mean_f   = float(np.mean(arr))
+                best_f   = float(np.max(arr))
+                worst_f  = float(np.min(arr))
+                pct_broke = float(np.mean(arr <= 0.0)) * 100.0
 
-            mean_gain  = mean_f  - bankroll
-            best_gain  = best_f  - bankroll
-            worst_gain = worst_f - bankroll
-            cdi_gain   = bankroll * cdi_rate
+                mean_gain  = mean_f  - bankroll
+                best_gain  = best_f  - bankroll
+                worst_gain = worst_f - bankroll
+                cdi_gain   = bankroll * cdi_rate
 
-            pct_win_mc  = float(np.mean(arr > bankroll)) * 100.0
-            pct_loss_mc = 100.0 - pct_win_mc
+                pct_win_mc  = float(np.mean(arr > bankroll)) * 100.0
+                pct_loss_mc = 100.0 - pct_win_mc
 
-            st.session_state.sim_mc_result = {
-                "n_bets": n_bets, "mc_odd": mc_odd, "mc_stake": mc_stake,
-                "bankroll": bankroll, "mc_cdi_rate": mc_cdi_rate, "cdi_gain": cdi_gain,
-                "mean_f": mean_f, "best_f": best_f, "worst_f": worst_f,
-                "pct_broke": pct_broke, "mean_gain": mean_gain,
-                "best_gain": best_gain, "worst_gain": worst_gain,
-                "pct_win": pct_win_mc, "pct_loss": pct_loss_mc,
-                "trajs": example_trajs,
-            }
-            st.session_state.sim_show_traj = None
+                st.session_state.sim_mc_result = {
+                    "n_bets": n_bets, "mc_odd": mc_odd, "mc_stake": mc_stake,
+                    "bankroll": bankroll, "mc_cdi_rate": mc_cdi_rate, "cdi_gain": cdi_gain,
+                    "mean_f": mean_f, "best_f": best_f, "worst_f": worst_f,
+                    "pct_broke": pct_broke, "mean_gain": mean_gain,
+                    "best_gain": best_gain, "worst_gain": worst_gain,
+                    "pct_win": pct_win_mc, "pct_loss": pct_loss_mc,
+                    "trajs": example_trajs,
+                }
+                st.session_state.sim_show_traj = None
             st.rerun()
 
         if st.session_state.get("sim_mc_result"):
