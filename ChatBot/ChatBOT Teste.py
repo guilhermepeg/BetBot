@@ -1907,7 +1907,7 @@ elif _page == "simulacao":
                     "<div style='display:flex;align-items:center;gap:12px;margin:20px 0 14px;'>"
                     "<div style='width:30px;height:30px;background:#163b2c;border-radius:50%;"
                     "display:flex;align-items:center;justify-content:center;flex-shrink:0;'>"
-                    "<span style='font-size:1rem;color:#fff;'>📈</span>"
+                    "<span style='font-size:1rem;color:#fff;'>↗</span>"
                     "</div>"
                     "<div style='font-family:Rajdhani,sans-serif;font-size:0.75rem;font-weight:700;"
                     "letter-spacing:2px;color:#163b2c;text-transform:uppercase;"
