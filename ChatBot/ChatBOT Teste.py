@@ -493,6 +493,8 @@ def select_chat(chat_id: str) -> None:
     st.session_state.chat_sim_open = False
     st.session_state.chat_sim_result = None
     st.session_state.chat_sim_bet = None
+    st.session_state.chat_prob_step = 0
+    st.session_state.chat_final_prob = 50.0
 
 
 if "supabase_user_code" not in st.session_state:
@@ -608,6 +610,14 @@ if "chat_sim_prefill" not in st.session_state:
         "odd": 2.0, "stake": 10.0, "p_pct": 45.0,
         "n_bets": 100, "bankroll": 200.0, "ver": 0,
     }
+if "sim_prob_step" not in st.session_state:
+    st.session_state.sim_prob_step = 0
+if "sim_final_prob" not in st.session_state:
+    st.session_state.sim_final_prob = 50.0
+if "chat_prob_step" not in st.session_state:
+    st.session_state.chat_prob_step = 0
+if "chat_final_prob" not in st.session_state:
+    st.session_state.chat_final_prob = 50.0
 
 
 # --- Real AI engine (Anthropic Claude) ---
@@ -1048,6 +1058,8 @@ if _page == "chat":
                 st.session_state.chat_sim_bet = {
                     "odd": csim_odd, "stake": csim_stake, "name": csim_name,
                 }
+                st.session_state.chat_prob_step = 0
+                st.session_state.chat_final_prob = 50.0
                 st.rerun()
 
         # --- Fase 2: resultado de 1 cenário + conector + Monte Carlo ---
@@ -1091,59 +1103,89 @@ if _page == "chat":
 
             # Disclaimer após o card
             st.markdown(
-                "<div style='background:#fff8e8;border-radius:8px;padding:10px 14px;margin:10px 0;"
+                "<div style='background:#fff8e8;border-radius:8px;padding:12px 16px;margin:10px 0;"
                 "border-left:3px solid #b8860b;'>"
-                "<span style='font-family:Rajdhani,sans-serif;font-size:0.9rem;color:#7a5a00;'>"
-                "Para a simulação acima, estamos assumindo que a chance de ganhar é "
-                "<b>igual</b> à chance de perder (50%). "
-                "Se você acha diferente, ajuste a probabilidade no formulário."
+                "<span style='font-family:Rajdhani,sans-serif;font-size:0.95rem;color:#7a5a00;'>"
+                "Para os resultados acima, assumimos que a chance de ganhar é <b>exatamente igual</b> "
+                "à chance de perder (50%)."
                 "</span></div>",
                 unsafe_allow_html=True,
             )
 
-            # Conector
-            st.markdown(
-                "<div style='margin:20px 0 4px;padding:18px 22px;"
-                "background:linear-gradient(135deg,#f0f5f2 0%,#e8f5ee 100%);"
-                "border-radius:10px;border:1px solid rgba(22,59,44,0.2);border-left:4px solid #163b2c;'>"
-                "<div style='font-family:Rajdhani,sans-serif;font-size:1.0rem;font-weight:700;"
-                "color:#163b2c;margin-bottom:6px;'>E se você repetir essa aposta várias vezes?</div>"
-                "<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;color:#163b2c;line-height:1.5;'>"
-                "O simulador abaixo roda 1.000 cenários e mostra o que pode acontecer com o seu dinheiro — "
-                "o melhor caso, o pior e o resultado mais provável."
-                "</div></div>",
-                unsafe_allow_html=True,
-            )
+            # PASSO 0: pergunta sobre probabilidade
+            if st.session_state.chat_prob_step == 0:
+                st.markdown(
+                    "<div style='font-family:Rajdhani,sans-serif;font-size:1rem;font-weight:600;"
+                    "color:#163b2c;margin:10px 0;'>Você gostaria de utilizar outra probabilidade de ganho?</div>",
+                    unsafe_allow_html=True,
+                )
+                _cp1, _cp2 = st.columns(2)
+                if _cp1.button("Sim", key="chat_btn_prob_sim", use_container_width=True):
+                    st.session_state.chat_prob_step = 1
+                    st.rerun()
+                if _cp2.button("Não", key="chat_btn_prob_nao", use_container_width=True):
+                    st.session_state.chat_prob_step = 2
+                    st.session_state.chat_final_prob = 50.0
+                    st.rerun()
 
-            # Formulário Monte Carlo (só aparece antes de rodar)
-            if not st.session_state.chat_sim_result:
-                with st.form(key="chat_sim_mc_form", clear_on_submit=False):
-                    csmc1, csmc2, csmc3, csmc4 = st.columns(4)
-                    csim_p_pct = csmc1.number_input(
-                        "Chance de acerto (%)", min_value=0.1, max_value=99.9,
-                        value=50.0, step=1.0, format="%.1f",
-                        help="Qual a sua estimativa de chance de ganhar? 50% = igual chance de ganhar e perder.",
+            elif st.session_state.chat_prob_step == 1:
+                # PASSO 1: input de probabilidade
+                with st.form(key="chat_custom_prob_form"):
+                    _cp_val = st.number_input(
+                        "Qual a sua estimativa de chance de ganhar (%)?",
+                        min_value=0.1, max_value=99.9, value=50.0, step=1.0, format="%.1f",
                     )
-                    csim_n_bets = csmc2.number_input(
-                        "Quantas vezes repetir?", min_value=10, max_value=1000,
-                        value=int(_pf.get("n_bets", 100)), step=10,
-                        help="Número de apostas iguais que você quer simular.",
-                    )
-                    _def_bk = round(_bet["stake"] * float(_pf.get("n_bets", 100)), 2)
-                    csim_bankroll = csmc3.number_input(
-                        "Dinheiro total (R$)", min_value=1.0,
-                        value=float(_pf.get("bankroll", _def_bk)),
-                        step=10.0, format="%.2f",
-                        help="Quanto você tem disponível para fazer essas apostas no total.",
-                    )
-                    csim_cdi = csmc4.number_input(
-                        "CDI anual (%)", min_value=0.0, max_value=100.0,
-                        value=CDI_ANUAL_PADRAO, step=0.01, format="%.2f",
-                        help="Taxa da renda fixa para comparar.",
-                    )
-                    csim_mc_submitted = st.form_submit_button("Simular 1.000 cenários", use_container_width=True)
+                    if st.form_submit_button("Confirmar probabilidade", use_container_width=True):
+                        st.session_state.chat_final_prob = _cp_val
+                        st.session_state.chat_prob_step = 2
+                        st.rerun()
 
-                if csim_mc_submitted:
+            # PASSO 2: conector + Monte Carlo
+            _chat_mc_submitted = False
+            if st.session_state.chat_prob_step == 2:
+                _chat_prob_label = f"{st.session_state.chat_final_prob:.0f}%"
+                st.markdown(
+                    f"<div style='margin:20px 0 4px;padding:18px 22px;"
+                    f"background:linear-gradient(135deg,#f0f5f2 0%,#e8f5ee 100%);"
+                    f"border-radius:10px;border:1px solid rgba(22,59,44,0.2);border-left:4px solid #163b2c;'>"
+                    f"<div style='font-family:Rajdhani,sans-serif;font-size:1.0rem;font-weight:700;"
+                    f"color:#163b2c;margin-bottom:6px;'>E se você repetir essa aposta várias vezes?</div>"
+                    f"<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;color:#163b2c;line-height:1.5;'>"
+                    f"O simulador abaixo roda 1.000 cenários usando <b>{_chat_prob_label} de chance de ganhar</b> "
+                    f"e mostra o que pode acontecer com o seu dinheiro."
+                    f"</div></div>",
+                    unsafe_allow_html=True,
+                )
+
+                if not st.session_state.chat_sim_result:
+                    with st.form(key="chat_sim_mc_form", clear_on_submit=False):
+                        csmc1, csmc2, csmc3, csmc4 = st.columns(4)
+                        csim_p_pct = csmc1.number_input(
+                            "Chance de acerto (%)", min_value=0.1, max_value=99.9,
+                            value=float(st.session_state.chat_final_prob), step=1.0, format="%.1f",
+                            help="Pré-preenchida com o valor que você escolheu.",
+                        )
+                        csim_n_bets = csmc2.number_input(
+                            "Quantas vezes repetir?", min_value=10, max_value=1000,
+                            value=int(_pf.get("n_bets", 100)), step=10,
+                            help="Número de apostas iguais que você quer simular.",
+                        )
+                        _def_bk = round(_bet["stake"] * float(_pf.get("n_bets", 100)), 2)
+                        csim_bankroll = csmc3.number_input(
+                            "Dinheiro total (R$)", min_value=1.0,
+                            value=float(_pf.get("bankroll", _def_bk)),
+                            step=10.0, format="%.2f",
+                            help="Quanto você tem disponível para fazer essas apostas no total.",
+                        )
+                        csim_cdi = csmc4.number_input(
+                            "CDI anual (%)", min_value=0.0, max_value=100.0,
+                            value=CDI_ANUAL_PADRAO, step=0.01, format="%.2f",
+                            help="Taxa da renda fixa para comparar.",
+                        )
+                        _chat_mc_submitted = st.form_submit_button("Simular 1.000 cenários", use_container_width=True)
+
+            csim_mc_submitted = _chat_mc_submitted
+            if csim_mc_submitted:
                     import numpy as np
                     import plotly.graph_objects as go
                     _rng        = np.random.default_rng()
@@ -1259,6 +1301,8 @@ if _page == "chat":
             st.session_state.chat_sim_open = False
             st.session_state.chat_sim_result = None
             st.session_state.chat_sim_bet = None
+            st.session_state.chat_prob_step = 0
+            st.session_state.chat_final_prob = 50.0
             st.rerun()
 
         st.divider()
@@ -1413,6 +1457,8 @@ elif _page == "simulacao":
             "p_estimate": None,
             "other_odds": [],
         })
+        st.session_state.sim_prob_step = 0
+        st.session_state.sim_final_prob = 50.0
         st.rerun()
     elif sel_add:
         st.warning("Preencha o que você está apostando.")
@@ -1495,81 +1541,112 @@ elif _page == "simulacao":
             with col_del:
                 if st.button("✕", key=f"del_{i}", help="Remover"):
                     st.session_state.sim_bets.pop(i)
+                    st.session_state.sim_prob_step = 0
+                    st.session_state.sim_final_prob = 50.0
                     st.rerun()
 
-        # Aviso sobre probabilidade (logo abaixo dos cards de resultado)
+        # --- PASSO 0: aviso + pergunta sobre probabilidade ---
         st.markdown(
-            "<div style='background:#fff8e8;border-radius:8px;padding:10px 14px;margin:14px 0;"
+            "<div style='background:#fff8e8;border-radius:8px;padding:12px 16px;margin:14px 0;"
             "border-left:3px solid #b8860b;'>"
-            "<span style='font-family:Rajdhani,sans-serif;font-size:0.9rem;color:#7a5a00;'>"
-            "A simulação usa a sua estimativa de chance de acerto. "
-            "Se não souber, use <b>50%</b> — igual chance de ganhar e de perder."
+            "<span style='font-family:Rajdhani,sans-serif;font-size:0.95rem;color:#7a5a00;'>"
+            "Para os resultados acima, assumimos que a chance de ganhar é <b>exatamente igual</b> "
+            "à chance de perder (50%)."
             "</span></div>",
             unsafe_allow_html=True,
         )
 
-        # --- Conector: Simulação de Longo Prazo ---
-        st.markdown(
-            "<div style='margin:28px 0 0;padding:20px 24px;"
-            "background:linear-gradient(135deg,#f0f5f2 0%,#e8f5ee 100%);"
-            "border-radius:10px;border:1px solid rgba(22,59,44,0.2);border-left:4px solid #163b2c;'>"
-            "<div style='font-family:Rajdhani,sans-serif;font-size:1.05rem;font-weight:700;"
-            "color:#163b2c;margin-bottom:8px;'>E se você fizer essa mesma aposta 100 vezes seguidas?</div>"
-            "<div style='font-family:Rajdhani,sans-serif;font-size:0.95rem;color:#163b2c;line-height:1.5;'>"
-            "O simulador abaixo roda 1.000 cenários diferentes e mostra o que pode acontecer com o seu "
-            "dinheiro — o melhor caso, o pior e o resultado mais provável."
-            "</div></div>",
-            unsafe_allow_html=True,
-        )
+        if st.session_state.sim_prob_step == 0:
+            st.markdown(
+                "<div style='font-family:Rajdhani,sans-serif;font-size:1rem;font-weight:600;"
+                "color:#163b2c;margin:14px 0 10px;'>Você gostaria de utilizar outra probabilidade de ganho?</div>",
+                unsafe_allow_html=True,
+            )
+            _pb1, _pb2 = st.columns(2)
+            if _pb1.button("Sim", key="btn_prob_sim", use_container_width=True):
+                st.session_state.sim_prob_step = 1
+                st.rerun()
+            if _pb2.button("Não", key="btn_prob_nao", use_container_width=True):
+                st.session_state.sim_prob_step = 2
+                st.session_state.sim_final_prob = 50.0
+                st.rerun()
 
-        # --- Simulação de Longo Prazo (Monte Carlo) ---
-        st.markdown(
-            "<div style='display:flex;align-items:center;gap:12px;margin:20px 0 14px;'>"
-            "<div style='width:30px;height:30px;background:#163b2c;border-radius:50%;"
-            "display:flex;align-items:center;justify-content:center;flex-shrink:0;'>"
-            "<span style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;color:#fff;'>4</span>"
-            "</div>"
-            "<div style='font-family:Rajdhani,sans-serif;font-size:0.75rem;font-weight:700;"
-            "letter-spacing:2px;color:#163b2c;text-transform:uppercase;border-bottom:1px solid rgba(22,59,44,0.25);"
-            "flex:1;padding-bottom:5px;'>Simulação de longo prazo</div>"
-            "</div>",
-            unsafe_allow_html=True,
-        )
-        with st.form(key="monte_carlo_form", clear_on_submit=False):
-            st.markdown("**Dados da aposta que você quer repetir:**")
-            mc1, mc2, mc3 = st.columns(3)
-            mc_odd      = mc1.number_input(
-                "Odd", min_value=1.01, max_value=1000.0,
-                value=float(st.session_state.sim_bets[0]["odd"]) if st.session_state.sim_bets else 2.00,
-                step=0.01, format="%.2f",
-                help="O número que a casa de apostas mostra para essa aposta.",
-            )
-            mc_stake    = mc2.number_input(
-                "Valor por aposta (R$)", min_value=0.01,
-                value=float(st.session_state.sim_bets[0]["stake"]) if st.session_state.sim_bets else 10.0,
-                step=1.0, format="%.2f",
-                help="Quanto você vai colocar em cada uma das apostas.",
-            )
-            mc_p_pct    = mc3.number_input(
-                "Sua estimativa de acerto (%)", min_value=0.1, max_value=99.9, value=45.0, step=1.0, format="%.1f",
-                help="Qual é a chance, na sua avaliação, de essa aposta ser vencedora? Ex: 45% significa que você acha que vai acertar em 45 de cada 100 apostas.",
-            )
-            mc4, mc5, mc6 = st.columns(3)
-            mc_n_bets   = mc4.number_input(
-                "Quantas vezes vai repetir?", min_value=10, max_value=1000, value=100, step=10,
-                help="Número de apostas iguais que você quer simular.",
-            )
-            mc_bankroll = mc5.number_input(
-                "Dinheiro total (R$)", min_value=1.0, value=200.0, step=10.0, format="%.2f",
-                help="Quanto você tem disponível para fazer essas apostas no total.",
-            )
-            mc_cdi_rate = mc6.number_input(
-                "CDI anual estimado (%)", min_value=0.0, max_value=100.0, value=CDI_ANUAL_PADRAO, step=0.01, format="%.2f",
-                help="Taxa do CDI (renda fixa) para comparar com as apostas.",
-            )
-            mc_run = st.form_submit_button("Simular")
+        elif st.session_state.sim_prob_step == 1:
+            # PASSO 1: input de probabilidade personalizada
+            with st.form(key="custom_prob_form"):
+                _cp = st.number_input(
+                    "Qual a sua estimativa de chance de ganhar (%)?",
+                    min_value=0.1, max_value=99.9, value=50.0, step=1.0, format="%.1f",
+                    help="Ex: 60% = você acredita que vai ganhar em 6 de cada 10 apostas.",
+                )
+                if st.form_submit_button("Confirmar probabilidade", use_container_width=True):
+                    st.session_state.sim_final_prob = _cp
+                    st.session_state.sim_prob_step = 2
+                    st.rerun()
 
-        if mc_run:
+        if st.session_state.sim_prob_step == 2:
+            # PASSO 2: conector + formulário Monte Carlo
+            _prob_label = f"{st.session_state.sim_final_prob:.0f}%"
+            st.markdown(
+                f"<div style='margin:28px 0 0;padding:20px 24px;"
+                f"background:linear-gradient(135deg,#f0f5f2 0%,#e8f5ee 100%);"
+                f"border-radius:10px;border:1px solid rgba(22,59,44,0.2);border-left:4px solid #163b2c;'>"
+                f"<div style='font-family:Rajdhani,sans-serif;font-size:1.05rem;font-weight:700;"
+                f"color:#163b2c;margin-bottom:8px;'>E se você fizer essa mesma aposta 100 vezes seguidas?</div>"
+                f"<div style='font-family:Rajdhani,sans-serif;font-size:0.95rem;color:#163b2c;line-height:1.5;'>"
+                f"O simulador abaixo roda 1.000 cenários usando <b>{_prob_label} de chance de ganhar</b> "
+                f"e mostra o que pode acontecer com o seu dinheiro."
+                f"</div></div>",
+                unsafe_allow_html=True,
+            )
+            st.markdown(
+                "<div style='display:flex;align-items:center;gap:12px;margin:20px 0 14px;'>"
+                "<div style='width:30px;height:30px;background:#163b2c;border-radius:50%;"
+                "display:flex;align-items:center;justify-content:center;flex-shrink:0;'>"
+                "<span style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;color:#fff;'>4</span>"
+                "</div>"
+                "<div style='font-family:Rajdhani,sans-serif;font-size:0.75rem;font-weight:700;"
+                "letter-spacing:2px;color:#163b2c;text-transform:uppercase;border-bottom:1px solid rgba(22,59,44,0.25);"
+                "flex:1;padding-bottom:5px;'>Simulação de longo prazo</div>"
+                "</div>",
+                unsafe_allow_html=True,
+            )
+            with st.form(key="monte_carlo_form", clear_on_submit=False):
+                st.markdown("**Dados da aposta que você quer repetir:**")
+                mc1, mc2, mc3 = st.columns(3)
+                mc_odd      = mc1.number_input(
+                    "Odd", min_value=1.01, max_value=1000.0,
+                    value=float(st.session_state.sim_bets[0]["odd"]) if st.session_state.sim_bets else 2.00,
+                    step=0.01, format="%.2f",
+                    help="O número que a casa de apostas mostra para essa aposta.",
+                )
+                mc_stake    = mc2.number_input(
+                    "Valor por aposta (R$)", min_value=0.01,
+                    value=float(st.session_state.sim_bets[0]["stake"]) if st.session_state.sim_bets else 10.0,
+                    step=1.0, format="%.2f",
+                    help="Quanto você vai colocar em cada uma das apostas.",
+                )
+                mc_p_pct    = mc3.number_input(
+                    "Chance de acerto (%)", min_value=0.1, max_value=99.9,
+                    value=float(st.session_state.sim_final_prob), step=1.0, format="%.1f",
+                    help="Sua estimativa de chance de ganhar. Pré-preenchida com o valor que você escolheu.",
+                )
+                mc4, mc5, mc6 = st.columns(3)
+                mc_n_bets   = mc4.number_input(
+                    "Quantas vezes vai repetir?", min_value=10, max_value=1000, value=100, step=10,
+                    help="Número de apostas iguais que você quer simular.",
+                )
+                mc_bankroll = mc5.number_input(
+                    "Dinheiro total (R$)", min_value=1.0, value=200.0, step=10.0, format="%.2f",
+                    help="Quanto você tem disponível para fazer essas apostas no total.",
+                )
+                mc_cdi_rate = mc6.number_input(
+                    "CDI anual estimado (%)", min_value=0.0, max_value=100.0, value=CDI_ANUAL_PADRAO, step=0.01, format="%.2f",
+                    help="Taxa do CDI (renda fixa) para comparar com as apostas.",
+                )
+                mc_run = st.form_submit_button("Simular")
+
+        if st.session_state.sim_prob_step == 2 and mc_run:
             import numpy as np
             import pandas as pd
             import plotly.graph_objects as go
@@ -1890,6 +1967,8 @@ elif _page == "simulacao":
         st.divider()
         if st.button("Limpar simulação"):
             st.session_state.sim_bets = []
+            st.session_state.sim_prob_step = 0
+            st.session_state.sim_final_prob = 50.0
             st.rerun()
     else:
         st.markdown(
