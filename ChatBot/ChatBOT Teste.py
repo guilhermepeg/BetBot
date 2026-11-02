@@ -1593,6 +1593,14 @@ elif _page == "simulacao":
             mc_run = False
 
             st.markdown(
+                "<div style='font-family:Rajdhani,sans-serif;font-size:1rem;font-weight:600;"
+                "color:#163b2c;margin:16px 0 10px;'>"
+                "Vamos ver o que acontece se repetir essa aposta várias vezes."
+                "</div>",
+                unsafe_allow_html=True,
+            )
+
+            st.markdown(
                 "<div style='margin:28px 0 0;padding:20px 24px;"
                 "background:linear-gradient(135deg,#f0f5f2 0%,#e8f5ee 100%);"
                 "border-radius:10px;border:1px solid rgba(22,59,44,0.2);border-left:4px solid #163b2c;'>"
