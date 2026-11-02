@@ -610,12 +610,10 @@ if "chat_sim_prefill" not in st.session_state:
         "odd": 2.0, "stake": 10.0, "p_pct": 45.0,
         "n_bets": 100, "bankroll": 200.0, "ver": 0,
     }
-if "sim_prob_step" not in st.session_state:
-    st.session_state.sim_prob_step = 2
+st.session_state.sim_prob_step = 2
 if "sim_final_prob" not in st.session_state:
     st.session_state.sim_final_prob = 50.0
-if "chat_prob_step" not in st.session_state:
-    st.session_state.chat_prob_step = 2
+st.session_state.chat_prob_step = 2
 if "chat_final_prob" not in st.session_state:
     st.session_state.chat_final_prob = 50.0
 if "sim_chose_custom" not in st.session_state:
