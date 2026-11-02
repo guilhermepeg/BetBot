@@ -1228,16 +1228,24 @@ if _page == "chat":
 
                 if st.session_state.chat_show_traj is True:
                     st.markdown(
-                        f"<div style='margin:20px 0 4px;padding:18px 22px;"
-                        f"background:linear-gradient(135deg,#f0f5f2 0%,#e8f5ee 100%);"
-                        f"border-radius:10px;border:1px solid rgba(22,59,44,0.2);border-left:4px solid #163b2c;'>"
-                        f"<div style='font-family:Rajdhani,sans-serif;font-size:1.0rem;font-weight:700;"
-                        f"color:#163b2c;margin-bottom:6px;'>E se você repetir essa aposta várias vezes?</div>"
-                        f"<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;color:#163b2c;line-height:1.5;'>"
-                        f"Ao repetir a mesma aposta várias vezes, o resultado pode variar bastante. "
-                        f"O simulador abaixo mostra 1.000 cenários possíveis para o seu dinheiro "
-                        f"— e compara com o quanto ele renderia na renda fixa no mesmo período."
-                        f"</div></div>",
+                        "<div style='margin:20px 0 4px;padding:18px 22px;"
+                        "background:linear-gradient(135deg,#f0f5f2 0%,#e8f5ee 100%);"
+                        "border-radius:10px;border:1px solid rgba(22,59,44,0.2);border-left:4px solid #163b2c;'>"
+                        "<div style='font-family:Rajdhani,sans-serif;font-size:1.0rem;font-weight:700;"
+                        "color:#163b2c;margin-bottom:6px;'>E se você repetir essa aposta várias vezes?</div>"
+                        "<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;color:#163b2c;line-height:1.6;'>"
+                        "Imagine repetir essa mesma aposta dezenas ou centenas de vezes seguidas. "
+                        "O simulador roda <b>1.000 cenários diferentes</b> para mostrar o leque do que pode acontecer "
+                        "com o seu dinheiro — do pior ao melhor caso — e compara com o quanto ele renderia "
+                        "na <b>renda fixa</b> no mesmo período."
+                        "</div>"
+                        "<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;color:#163b2c;"
+                        "line-height:1.5;margin-top:10px;border-top:1px solid rgba(22,59,44,0.18);"
+                        "padding-top:9px;'>"
+                        "<b>Para simular, preencha os campos abaixo:</b> a odd e o valor de cada aposta, "
+                        "quantas vezes você quer repetir, quanto tem disponível no total e a taxa CDI "
+                        "para a comparação com a renda fixa."
+                        "</div></div>",
                         unsafe_allow_html=True,
                     )
 
@@ -1757,16 +1765,24 @@ elif _page == "simulacao":
 
             if st.session_state.sim_show_traj is True:
                 st.markdown(
-                    f"<div style='margin:28px 0 0;padding:20px 24px;"
-                    f"background:linear-gradient(135deg,#f0f5f2 0%,#e8f5ee 100%);"
-                    f"border-radius:10px;border:1px solid rgba(22,59,44,0.2);border-left:4px solid #163b2c;'>"
-                    f"<div style='font-family:Rajdhani,sans-serif;font-size:1.05rem;font-weight:700;"
-                    f"color:#163b2c;margin-bottom:8px;'>E se você fizer essa mesma aposta 100 vezes seguidas?</div>"
-                    f"<div style='font-family:Rajdhani,sans-serif;font-size:0.95rem;color:#163b2c;line-height:1.5;'>"
-                    f"Ao repetir a mesma aposta várias vezes, o resultado pode variar bastante. "
-                    f"O simulador abaixo mostra 1.000 cenários possíveis para o seu dinheiro "
-                    f"— e compara com o quanto ele renderia na renda fixa no mesmo período."
-                    f"</div></div>",
+                    "<div style='margin:28px 0 0;padding:20px 24px;"
+                    "background:linear-gradient(135deg,#f0f5f2 0%,#e8f5ee 100%);"
+                    "border-radius:10px;border:1px solid rgba(22,59,44,0.2);border-left:4px solid #163b2c;'>"
+                    "<div style='font-family:Rajdhani,sans-serif;font-size:1.05rem;font-weight:700;"
+                    "color:#163b2c;margin-bottom:8px;'>E se você repetir essa aposta várias vezes?</div>"
+                    "<div style='font-family:Rajdhani,sans-serif;font-size:0.95rem;color:#163b2c;line-height:1.6;'>"
+                    "Imagine repetir essa mesma aposta dezenas ou centenas de vezes seguidas. "
+                    "O simulador roda <b>1.000 cenários diferentes</b> para mostrar o leque do que pode acontecer "
+                    "com o seu dinheiro — do pior ao melhor caso — e compara com o quanto ele renderia "
+                    "na <b>renda fixa</b> no mesmo período."
+                    "</div>"
+                    "<div style='font-family:Rajdhani,sans-serif;font-size:0.88rem;color:#163b2c;"
+                    "line-height:1.5;margin-top:12px;border-top:1px solid rgba(22,59,44,0.18);"
+                    "padding-top:10px;'>"
+                    "<b>Para simular, preencha os campos abaixo:</b> a odd e o valor de cada aposta, "
+                    "quantas vezes você quer repetir, quanto tem disponível no total e a taxa CDI "
+                    "para a comparação com a renda fixa."
+                    "</div></div>",
                     unsafe_allow_html=True,
                 )
                 st.markdown(
