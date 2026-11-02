@@ -1593,9 +1593,15 @@ elif _page == "simulacao":
             mc_run = False
 
             st.markdown(
-                "<div style='font-family:Rajdhani,sans-serif;font-size:1rem;font-weight:600;"
-                "color:#163b2c;margin:16px 0 10px;'>"
-                "Vamos ver o que acontece se repetir essa aposta várias vezes."
+                "<div style='display:flex;align-items:center;gap:12px;margin:16px 0 14px;'>"
+                "<div style='width:30px;height:30px;background:#163b2c;border-radius:50%;"
+                "display:flex;align-items:center;justify-content:center;flex-shrink:0;'>"
+                "<span style='font-size:1rem;color:#fff;'>→</span>"
+                "</div>"
+                "<div style='font-family:Rajdhani,sans-serif;font-size:0.75rem;font-weight:700;"
+                "letter-spacing:2px;color:#163b2c;text-transform:uppercase;"
+                "border-bottom:1px solid rgba(22,59,44,0.25);flex:1;padding-bottom:5px;'>"
+                "Vamos ver o que acontece se repetir essa aposta várias vezes.</div>"
                 "</div>",
                 unsafe_allow_html=True,
             )
