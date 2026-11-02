@@ -1625,18 +1625,6 @@ elif _page == "simulacao":
                 "</div></div>",
                 unsafe_allow_html=True,
             )
-            st.markdown(
-                "<div style='display:flex;align-items:center;gap:12px;margin:20px 0 14px;'>"
-                "<div style='width:30px;height:30px;background:#163b2c;border-radius:50%;"
-                "display:flex;align-items:center;justify-content:center;flex-shrink:0;'>"
-                "<span style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;color:#fff;'>4</span>"
-                "</div>"
-                "<div style='font-family:Rajdhani,sans-serif;font-size:0.75rem;font-weight:700;"
-                "letter-spacing:2px;color:#163b2c;text-transform:uppercase;border-bottom:1px solid rgba(22,59,44,0.25);"
-                "flex:1;padding-bottom:5px;'>Simulação de longo prazo</div>"
-                "</div>",
-                unsafe_allow_html=True,
-            )
             with st.form(key="monte_carlo_form", clear_on_submit=False):
                 st.markdown("**Dados da aposta que você quer repetir:**")
                 mc1, mc2, mc3 = st.columns(3)
