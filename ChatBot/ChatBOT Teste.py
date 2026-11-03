@@ -411,7 +411,7 @@ components.html("""
       'box-shadow:0 4px 18px rgba(22,59,44,0.08);';
     bar.innerHTML =
       '<span style="font-family:Rajdhani,sans-serif;font-size:1.8rem;font-weight:900;' +
-      'letter-spacing:5px;color:#111;">BETBOT AI</span>';
+      'letter-spacing:5px;color:#1a3d2b;">BETBOT AI</span>';
 
     doc.body.appendChild(bar);
   }
@@ -591,7 +591,7 @@ with st.sidebar:
         st.caption("Histórico não será salvo ao recarregar.")
 
     st.markdown(
-        "<div style='text-align:center; font-family:Rajdhani,sans-serif; color:#2d6a4f; "
+        "<div style='text-align:center; font-family:Rajdhani,sans-serif; color:#1a3d2b; "
         "font-size:0.6rem; letter-spacing:2px; margin-top:1rem; "
         "text-shadow:none;'>"
         "BETBOT AI · POWERED BY AI</div>",
@@ -1043,7 +1043,7 @@ if _page == "chat":
             "<span style='font-family:Rajdhani,sans-serif;font-size:0.9rem;font-weight:900;color:#fff;'>⚡</span>"
             "</div>"
             "<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;font-weight:900;"
-            "letter-spacing:2px;color:#2d6a4f;text-transform:uppercase;flex:1;padding-bottom:5px;border-bottom:1px solid rgba(22,59,44,0.25);'>"
+            "letter-spacing:2px;color:#1a3d2b;text-transform:uppercase;flex:1;padding-bottom:5px;border-bottom:1px solid rgba(22,59,44,0.25);'>"
             "Simulador</div>"
             "</div>",
             unsafe_allow_html=True,
@@ -1093,16 +1093,16 @@ if _page == "chat":
                 f"border-left:4px solid #2d6a4f;border-radius:0 10px 10px 0;"
                 f"padding:16px 20px;margin:6px 0;'>"
                 f"<div style='font-family:Rajdhani,sans-serif;font-size:1.1rem;font-weight:700;"
-                f"color:#2d6a4f;margin-bottom:14px;'>{_sn}</div>"
+                f"color:#1a3d2b;margin-bottom:14px;'>{_sn}</div>"
                 f"<div style='display:grid;grid-template-columns:1fr 1fr 1.4fr 1.4fr;gap:12px;'>"
                 f"<div><div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;"
-                f"color:#2d6a4f;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;'>Odd</div>"
+                f"color:#1a3d2b;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;'>Odd</div>"
                 f"<div style='font-family:Rajdhani,sans-serif;font-size:1.25rem;font-weight:700;"
-                f"color:#2d6a4f;'>{_bet['odd']:.2f}</div></div>"
+                f"color:#1a3d2b;'>{_bet['odd']:.2f}</div></div>"
                 f"<div><div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;"
-                f"color:#2d6a4f;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;'>Aposta</div>"
+                f"color:#1a3d2b;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;'>Aposta</div>"
                 f"<div style='font-family:Rajdhani,sans-serif;font-size:1.25rem;font-weight:700;"
-                f"color:#2d6a4f;'>R$ {_bet['stake']:.2f}</div></div>"
+                f"color:#1a3d2b;'>R$ {_bet['stake']:.2f}</div></div>"
                 f"<div style='background:#e8f5ee;border-radius:8px;padding:10px 14px;'>"
                 f"<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;"
                 f"color:#1a6641;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;'>Se ganhar</div>"
@@ -1125,7 +1125,7 @@ if _page == "chat":
             st.markdown(
                 "<div style='background:#e8f5ee;border-radius:8px;padding:12px 16px;margin:10px 0;"
                 "border-left:3px solid #1a6641;'>"
-                "<span style='font-family:Rajdhani,sans-serif;font-size:0.95rem;color:#2d6a4f;'>"
+                "<span style='font-family:Rajdhani,sans-serif;font-size:0.95rem;color:#1a3d2b;'>"
                 "Para os resultados acima, assumimos que a chance de ganhar é <b>exatamente igual</b> "
                 "à chance de perder (50%)."
                 "</span></div>",
@@ -1142,7 +1142,7 @@ if _page == "chat":
                     "<span style='font-size:1rem;color:#fff;'>→</span>"
                     "</div>"
                     "<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;font-weight:900;"
-                    "letter-spacing:2px;color:#2d6a4f;text-transform:uppercase;"
+                    "letter-spacing:2px;color:#1a3d2b;text-transform:uppercase;"
                     "border-bottom:1px solid rgba(22,59,44,0.25);flex:1;padding-bottom:5px;'>"
                     "Vamos ver o que acontece se repetir essa aposta várias vezes.</div>"
                     "</div>",
@@ -1152,7 +1152,7 @@ if _page == "chat":
                 if st.session_state.chat_show_mc is None:
                     st.markdown(
                         "<div style='font-family:Rajdhani,sans-serif;font-size:1rem;font-weight:600;"
-                        "color:#2d6a4f;margin:16px 0 10px;'>Quer saber o que acontece se repetir essa aposta várias vezes?</div>",
+                        "color:#1a3d2b;margin:16px 0 10px;'>Quer saber o que acontece se repetir essa aposta várias vezes?</div>",
                         unsafe_allow_html=True,
                     )
                     _cmc1, _cmc2 = st.columns(2)
@@ -1168,13 +1168,13 @@ if _page == "chat":
                         "<div style='margin:20px 0 4px;padding:18px 22px;"
                         "background:linear-gradient(135deg,#f0f5f2 0%,#e8f5ee 100%);"
                         "border-radius:10px;border:1px solid rgba(22,59,44,0.2);border-left:4px solid #2d6a4f;'>"
-                        "<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;color:#2d6a4f;line-height:1.6;'>"
+                        "<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;color:#1a3d2b;line-height:1.6;'>"
                         "Imagine repetir essa mesma aposta dezenas ou centenas de vezes seguidas. "
                         "O simulador roda <b>1.000 cenários diferentes</b> para mostrar o leque do que pode acontecer "
                         "com o seu dinheiro — do pior ao melhor caso — e compara com o quanto ele renderia "
                         "na <b>renda fixa</b> no mesmo período."
                         "</div>"
-                        "<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;color:#2d6a4f;"
+                        "<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;color:#1a3d2b;"
                         "line-height:1.5;margin-top:10px;border-top:1px solid rgba(22,59,44,0.18);"
                         "padding-top:9px;'>"
                         "Para simular, preencha os campos abaixo: a odd e o valor de cada aposta, "
@@ -1275,7 +1275,7 @@ if _page == "chat":
             if st.session_state.chat_show_traj is None:
                 st.markdown(
                     "<div style='font-family:Rajdhani,sans-serif;font-size:1rem;font-weight:600;"
-                    "color:#2d6a4f;margin:18px 0 10px;'>"
+                    "color:#1a3d2b;margin:18px 0 10px;'>"
                     "Quer visualizar como o seu dinheiro pode se comportar ao longo do tempo, "
                     "repetindo essa aposta várias vezes?</div>",
                     unsafe_allow_html=True,
@@ -1296,7 +1296,7 @@ if _page == "chat":
                     "<span style='font-size:1rem;color:#fff;'>↗</span>"
                     "</div>"
                     "<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;font-weight:900;"
-                    "letter-spacing:2px;color:#2d6a4f;text-transform:uppercase;"
+                    "letter-spacing:2px;color:#1a3d2b;text-transform:uppercase;"
                     "border-bottom:1px solid rgba(22,59,44,0.25);flex:1;padding-bottom:5px;'>"
                     "Como seu dinheiro pode se comportar ao longo das apostas</div>"
                     "</div>",
@@ -1482,7 +1482,7 @@ elif _page == "simulacao":
         "<span style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;color:#fff;'>1</span>"
         "</div>"
         "<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;font-weight:900;"
-        "letter-spacing:2px;color:#2d6a4f;text-transform:uppercase;"
+        "letter-spacing:2px;color:#1a3d2b;text-transform:uppercase;"
         "flex:1;padding-bottom:5px;border-bottom:1px solid rgba(22,59,44,0.25);'>"
         "Dados da aposta</div>"
         "</div>",
@@ -1492,7 +1492,7 @@ elif _page == "simulacao":
     st.markdown(
         "<div style='background:#f0f5f2;border-radius:8px;padding:14px 18px;margin-bottom:16px;"
         "border-left:3px solid #2d6a4f;'>"
-        "<div style='font-family:Rajdhani,sans-serif;font-size:1rem;color:#2d6a4f;line-height:1.6;'>"
+        "<div style='font-family:Rajdhani,sans-serif;font-size:1rem;color:#1a3d2b;line-height:1.6;'>"
         "Está assistindo a um jogo e quer entender melhor os riscos e os possíveis retornos de uma "
         "aposta esportiva? Nesta aba, você pode simular diferentes cenários para visualizar quanto "
         "poderia ganhar ou perder de acordo com a odd oferecida pela casa de apostas e o valor apostado."
@@ -1542,7 +1542,7 @@ elif _page == "simulacao":
             "<span style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;color:#fff;'>2</span>"
             "</div>"
             "<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;font-weight:900;"
-            "letter-spacing:2px;color:#2d6a4f;text-transform:uppercase;border-bottom:1px solid rgba(22,59,44,0.25);"
+            "letter-spacing:2px;color:#1a3d2b;text-transform:uppercase;border-bottom:1px solid rgba(22,59,44,0.25);"
             "flex:1;padding-bottom:5px;'>Resultado de cada aposta</div>"
             "</div>",
             unsafe_allow_html=True,
@@ -1571,9 +1571,9 @@ elif _page == "simulacao":
                     f"<div style='background:#e8f5ee;border-radius:8px;padding:14px 16px;"
                     f"border-left:3px solid #1a6641;'>"
                     f"<div style='font-family:Rajdhani,sans-serif;font-size:0.8rem;font-weight:700;"
-                    f"color:#2d6a4f;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;'>Se ganhar</div>"
+                    f"color:#1a3d2b;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;'>Se ganhar</div>"
                     f"<div style='font-family:Rajdhani,sans-serif;font-size:1.5rem;font-weight:700;"
-                    f"color:#2d6a4f;'>+R$ {pot_profit:.2f}</div>"
+                    f"color:#1a3d2b;'>+R$ {pot_profit:.2f}</div>"
                     f"<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;color:#1a6641;margin-top:3px;'>"
                     f"recebe R$ {pot_return:.2f}</div>"
                     f"</div>",
@@ -1583,9 +1583,9 @@ elif _page == "simulacao":
                     f"<div style='background:#fdf0f0;border-radius:8px;padding:14px 16px;"
                     f"border-left:3px solid rgba(160,40,40,0.5);'>"
                     f"<div style='font-family:Rajdhani,sans-serif;font-size:0.8rem;font-weight:700;"
-                    f"color:#2d6a4f;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;'>Se perder</div>"
+                    f"color:#1a3d2b;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;'>Se perder</div>"
                     f"<div style='font-family:Rajdhani,sans-serif;font-size:1.5rem;font-weight:700;"
-                    f"color:#2d6a4f;'>-R$ {bet['stake']:.2f}</div>"
+                    f"color:#1a3d2b;'>-R$ {bet['stake']:.2f}</div>"
                     f"<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;color:rgba(160,40,40,0.9);margin-top:3px;'>"
                     f"perde o valor apostado</div>"
                     f"</div>",
@@ -1618,7 +1618,7 @@ elif _page == "simulacao":
         st.markdown(
             "<div style='background:#e8f5ee;border-radius:8px;padding:12px 16px;margin:14px 0;"
             "border-left:3px solid #1a6641;'>"
-            "<span style='font-family:Rajdhani,sans-serif;font-size:0.95rem;color:#2d6a4f;'>"
+            "<span style='font-family:Rajdhani,sans-serif;font-size:0.95rem;color:#1a3d2b;'>"
             "Para os resultados acima, assumimos que a chance de ganhar é <b>exatamente igual</b> "
             "à chance de perder (50%)."
             "</span></div>",
@@ -1628,7 +1628,7 @@ elif _page == "simulacao":
         if st.session_state.sim_show_mc is None:
             st.markdown(
                 "<div style='font-family:Rajdhani,sans-serif;font-size:1rem;font-weight:600;"
-                "color:#2d6a4f;margin:16px 0 10px;'>Quer saber o que acontece se repetir essa aposta várias vezes?</div>",
+                "color:#1a3d2b;margin:16px 0 10px;'>Quer saber o que acontece se repetir essa aposta várias vezes?</div>",
                 unsafe_allow_html=True,
             )
             _smc1, _smc2 = st.columns(2)
@@ -1649,7 +1649,7 @@ elif _page == "simulacao":
                 "<span style='font-size:1rem;color:#fff;'>→</span>"
                 "</div>"
                 "<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;font-weight:900;"
-                "letter-spacing:2px;color:#2d6a4f;text-transform:uppercase;"
+                "letter-spacing:2px;color:#1a3d2b;text-transform:uppercase;"
                 "border-bottom:1px solid rgba(22,59,44,0.25);flex:1;padding-bottom:5px;'>"
                 "Vamos ver o que acontece se repetir essa aposta várias vezes.</div>"
                 "</div>",
@@ -1661,13 +1661,13 @@ elif _page == "simulacao":
                     "<div style='margin:28px 0 0;padding:20px 24px;"
                     "background:linear-gradient(135deg,#f0f5f2 0%,#e8f5ee 100%);"
                     "border-radius:10px;border:1px solid rgba(22,59,44,0.2);border-left:4px solid #2d6a4f;'>"
-                    "<div style='font-family:Rajdhani,sans-serif;font-size:0.95rem;color:#2d6a4f;line-height:1.6;'>"
+                    "<div style='font-family:Rajdhani,sans-serif;font-size:0.95rem;color:#1a3d2b;line-height:1.6;'>"
                     "Imagine repetir essa mesma aposta dezenas ou centenas de vezes seguidas. "
                     "O simulador roda <b>1.000 cenários diferentes</b> para mostrar o leque do que pode acontecer "
                     "com o seu dinheiro — do pior ao melhor caso — e compara com o quanto ele renderia "
                     "na <b>renda fixa</b> no mesmo período."
                     "</div>"
-                    "<div style='font-family:Rajdhani,sans-serif;font-size:0.88rem;color:#2d6a4f;"
+                    "<div style='font-family:Rajdhani,sans-serif;font-size:0.88rem;color:#1a3d2b;"
                     "line-height:1.5;margin-top:12px;border-top:1px solid rgba(22,59,44,0.18);"
                     "padding-top:10px;'>"
                     "Para simular, preencha os campos abaixo: a odd e o valor de cada aposta, "
@@ -1791,9 +1791,9 @@ elif _page == "simulacao":
                     f"<div style='background:{bg};border-radius:8px;padding:14px 16px;"
                     f"border-left:3px solid {border};height:100%;'>"
                     f"<div style='font-family:Rajdhani,sans-serif;font-size:0.8rem;font-weight:700;"
-                    f"color:#2d6a4f;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;'>{label}</div>"
+                    f"color:#1a3d2b;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;'>{label}</div>"
                     f"<div style='font-family:Rajdhani,sans-serif;font-size:1.5rem;font-weight:700;"
-                    f"color:#2d6a4f;'>R$ {final:.2f}</div>"
+                    f"color:#1a3d2b;'>R$ {final:.2f}</div>"
                     f"<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;color:{color};margin-top:3px;'>"
                     f"{sign}R$ {gain:.2f} vs. início</div>"
                     f"</div>"
@@ -1813,7 +1813,7 @@ elif _page == "simulacao":
             # --- Gráfico divergente: melhor / média / pior ---
             st.markdown(
                 "<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;font-weight:900;"
-                "letter-spacing:2px;color:#2d6a4f;text-transform:uppercase;margin:20px 0 6px;'>"
+                "letter-spacing:2px;color:#1a3d2b;text-transform:uppercase;margin:20px 0 6px;'>"
                 "Comparação visual: ganho ou perda</div>",
                 unsafe_allow_html=True,
             )
@@ -1869,7 +1869,7 @@ elif _page == "simulacao":
                 rows_html += (
                     f"<div style='display:flex;align-items:center;margin:10px 0;'>"
                     f"<div style='width:180px;min-width:180px;text-align:right;font-size:0.95rem;"
-                    f"font-family:Rajdhani,sans-serif;color:#2d6a4f;padding-right:12px;line-height:1.3;font-weight:600;'>{label_safe}</div>"
+                    f"font-family:Rajdhani,sans-serif;color:#1a3d2b;padding-right:12px;line-height:1.3;font-weight:600;'>{label_safe}</div>"
                     f"<div style='flex:1;display:flex;'>"
                     f"{left_side}"
                     f"<div style='width:2px;min-width:2px;background:#2d6a4f;height:28px;flex-shrink:0;'></div>"
@@ -1884,8 +1884,8 @@ elif _page == "simulacao":
                 "<div style='background:#f0f5f2;border-radius:8px;padding:14px 16px;margin:4px 0 12px;"
                 "border-left:4px solid #4b8068;'>"
                 "<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;letter-spacing:1px;"
-                "color:#2d6a4f;text-transform:uppercase;margin-bottom:8px;'>E se você investisse em renda fixa?</div>"
-                f"<p style='font-family:Rajdhani,sans-serif;font-size:0.95rem;color:#2d6a4f;margin:0;line-height:1.5;'>"
+                "color:#1a3d2b;text-transform:uppercase;margin-bottom:8px;'>E se você investisse em renda fixa?</div>"
+                f"<p style='font-family:Rajdhani,sans-serif;font-size:0.95rem;color:#1a3d2b;margin:0;line-height:1.5;'>"
                 f"O <b>CDI</b> é a referência da renda fixa no Brasil — um rendimento garantido sobre o que você investe. "
                 f"Diferente das apostas, <b>não há risco de perder</b>: você contrata uma taxa e recebe no final. "
                 f"Com {_smr['mc_cdi_rate']:.2f}% ao ano, investir R$ {_smr_bk:.2f} renderia "
@@ -1906,9 +1906,9 @@ elif _page == "simulacao":
                 f"<div style='background:#f0f5f2;border-radius:8px;padding:14px 16px;"
                 f"border-left:3px solid #4b8068;height:100%;'>"
                 f"<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;font-weight:700;"
-                f"color:#2d6a4f;text-transform:uppercase;margin-bottom:6px;'>CDI em 1 ano</div>"
+                f"color:#1a3d2b;text-transform:uppercase;margin-bottom:6px;'>CDI em 1 ano</div>"
                 f"<div style='font-family:Rajdhani,sans-serif;font-size:1.5rem;font-weight:700;"
-                f"color:#2d6a4f;'>R$ {_smr['cdi_gain']:.2f}</div>"
+                f"color:#1a3d2b;'>R$ {_smr['cdi_gain']:.2f}</div>"
                 f"<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;color:#1a6641;margin-top:3px;'>"
                 f"sem risco</div></div>",
                 unsafe_allow_html=True,
@@ -1917,7 +1917,7 @@ elif _page == "simulacao":
                 f"<div style='background:{_smr_mean_bg};border-radius:8px;padding:14px 16px;"
                 f"border-left:3px solid {_smr_mean_border};height:100%;'>"
                 f"<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;font-weight:700;"
-                f"color:#2d6a4f;text-transform:uppercase;margin-bottom:6px;'>Resultado médio</div>"
+                f"color:#1a3d2b;text-transform:uppercase;margin-bottom:6px;'>Resultado médio</div>"
                 f"<div style='font-family:Rajdhani,sans-serif;font-size:1.5rem;font-weight:700;"
                 f"color:{_smr_mean_color};'>R$ {_smr['mean_gain']:+.2f}</div>"
                 f"<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;color:{_smr_mean_color};margin-top:3px;'>"
@@ -1928,7 +1928,7 @@ elif _page == "simulacao":
                 f"<div style='background:{_smr_diff_bg};border-radius:8px;padding:14px 16px;"
                 f"border-left:3px solid {_smr_diff_border};height:100%;'>"
                 f"<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;font-weight:700;"
-                f"color:#2d6a4f;text-transform:uppercase;margin-bottom:6px;'>Diferença vs CDI</div>"
+                f"color:#1a3d2b;text-transform:uppercase;margin-bottom:6px;'>Diferença vs CDI</div>"
                 f"<div style='font-family:Rajdhani,sans-serif;font-size:1.5rem;font-weight:700;"
                 f"color:{_smr_diff_color};'>R$ {abs(_smr_delta):.2f}</div>"
                 f"<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;color:{_smr_diff_color};margin-top:3px;'>"
@@ -1940,7 +1940,7 @@ elif _page == "simulacao":
             if st.session_state.sim_show_traj is None:
                 st.markdown(
                     "<div style='font-family:Rajdhani,sans-serif;font-size:1rem;font-weight:600;"
-                    "color:#2d6a4f;margin:18px 0 10px;'>"
+                    "color:#1a3d2b;margin:18px 0 10px;'>"
                     "Quer visualizar como o seu dinheiro pode se comportar ao longo do tempo, "
                     "repetindo essa aposta várias vezes?</div>",
                     unsafe_allow_html=True,
@@ -1961,7 +1961,7 @@ elif _page == "simulacao":
                     "<span style='font-size:1rem;color:#fff;'>↗</span>"
                     "</div>"
                     "<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;font-weight:900;"
-                    "letter-spacing:2px;color:#2d6a4f;text-transform:uppercase;"
+                    "letter-spacing:2px;color:#1a3d2b;text-transform:uppercase;"
                     "border-bottom:1px solid rgba(22,59,44,0.25);flex:1;padding-bottom:5px;'>"
                     "Como seu dinheiro pode se comportar ao longo das apostas</div>"
                     "</div>",
@@ -2084,7 +2084,7 @@ elif _page == "simulacao":
         st.markdown(
             "<div style='background:#f0f5f2;border-radius:8px;padding:16px 20px;margin:10px 0;"
             "border:1px dashed rgba(22,59,44,0.3);text-align:center;'>"
-            "<span style='font-family:Rajdhani,sans-serif;font-size:1rem;color:#2d6a4f;'>"
+            "<span style='font-family:Rajdhani,sans-serif;font-size:1rem;color:#1a3d2b;'>"
             "Nenhuma aposta adicionada ainda. Preencha o formulário acima e clique em "
             "<b>Adicionar aposta</b> para começar."
             "</span></div>",
@@ -2114,7 +2114,7 @@ elif _page == "historico":
         "<span style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;color:#fff;'>1</span>"
         "</div>"
         "<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;font-weight:900;"
-        "letter-spacing:2px;color:#2d6a4f;text-transform:uppercase;flex:1;padding-bottom:5px;border-bottom:1px solid rgba(22,59,44,0.25);'>"
+        "letter-spacing:2px;color:#1a3d2b;text-transform:uppercase;flex:1;padding-bottom:5px;border-bottom:1px solid rgba(22,59,44,0.25);'>"
         "Registrar resultado</div>"
         "</div>",
         unsafe_allow_html=True,
@@ -2123,7 +2123,7 @@ elif _page == "historico":
     st.markdown(
         "<div style='background:#f0f5f2;border-radius:8px;padding:14px 18px;margin-bottom:16px;"
         "border-left:3px solid #2d6a4f;'>"
-        "<div style='font-family:Rajdhani,sans-serif;font-size:1rem;color:#2d6a4f;line-height:1.6;'>"
+        "<div style='font-family:Rajdhani,sans-serif;font-size:1rem;color:#1a3d2b;line-height:1.6;'>"
         "Imagine que você estava assistindo a um jogo e decidiu testar uma aposta. "
         "Por exemplo: você colocou <b>R$ 50</b> na vitória do <b>Flamengo</b> numa partida em que achava que o time tinha boas chances. "
         "Se o Flamengo ganhou e a casa pagou <b>R$ 120</b> no total (o que você recebeu de volta), informe esse valor aqui. "
@@ -2171,7 +2171,7 @@ elif _page == "historico":
             bg, border, val_color = "#fdf0f0", "rgba(160,40,40,0.5)", "rgba(160,40,40,0.9)"
         sub_html = (
             f"<div style='font-family:Rajdhani,sans-serif;font-size:0.82rem;"
-            f"color:#2d6a4f;margin-top:3px;'>{sub}</div>"
+            f"color:#1a3d2b;margin-top:3px;'>{sub}</div>"
         ) if sub else ""
         val_size = "1.35rem" if compact else "1.7rem"
         pad = "16px 14px" if compact else "22px 20px"
@@ -2201,7 +2201,7 @@ elif _page == "historico":
             "<span style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;color:#fff;'>2</span>"
             "</div>"
             "<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;font-weight:900;"
-            "letter-spacing:2px;color:#2d6a4f;text-transform:uppercase;flex:1;padding-bottom:5px;border-bottom:1px solid rgba(22,59,44,0.25);'>"
+            "letter-spacing:2px;color:#1a3d2b;text-transform:uppercase;flex:1;padding-bottom:5px;border-bottom:1px solid rgba(22,59,44,0.25);'>"
             "Desempenho das bets</div>"
             "</div>",
             unsafe_allow_html=True,
@@ -2247,7 +2247,7 @@ elif _page == "historico":
             "<span style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;color:#fff;'>3</span>"
             "</div>"
             "<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;font-weight:900;"
-            "letter-spacing:2px;color:#2d6a4f;text-transform:uppercase;flex:1;padding-bottom:5px;border-bottom:1px solid rgba(22,59,44,0.25);'>"
+            "letter-spacing:2px;color:#1a3d2b;text-transform:uppercase;flex:1;padding-bottom:5px;border-bottom:1px solid rgba(22,59,44,0.25);'>"
             "Comparação com CDI</div>"
             "</div>",
             unsafe_allow_html=True,
@@ -2272,7 +2272,7 @@ elif _page == "historico":
             "<span style='font-family:Rajdhani,sans-serif;font-size:0.7rem;font-weight:700;color:#fff;'>4</span>"
             "</div>"
             "<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;font-weight:900;"
-            "letter-spacing:2px;color:#2d6a4f;text-transform:uppercase;flex:1;padding-bottom:5px;border-bottom:1px solid rgba(22,59,44,0.25);'>"
+            "letter-spacing:2px;color:#1a3d2b;text-transform:uppercase;flex:1;padding-bottom:5px;border-bottom:1px solid rgba(22,59,44,0.25);'>"
             "Lançamentos</div>"
             "</div>",
             unsafe_allow_html=True,
