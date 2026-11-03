@@ -121,7 +121,7 @@ st.markdown("""
     .stApp code, .stApp pre,
     .stApp [data-testid="stCode"], .stApp [data-testid="stCodeBlock"] {
         background-color: #ffffff !important;
-        color: #14532d !important;
+        color: #2d6a4f !important;
         border: 1px solid rgba(22,59,44,0.2) !important;
         border-radius: 4px !important;
     }
@@ -153,12 +153,12 @@ st.markdown("""
         font-size: 0.85rem !important;
         font-weight: 700 !important;
         letter-spacing: 1px !important;
-        color: #14532d !important;
+        color: #2d6a4f !important;
         text-transform: uppercase;
     }
     [data-testid="stTabs"] button[aria-selected="true"] {
-        color: #14532d !important;
-        border-bottom: 2px solid #14532d !important;
+        color: #2d6a4f !important;
+        border-bottom: 2px solid #2d6a4f !important;
         text-shadow: 0 0 8px rgba(22,59,44,0.2);
     }
 
@@ -169,7 +169,7 @@ st.markdown("""
         margin: 0.4rem 0;
     }
     .user-msg {
-        background: #14532d;
+        background: #2d6a4f;
         color: #ffffff !important;
         border-radius: 18px 18px 4px 18px;
         padding: 0.7rem 1.1rem;
@@ -195,22 +195,22 @@ st.markdown("""
     /* Input */
     .stTextInput > div > div > input {
         background: #ffffff !important;
-        color: #14532d !important;
+        color: #2d6a4f !important;
         border: 1px solid rgba(22,59,44,0.45) !important;
         border-radius: 6px !important;
         font-family: 'Rajdhani', sans-serif !important;
         font-size: 1rem !important;
     }
-    .stTextInput > div > div > input::placeholder { color: #14532d !important; }
+    .stTextInput > div > div > input::placeholder { color: #2d6a4f !important; }
     .stTextInput > div > div > input:focus {
-        border-color: #14532d !important;
+        border-color: #2d6a4f !important;
         box-shadow: 0 0 14px rgba(22,59,44,0.2) !important;
     }
 
     /* Number input */
     .stNumberInput input {
         background: #ffffff !important;
-        color: #14532d !important;
+        color: #2d6a4f !important;
         border: 1px solid rgba(22,59,44,0.45) !important;
         border-radius: 6px !important;
         font-family: 'Rajdhani', sans-serif !important;
@@ -219,12 +219,12 @@ st.markdown("""
     /* Button */
     .stButton > button {
         background: #ffffff !important;
-        color: #14532d !important;
+        color: #2d6a4f !important;
         font-family: 'Rajdhani', sans-serif !important;
         font-size: 0.85rem !important;
         font-weight: 700 !important;
         letter-spacing: 1px !important;
-        border: 1px solid #14532d !important;
+        border: 1px solid #2d6a4f !important;
         border-radius: 6px !important;
         padding: 0.5rem 1.4rem !important;
         text-transform: uppercase;
@@ -235,17 +235,17 @@ st.markdown("""
     .stButton > button:hover {
         background: #f0f5f2 !important;
         box-shadow: 0 0 22px rgba(22,59,44,0.25) !important;
-        color: #14532d !important;
+        color: #2d6a4f !important;
     }
 
     /* Form submit button */
     [data-testid="stFormSubmitButton"] button {
         background: #ffffff !important;
-        color: #14532d !important;
+        color: #2d6a4f !important;
         font-family: 'Rajdhani', sans-serif !important;
         font-size: 0.9rem !important;
         letter-spacing: 1.5px !important;
-        border: 1px solid #14532d !important;
+        border: 1px solid #2d6a4f !important;
         box-shadow: 0 0 14px rgba(22,59,44,0.18) !important;
     }
     [data-testid="stFormSubmitButton"] button:hover {
@@ -256,8 +256,8 @@ st.markdown("""
     /* Botão "+" de anexos e seu painel */
     [data-testid="stPopover"] button {
         background: #ffffff !important;
-        color: #14532d !important;
-        border: 1px solid #14532d !important;
+        color: #2d6a4f !important;
+        border: 1px solid #2d6a4f !important;
         border-radius: 50% !important;
         font-size: 1.3rem !important;
         font-weight: 700 !important;
@@ -269,7 +269,7 @@ st.markdown("""
     [data-testid="stPopover"] button [data-testid="stIconMaterial"] { display: none !important; }
     [data-testid="stPopoverBody"], [data-testid="stPopoverBody"] * {
         background-color: #ffffff !important;
-        color: #14532d !important;
+        color: #2d6a4f !important;
     }
     [data-testid="stPopoverBody"] {
         border: 1px solid rgba(22,59,44,0.35) !important;
@@ -279,7 +279,7 @@ st.markdown("""
         border: 1px dashed rgba(22,59,44,0.55) !important;
     }
     [data-testid="stPopoverBody"] button {
-        border: 1px solid #14532d !important;
+        border: 1px solid #2d6a4f !important;
     }
     [data-testid="stPopoverBody"] [data-testid="stTooltipHoverTarget"] button,
     [data-testid="stPopoverBody"] [data-testid="stTooltipIcon"] button {
@@ -292,12 +292,12 @@ st.markdown("""
         font-size: 0.85rem !important;
         font-weight: 700 !important;
         letter-spacing: 0.5px !important;
-        color: #14532d !important;
+        color: #2d6a4f !important;
         text-transform: uppercase;
     }
     [data-testid="stMetric"] [data-testid="stMetricValue"] {
         font-family: 'Rajdhani', sans-serif !important;
-        color: #14532d !important;
+        color: #2d6a4f !important;
         text-shadow: none;
     }
 
@@ -307,7 +307,7 @@ st.markdown("""
     /* Selectbox / multiselect */
     .stSelectbox label, .stMultiSelect label, .stNumberInput label, .stTextInput label {
         font-family: 'Rajdhani', sans-serif !important;
-        color: #14532d !important;
+        color: #2d6a4f !important;
         font-weight: 600;
     }
 
@@ -315,7 +315,7 @@ st.markdown("""
     [data-testid="stNotification"], .stAlert {
         background: #f0f5f2 !important;
         border: 1px solid rgba(22,59,44,0.25) !important;
-        color: #14532d !important;
+        color: #2d6a4f !important;
     }
 
     /* Sidebar */
@@ -324,11 +324,11 @@ st.markdown("""
         border-right: 1px solid rgba(22,59,44,0.2) !important;
     }
     section[data-testid="stSidebar"] * {
-        color: #14532d !important;
+        color: #2d6a4f !important;
     }
     section[data-testid="stSidebar"] h2, section[data-testid="stSidebar"] h3 {
         font-family: 'Rajdhani', sans-serif !important;
-        color: #14532d !important;
+        color: #2d6a4f !important;
         text-shadow: none;
         font-size: 1rem !important;
         font-weight: 700 !important;
@@ -337,7 +337,7 @@ st.markdown("""
     /* Markdown section headers */
     [data-testid="stMarkdownContainer"] h3, [data-testid="stMarkdownContainer"] h4 {
         font-family: 'Rajdhani', sans-serif !important;
-        color: #14532d !important;
+        color: #2d6a4f !important;
         text-shadow: none;
         letter-spacing: 0.5px;
         border-bottom: 1px solid rgba(22,59,44,0.25);
@@ -347,7 +347,7 @@ st.markdown("""
     /* Tab highlight underline */
     [data-testid="stTabs"] button { transition: color 0.2s ease, text-shadow 0.2s ease; }
     [data-baseweb="tab-highlight"] {
-        background: #14532d !important;
+        background: #2d6a4f !important;
         box-shadow: 0 0 12px rgba(22,59,44,0.25);
     }
 
@@ -361,15 +361,15 @@ st.markdown("""
     [data-testid="stMarkdownContainer"] span,
     [data-testid="stMarkdownContainer"] li,
     [data-testid="stMarkdownContainer"] strong {
-        color: #14532d !important;
+        color: #2d6a4f !important;
     }
 
     /* Restore white text inside dark header cards */
-    [data-testid="stMarkdownContainer"] div[style*="background:#14532d"] p,
-    [data-testid="stMarkdownContainer"] div[style*="background:#14532d"] span,
-    [data-testid="stMarkdownContainer"] div[style*="background:#14532d"] strong,
-    [data-testid="stMarkdownContainer"] div[style*="background:#14532d"] b,
-    [data-testid="stMarkdownContainer"] div[style*="background:#14532d"] div {
+    [data-testid="stMarkdownContainer"] div[style*="background:#2d6a4f"] p,
+    [data-testid="stMarkdownContainer"] div[style*="background:#2d6a4f"] span,
+    [data-testid="stMarkdownContainer"] div[style*="background:#2d6a4f"] strong,
+    [data-testid="stMarkdownContainer"] div[style*="background:#2d6a4f"] b,
+    [data-testid="stMarkdownContainer"] div[style*="background:#2d6a4f"] div {
         color: rgba(255,255,255,0.85) !important;
     }
 
@@ -411,7 +411,7 @@ components.html("""
       'box-shadow:0 4px 18px rgba(22,59,44,0.08);';
     bar.innerHTML =
       '<span style="font-family:Rajdhani,sans-serif;font-size:1.8rem;font-weight:900;' +
-      'letter-spacing:5px;color:#14532d;">BETBOT AI</span>';
+      'letter-spacing:5px;color:#2d6a4f;">BETBOT AI</span>';
 
     doc.body.appendChild(bar);
   }
@@ -591,7 +591,7 @@ with st.sidebar:
         st.caption("Histórico não será salvo ao recarregar.")
 
     st.markdown(
-        "<div style='text-align:center; font-family:Rajdhani,sans-serif; color:#14532d; "
+        "<div style='text-align:center; font-family:Rajdhani,sans-serif; color:#2d6a4f; "
         "font-size:0.6rem; letter-spacing:2px; margin-top:1rem; "
         "text-shadow:none;'>"
         "BETBOT AI · POWERED BY AI</div>",
@@ -999,7 +999,7 @@ _page = st.session_state.active_page
 # ============================
 if _page == "chat":
     st.markdown(
-        "<div style='background:#14532d;border-radius:8px;padding:14px 20px;margin-bottom:20px;'>"
+        "<div style='background:#2d6a4f;border-radius:8px;padding:14px 20px;margin-bottom:20px;'>"
         "<div style='font-family:Rajdhani,sans-serif;font-size:1rem;font-weight:900;"
         "letter-spacing:3px;color:#fff;'>CHAT COM O BETBOT</div>"
         "</div>",
@@ -1038,12 +1038,12 @@ if _page == "chat":
     if st.session_state.chat_sim_open:
         st.markdown(
             "<div style='display:flex;align-items:center;gap:12px;margin:0 0 14px;'>"
-            "<div style='width:30px;height:30px;background:#14532d;border-radius:50%;"
+            "<div style='width:30px;height:30px;background:#2d6a4f;border-radius:50%;"
             "display:flex;align-items:center;justify-content:center;flex-shrink:0;'>"
             "<span style='font-family:Rajdhani,sans-serif;font-size:0.9rem;font-weight:900;color:#fff;'>⚡</span>"
             "</div>"
             "<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;font-weight:900;"
-            "letter-spacing:2px;color:#14532d;text-transform:uppercase;flex:1;padding-bottom:5px;border-bottom:1px solid rgba(22,59,44,0.25);'>"
+            "letter-spacing:2px;color:#2d6a4f;text-transform:uppercase;flex:1;padding-bottom:5px;border-bottom:1px solid rgba(22,59,44,0.25);'>"
             "Simulador</div>"
             "</div>",
             unsafe_allow_html=True,
@@ -1090,19 +1090,19 @@ if _page == "chat":
             _sn  = _html.escape(_bet["name"]) if _bet["name"] else "Sua aposta"
             st.markdown(
                 f"<div style='background:#fff;border:1px solid rgba(22,59,44,0.15);"
-                f"border-left:4px solid #14532d;border-radius:0 10px 10px 0;"
+                f"border-left:4px solid #2d6a4f;border-radius:0 10px 10px 0;"
                 f"padding:16px 20px;margin:6px 0;'>"
                 f"<div style='font-family:Rajdhani,sans-serif;font-size:1.1rem;font-weight:700;"
-                f"color:#14532d;margin-bottom:14px;'>{_sn}</div>"
+                f"color:#2d6a4f;margin-bottom:14px;'>{_sn}</div>"
                 f"<div style='display:grid;grid-template-columns:1fr 1fr 1.4fr 1.4fr;gap:12px;'>"
                 f"<div><div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;"
-                f"color:#14532d;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;'>Odd</div>"
+                f"color:#2d6a4f;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;'>Odd</div>"
                 f"<div style='font-family:Rajdhani,sans-serif;font-size:1.25rem;font-weight:700;"
-                f"color:#14532d;'>{_bet['odd']:.2f}</div></div>"
+                f"color:#2d6a4f;'>{_bet['odd']:.2f}</div></div>"
                 f"<div><div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;"
-                f"color:#14532d;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;'>Aposta</div>"
+                f"color:#2d6a4f;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;'>Aposta</div>"
                 f"<div style='font-family:Rajdhani,sans-serif;font-size:1.25rem;font-weight:700;"
-                f"color:#14532d;'>R$ {_bet['stake']:.2f}</div></div>"
+                f"color:#2d6a4f;'>R$ {_bet['stake']:.2f}</div></div>"
                 f"<div style='background:#e8f5ee;border-radius:8px;padding:10px 14px;'>"
                 f"<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;"
                 f"color:#1a6641;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;'>Se ganhar</div>"
@@ -1125,7 +1125,7 @@ if _page == "chat":
             st.markdown(
                 "<div style='background:#e8f5ee;border-radius:8px;padding:12px 16px;margin:10px 0;"
                 "border-left:3px solid #1a6641;'>"
-                "<span style='font-family:Rajdhani,sans-serif;font-size:0.95rem;color:#14532d;'>"
+                "<span style='font-family:Rajdhani,sans-serif;font-size:0.95rem;color:#2d6a4f;'>"
                 "Para os resultados acima, assumimos que a chance de ganhar é <b>exatamente igual</b> "
                 "à chance de perder (50%)."
                 "</span></div>",
@@ -1137,12 +1137,12 @@ if _page == "chat":
             if st.session_state.chat_prob_step == 2:
                 st.markdown(
                     "<div style='display:flex;align-items:center;gap:12px;margin:16px 0 14px;'>"
-                    "<div style='width:30px;height:30px;background:#14532d;border-radius:50%;"
+                    "<div style='width:30px;height:30px;background:#2d6a4f;border-radius:50%;"
                     "display:flex;align-items:center;justify-content:center;flex-shrink:0;'>"
                     "<span style='font-size:1rem;color:#fff;'>→</span>"
                     "</div>"
                     "<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;font-weight:900;"
-                    "letter-spacing:2px;color:#14532d;text-transform:uppercase;"
+                    "letter-spacing:2px;color:#2d6a4f;text-transform:uppercase;"
                     "border-bottom:1px solid rgba(22,59,44,0.25);flex:1;padding-bottom:5px;'>"
                     "Vamos ver o que acontece se repetir essa aposta várias vezes.</div>"
                     "</div>",
@@ -1152,7 +1152,7 @@ if _page == "chat":
                 if st.session_state.chat_show_mc is None:
                     st.markdown(
                         "<div style='font-family:Rajdhani,sans-serif;font-size:1rem;font-weight:600;"
-                        "color:#14532d;margin:16px 0 10px;'>Quer saber o que acontece se repetir essa aposta várias vezes?</div>",
+                        "color:#2d6a4f;margin:16px 0 10px;'>Quer saber o que acontece se repetir essa aposta várias vezes?</div>",
                         unsafe_allow_html=True,
                     )
                     _cmc1, _cmc2 = st.columns(2)
@@ -1167,14 +1167,14 @@ if _page == "chat":
                     st.markdown(
                         "<div style='margin:20px 0 4px;padding:18px 22px;"
                         "background:linear-gradient(135deg,#f0f5f2 0%,#e8f5ee 100%);"
-                        "border-radius:10px;border:1px solid rgba(22,59,44,0.2);border-left:4px solid #14532d;'>"
-                        "<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;color:#14532d;line-height:1.6;'>"
+                        "border-radius:10px;border:1px solid rgba(22,59,44,0.2);border-left:4px solid #2d6a4f;'>"
+                        "<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;color:#2d6a4f;line-height:1.6;'>"
                         "Imagine repetir essa mesma aposta dezenas ou centenas de vezes seguidas. "
                         "O simulador roda <b>1.000 cenários diferentes</b> para mostrar o leque do que pode acontecer "
                         "com o seu dinheiro — do pior ao melhor caso — e compara com o quanto ele renderia "
                         "na <b>renda fixa</b> no mesmo período."
                         "</div>"
-                        "<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;color:#14532d;"
+                        "<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;color:#2d6a4f;"
                         "line-height:1.5;margin-top:10px;border-top:1px solid rgba(22,59,44,0.18);"
                         "padding-top:9px;'>"
                         "Para simular, preencha os campos abaixo: a odd e o valor de cada aposta, "
@@ -1267,7 +1267,7 @@ if _page == "chat":
                 )
             rc1, rc2, rc3, rc4 = st.columns(4)
             rc1.markdown(_mini_card("Melhor cenário", f"R$ {r['best_f']:.2f}", "#1a6641"), unsafe_allow_html=True)
-            rc2.markdown(_mini_card("Média dos cenários", f"R$ {r['mean_f']:.2f}", "#14532d" if r["mean_f"] >= _bk else "rgba(160,40,40,0.9)"), unsafe_allow_html=True)
+            rc2.markdown(_mini_card("Média dos cenários", f"R$ {r['mean_f']:.2f}", "#2d6a4f" if r["mean_f"] >= _bk else "rgba(160,40,40,0.9)"), unsafe_allow_html=True)
             rc3.markdown(_mini_card("Pior cenário", f"R$ {r['worst_f']:.2f}", "rgba(160,40,40,0.9)"), unsafe_allow_html=True)
             rc4.markdown(_mini_card("Ficou no zero", f"{r['pct_broke']:.1f}%", "rgba(160,40,40,0.9)" if r["pct_broke"] > 0 else "#1a6641"), unsafe_allow_html=True)
 
@@ -1275,7 +1275,7 @@ if _page == "chat":
             if st.session_state.chat_show_traj is None:
                 st.markdown(
                     "<div style='font-family:Rajdhani,sans-serif;font-size:1rem;font-weight:600;"
-                    "color:#14532d;margin:18px 0 10px;'>"
+                    "color:#2d6a4f;margin:18px 0 10px;'>"
                     "Quer visualizar como o seu dinheiro pode se comportar ao longo do tempo, "
                     "repetindo essa aposta várias vezes?</div>",
                     unsafe_allow_html=True,
@@ -1291,12 +1291,12 @@ if _page == "chat":
             if st.session_state.chat_show_traj is True:
                 st.markdown(
                     "<div style='display:flex;align-items:center;gap:12px;margin:36px 0 22px;'>"
-                    "<div style='width:30px;height:30px;background:#14532d;border-radius:50%;"
+                    "<div style='width:30px;height:30px;background:#2d6a4f;border-radius:50%;"
                     "display:flex;align-items:center;justify-content:center;flex-shrink:0;'>"
                     "<span style='font-size:1rem;color:#fff;'>↗</span>"
                     "</div>"
                     "<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;font-weight:900;"
-                    "letter-spacing:2px;color:#14532d;text-transform:uppercase;"
+                    "letter-spacing:2px;color:#2d6a4f;text-transform:uppercase;"
                     "border-bottom:1px solid rgba(22,59,44,0.25);flex:1;padding-bottom:5px;'>"
                     "Como seu dinheiro pode se comportar ao longo das apostas</div>"
                     "</div>",
@@ -1463,7 +1463,7 @@ if _page == "chat":
 # ============================
 elif _page == "simulacao":
     st.markdown(
-        "<div style='background:#14532d;border-radius:8px;padding:16px 20px 14px;margin-bottom:20px;'>"
+        "<div style='background:#2d6a4f;border-radius:8px;padding:16px 20px 14px;margin-bottom:20px;'>"
         "<div style='font-family:Rajdhani,sans-serif;font-size:1rem;font-weight:900;"
         "letter-spacing:3px;color:#fff;'>SIMULADOR DE APOSTAS</div>"
         "<div style='font-family:Rajdhani,sans-serif;font-size:1rem;color:rgba(255,255,255,0.85);"
@@ -1477,12 +1477,12 @@ elif _page == "simulacao":
     # Passo 1
     st.markdown(
         "<div style='display:flex;align-items:center;gap:12px;margin:20px 0 14px;'>"
-        "<div style='width:30px;height:30px;background:#14532d;border-radius:50%;"
+        "<div style='width:30px;height:30px;background:#2d6a4f;border-radius:50%;"
         "display:flex;align-items:center;justify-content:center;flex-shrink:0;'>"
         "<span style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;color:#fff;'>1</span>"
         "</div>"
         "<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;font-weight:900;"
-        "letter-spacing:2px;color:#14532d;text-transform:uppercase;"
+        "letter-spacing:2px;color:#2d6a4f;text-transform:uppercase;"
         "flex:1;padding-bottom:5px;border-bottom:1px solid rgba(22,59,44,0.25);'>"
         "Dados da aposta</div>"
         "</div>",
@@ -1491,8 +1491,8 @@ elif _page == "simulacao":
 
     st.markdown(
         "<div style='background:#f0f5f2;border-radius:8px;padding:14px 18px;margin-bottom:16px;"
-        "border-left:3px solid #14532d;'>"
-        "<div style='font-family:Rajdhani,sans-serif;font-size:1rem;color:#14532d;line-height:1.6;'>"
+        "border-left:3px solid #2d6a4f;'>"
+        "<div style='font-family:Rajdhani,sans-serif;font-size:1rem;color:#2d6a4f;line-height:1.6;'>"
         "Está assistindo a um jogo e quer entender melhor os riscos e os possíveis retornos de uma "
         "aposta esportiva? Nesta aba, você pode simular diferentes cenários para visualizar quanto "
         "poderia ganhar ou perder de acordo com a odd oferecida pela casa de apostas e o valor apostado."
@@ -1537,12 +1537,12 @@ elif _page == "simulacao":
     if st.session_state.sim_bets:
         st.markdown(
             "<div style='display:flex;align-items:center;gap:12px;margin:24px 0 14px;'>"
-            "<div style='width:30px;height:30px;background:#14532d;border-radius:50%;"
+            "<div style='width:30px;height:30px;background:#2d6a4f;border-radius:50%;"
             "display:flex;align-items:center;justify-content:center;flex-shrink:0;'>"
             "<span style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;color:#fff;'>2</span>"
             "</div>"
             "<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;font-weight:900;"
-            "letter-spacing:2px;color:#14532d;text-transform:uppercase;border-bottom:1px solid rgba(22,59,44,0.25);"
+            "letter-spacing:2px;color:#2d6a4f;text-transform:uppercase;border-bottom:1px solid rgba(22,59,44,0.25);"
             "flex:1;padding-bottom:5px;'>Resultado de cada aposta</div>"
             "</div>",
             unsafe_allow_html=True,
@@ -1558,7 +1558,7 @@ elif _page == "simulacao":
             col_card, col_del = st.columns([12, 1])
             with col_card:
                 st.markdown(
-                    f"<div style='background:#14532d;border-radius:8px;padding:14px 18px;margin-bottom:8px;'>"
+                    f"<div style='background:#2d6a4f;border-radius:8px;padding:14px 18px;margin-bottom:8px;'>"
                     f"<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;"
                     f"color:rgba(255,255,255,0.75);text-transform:uppercase;letter-spacing:1px;'>{safe_name}</div>"
                     f"<div style='font-family:Rajdhani,sans-serif;font-size:1.05rem;font-weight:600;color:#fff;margin-top:4px;'>"
@@ -1571,9 +1571,9 @@ elif _page == "simulacao":
                     f"<div style='background:#e8f5ee;border-radius:8px;padding:14px 16px;"
                     f"border-left:3px solid #1a6641;'>"
                     f"<div style='font-family:Rajdhani,sans-serif;font-size:0.8rem;font-weight:700;"
-                    f"color:#14532d;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;'>Se ganhar</div>"
+                    f"color:#2d6a4f;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;'>Se ganhar</div>"
                     f"<div style='font-family:Rajdhani,sans-serif;font-size:1.5rem;font-weight:700;"
-                    f"color:#14532d;'>+R$ {pot_profit:.2f}</div>"
+                    f"color:#2d6a4f;'>+R$ {pot_profit:.2f}</div>"
                     f"<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;color:#1a6641;margin-top:3px;'>"
                     f"recebe R$ {pot_return:.2f}</div>"
                     f"</div>",
@@ -1583,9 +1583,9 @@ elif _page == "simulacao":
                     f"<div style='background:#fdf0f0;border-radius:8px;padding:14px 16px;"
                     f"border-left:3px solid rgba(160,40,40,0.5);'>"
                     f"<div style='font-family:Rajdhani,sans-serif;font-size:0.8rem;font-weight:700;"
-                    f"color:#14532d;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;'>Se perder</div>"
+                    f"color:#2d6a4f;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;'>Se perder</div>"
                     f"<div style='font-family:Rajdhani,sans-serif;font-size:1.5rem;font-weight:700;"
-                    f"color:#14532d;'>-R$ {bet['stake']:.2f}</div>"
+                    f"color:#2d6a4f;'>-R$ {bet['stake']:.2f}</div>"
                     f"<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;color:rgba(160,40,40,0.9);margin-top:3px;'>"
                     f"perde o valor apostado</div>"
                     f"</div>",
@@ -1618,7 +1618,7 @@ elif _page == "simulacao":
         st.markdown(
             "<div style='background:#e8f5ee;border-radius:8px;padding:12px 16px;margin:14px 0;"
             "border-left:3px solid #1a6641;'>"
-            "<span style='font-family:Rajdhani,sans-serif;font-size:0.95rem;color:#14532d;'>"
+            "<span style='font-family:Rajdhani,sans-serif;font-size:0.95rem;color:#2d6a4f;'>"
             "Para os resultados acima, assumimos que a chance de ganhar é <b>exatamente igual</b> "
             "à chance de perder (50%)."
             "</span></div>",
@@ -1628,7 +1628,7 @@ elif _page == "simulacao":
         if st.session_state.sim_show_mc is None:
             st.markdown(
                 "<div style='font-family:Rajdhani,sans-serif;font-size:1rem;font-weight:600;"
-                "color:#14532d;margin:16px 0 10px;'>Quer saber o que acontece se repetir essa aposta várias vezes?</div>",
+                "color:#2d6a4f;margin:16px 0 10px;'>Quer saber o que acontece se repetir essa aposta várias vezes?</div>",
                 unsafe_allow_html=True,
             )
             _smc1, _smc2 = st.columns(2)
@@ -1644,12 +1644,12 @@ elif _page == "simulacao":
 
             st.markdown(
                 "<div style='display:flex;align-items:center;gap:12px;margin:16px 0 14px;'>"
-                "<div style='width:30px;height:30px;background:#14532d;border-radius:50%;"
+                "<div style='width:30px;height:30px;background:#2d6a4f;border-radius:50%;"
                 "display:flex;align-items:center;justify-content:center;flex-shrink:0;'>"
                 "<span style='font-size:1rem;color:#fff;'>→</span>"
                 "</div>"
                 "<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;font-weight:900;"
-                "letter-spacing:2px;color:#14532d;text-transform:uppercase;"
+                "letter-spacing:2px;color:#2d6a4f;text-transform:uppercase;"
                 "border-bottom:1px solid rgba(22,59,44,0.25);flex:1;padding-bottom:5px;'>"
                 "Vamos ver o que acontece se repetir essa aposta várias vezes.</div>"
                 "</div>",
@@ -1660,14 +1660,14 @@ elif _page == "simulacao":
                 st.markdown(
                     "<div style='margin:28px 0 0;padding:20px 24px;"
                     "background:linear-gradient(135deg,#f0f5f2 0%,#e8f5ee 100%);"
-                    "border-radius:10px;border:1px solid rgba(22,59,44,0.2);border-left:4px solid #14532d;'>"
-                    "<div style='font-family:Rajdhani,sans-serif;font-size:0.95rem;color:#14532d;line-height:1.6;'>"
+                    "border-radius:10px;border:1px solid rgba(22,59,44,0.2);border-left:4px solid #2d6a4f;'>"
+                    "<div style='font-family:Rajdhani,sans-serif;font-size:0.95rem;color:#2d6a4f;line-height:1.6;'>"
                     "Imagine repetir essa mesma aposta dezenas ou centenas de vezes seguidas. "
                     "O simulador roda <b>1.000 cenários diferentes</b> para mostrar o leque do que pode acontecer "
                     "com o seu dinheiro — do pior ao melhor caso — e compara com o quanto ele renderia "
                     "na <b>renda fixa</b> no mesmo período."
                     "</div>"
-                    "<div style='font-family:Rajdhani,sans-serif;font-size:0.88rem;color:#14532d;"
+                    "<div style='font-family:Rajdhani,sans-serif;font-size:0.88rem;color:#2d6a4f;"
                     "line-height:1.5;margin-top:12px;border-top:1px solid rgba(22,59,44,0.18);"
                     "padding-top:10px;'>"
                     "Para simular, preencha os campos abaixo: a odd e o valor de cada aposta, "
@@ -1771,7 +1771,7 @@ elif _page == "simulacao":
             _smr_n  = _smr["n_bets"]
 
             st.markdown(
-                "<div style='background:#14532d;border-radius:8px;padding:14px 18px;margin:16px 0;'>"
+                "<div style='background:#2d6a4f;border-radius:8px;padding:14px 18px;margin:16px 0;'>"
                 "<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;"
                 "color:rgba(255,255,255,0.75);text-transform:uppercase;letter-spacing:1px;'>1.000 simulações</div>"
                 f"<div style='font-family:Rajdhani,sans-serif;font-size:1.05rem;font-weight:600;color:#fff;margin-top:4px;'>"
@@ -1791,9 +1791,9 @@ elif _page == "simulacao":
                     f"<div style='background:{bg};border-radius:8px;padding:14px 16px;"
                     f"border-left:3px solid {border};height:100%;'>"
                     f"<div style='font-family:Rajdhani,sans-serif;font-size:0.8rem;font-weight:700;"
-                    f"color:#14532d;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;'>{label}</div>"
+                    f"color:#2d6a4f;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;'>{label}</div>"
                     f"<div style='font-family:Rajdhani,sans-serif;font-size:1.5rem;font-weight:700;"
-                    f"color:#14532d;'>R$ {final:.2f}</div>"
+                    f"color:#2d6a4f;'>R$ {final:.2f}</div>"
                     f"<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;color:{color};margin-top:3px;'>"
                     f"{sign}R$ {gain:.2f} vs. início</div>"
                     f"</div>"
@@ -1813,7 +1813,7 @@ elif _page == "simulacao":
             # --- Gráfico divergente: melhor / média / pior ---
             st.markdown(
                 "<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;font-weight:900;"
-                "letter-spacing:2px;color:#14532d;text-transform:uppercase;margin:20px 0 6px;'>"
+                "letter-spacing:2px;color:#2d6a4f;text-transform:uppercase;margin:20px 0 6px;'>"
                 "Comparação visual: ganho ou perda</div>",
                 unsafe_allow_html=True,
             )
@@ -1833,7 +1833,7 @@ elif _page == "simulacao":
                 "<div style='flex:1;text-align:right;padding-right:8px;"
                 "font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;color:rgba(22,59,44,0.55);"
                 "letter-spacing:1px;'>← PERDA</div>"
-                "<div style='width:2px;background:#14532d;height:18px;flex-shrink:0;'></div>"
+                "<div style='width:2px;background:#2d6a4f;height:18px;flex-shrink:0;'></div>"
                 "<div style='flex:1;padding-left:8px;"
                 "font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;color:rgba(22,59,44,0.55);"
                 "letter-spacing:1px;'>GANHO →</div>"
@@ -1869,10 +1869,10 @@ elif _page == "simulacao":
                 rows_html += (
                     f"<div style='display:flex;align-items:center;margin:10px 0;'>"
                     f"<div style='width:180px;min-width:180px;text-align:right;font-size:0.95rem;"
-                    f"font-family:Rajdhani,sans-serif;color:#14532d;padding-right:12px;line-height:1.3;font-weight:600;'>{label_safe}</div>"
+                    f"font-family:Rajdhani,sans-serif;color:#2d6a4f;padding-right:12px;line-height:1.3;font-weight:600;'>{label_safe}</div>"
                     f"<div style='flex:1;display:flex;'>"
                     f"{left_side}"
-                    f"<div style='width:2px;min-width:2px;background:#14532d;height:28px;flex-shrink:0;'></div>"
+                    f"<div style='width:2px;min-width:2px;background:#2d6a4f;height:28px;flex-shrink:0;'></div>"
                     f"{right_side}"
                     f"</div></div>"
                 )
@@ -1884,8 +1884,8 @@ elif _page == "simulacao":
                 "<div style='background:#f0f5f2;border-radius:8px;padding:14px 16px;margin:4px 0 12px;"
                 "border-left:4px solid #4b8068;'>"
                 "<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;letter-spacing:1px;"
-                "color:#14532d;text-transform:uppercase;margin-bottom:8px;'>E se você investisse em renda fixa?</div>"
-                f"<p style='font-family:Rajdhani,sans-serif;font-size:0.95rem;color:#14532d;margin:0;line-height:1.5;'>"
+                "color:#2d6a4f;text-transform:uppercase;margin-bottom:8px;'>E se você investisse em renda fixa?</div>"
+                f"<p style='font-family:Rajdhani,sans-serif;font-size:0.95rem;color:#2d6a4f;margin:0;line-height:1.5;'>"
                 f"O <b>CDI</b> é a referência da renda fixa no Brasil — um rendimento garantido sobre o que você investe. "
                 f"Diferente das apostas, <b>não há risco de perder</b>: você contrata uma taxa e recebe no final. "
                 f"Com {_smr['mc_cdi_rate']:.2f}% ao ano, investir R$ {_smr_bk:.2f} renderia "
@@ -1906,9 +1906,9 @@ elif _page == "simulacao":
                 f"<div style='background:#f0f5f2;border-radius:8px;padding:14px 16px;"
                 f"border-left:3px solid #4b8068;height:100%;'>"
                 f"<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;font-weight:700;"
-                f"color:#14532d;text-transform:uppercase;margin-bottom:6px;'>CDI em 1 ano</div>"
+                f"color:#2d6a4f;text-transform:uppercase;margin-bottom:6px;'>CDI em 1 ano</div>"
                 f"<div style='font-family:Rajdhani,sans-serif;font-size:1.5rem;font-weight:700;"
-                f"color:#14532d;'>R$ {_smr['cdi_gain']:.2f}</div>"
+                f"color:#2d6a4f;'>R$ {_smr['cdi_gain']:.2f}</div>"
                 f"<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;color:#1a6641;margin-top:3px;'>"
                 f"sem risco</div></div>",
                 unsafe_allow_html=True,
@@ -1917,7 +1917,7 @@ elif _page == "simulacao":
                 f"<div style='background:{_smr_mean_bg};border-radius:8px;padding:14px 16px;"
                 f"border-left:3px solid {_smr_mean_border};height:100%;'>"
                 f"<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;font-weight:700;"
-                f"color:#14532d;text-transform:uppercase;margin-bottom:6px;'>Resultado médio</div>"
+                f"color:#2d6a4f;text-transform:uppercase;margin-bottom:6px;'>Resultado médio</div>"
                 f"<div style='font-family:Rajdhani,sans-serif;font-size:1.5rem;font-weight:700;"
                 f"color:{_smr_mean_color};'>R$ {_smr['mean_gain']:+.2f}</div>"
                 f"<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;color:{_smr_mean_color};margin-top:3px;'>"
@@ -1928,7 +1928,7 @@ elif _page == "simulacao":
                 f"<div style='background:{_smr_diff_bg};border-radius:8px;padding:14px 16px;"
                 f"border-left:3px solid {_smr_diff_border};height:100%;'>"
                 f"<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;font-weight:700;"
-                f"color:#14532d;text-transform:uppercase;margin-bottom:6px;'>Diferença vs CDI</div>"
+                f"color:#2d6a4f;text-transform:uppercase;margin-bottom:6px;'>Diferença vs CDI</div>"
                 f"<div style='font-family:Rajdhani,sans-serif;font-size:1.5rem;font-weight:700;"
                 f"color:{_smr_diff_color};'>R$ {abs(_smr_delta):.2f}</div>"
                 f"<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;color:{_smr_diff_color};margin-top:3px;'>"
@@ -1940,7 +1940,7 @@ elif _page == "simulacao":
             if st.session_state.sim_show_traj is None:
                 st.markdown(
                     "<div style='font-family:Rajdhani,sans-serif;font-size:1rem;font-weight:600;"
-                    "color:#14532d;margin:18px 0 10px;'>"
+                    "color:#2d6a4f;margin:18px 0 10px;'>"
                     "Quer visualizar como o seu dinheiro pode se comportar ao longo do tempo, "
                     "repetindo essa aposta várias vezes?</div>",
                     unsafe_allow_html=True,
@@ -1956,12 +1956,12 @@ elif _page == "simulacao":
             if st.session_state.sim_show_traj is True:
                 st.markdown(
                     "<div style='display:flex;align-items:center;gap:12px;margin:36px 0 22px;'>"
-                    "<div style='width:30px;height:30px;background:#14532d;border-radius:50%;"
+                    "<div style='width:30px;height:30px;background:#2d6a4f;border-radius:50%;"
                     "display:flex;align-items:center;justify-content:center;flex-shrink:0;'>"
                     "<span style='font-size:1rem;color:#fff;'>↗</span>"
                     "</div>"
                     "<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;font-weight:900;"
-                    "letter-spacing:2px;color:#14532d;text-transform:uppercase;"
+                    "letter-spacing:2px;color:#2d6a4f;text-transform:uppercase;"
                     "border-bottom:1px solid rgba(22,59,44,0.25);flex:1;padding-bottom:5px;'>"
                     "Como seu dinheiro pode se comportar ao longo das apostas</div>"
                     "</div>",
@@ -2084,7 +2084,7 @@ elif _page == "simulacao":
         st.markdown(
             "<div style='background:#f0f5f2;border-radius:8px;padding:16px 20px;margin:10px 0;"
             "border:1px dashed rgba(22,59,44,0.3);text-align:center;'>"
-            "<span style='font-family:Rajdhani,sans-serif;font-size:1rem;color:#14532d;'>"
+            "<span style='font-family:Rajdhani,sans-serif;font-size:1rem;color:#2d6a4f;'>"
             "Nenhuma aposta adicionada ainda. Preencha o formulário acima e clique em "
             "<b>Adicionar aposta</b> para começar."
             "</span></div>",
@@ -2096,7 +2096,7 @@ elif _page == "simulacao":
 # ============================
 elif _page == "historico":
     st.markdown(
-        "<div style='background:#14532d;border-radius:8px;padding:16px 20px 14px;margin-bottom:20px;'>"
+        "<div style='background:#2d6a4f;border-radius:8px;padding:16px 20px 14px;margin-bottom:20px;'>"
         "<div style='font-family:Rajdhani,sans-serif;font-size:1rem;font-weight:900;"
         "letter-spacing:3px;color:#fff;'>HISTÓRICO DE BETS</div>"
         "<div style='font-family:Rajdhani,sans-serif;font-size:1rem;color:rgba(255,255,255,0.85);"
@@ -2109,12 +2109,12 @@ elif _page == "historico":
 
     st.markdown(
         "<div style='display:flex;align-items:center;gap:12px;margin:20px 0 14px;'>"
-        "<div style='width:30px;height:30px;background:#14532d;border-radius:50%;"
+        "<div style='width:30px;height:30px;background:#2d6a4f;border-radius:50%;"
         "display:flex;align-items:center;justify-content:center;flex-shrink:0;'>"
         "<span style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;color:#fff;'>1</span>"
         "</div>"
         "<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;font-weight:900;"
-        "letter-spacing:2px;color:#14532d;text-transform:uppercase;flex:1;padding-bottom:5px;border-bottom:1px solid rgba(22,59,44,0.25);'>"
+        "letter-spacing:2px;color:#2d6a4f;text-transform:uppercase;flex:1;padding-bottom:5px;border-bottom:1px solid rgba(22,59,44,0.25);'>"
         "Registrar resultado</div>"
         "</div>",
         unsafe_allow_html=True,
@@ -2122,8 +2122,8 @@ elif _page == "historico":
 
     st.markdown(
         "<div style='background:#f0f5f2;border-radius:8px;padding:14px 18px;margin-bottom:16px;"
-        "border-left:3px solid #14532d;'>"
-        "<div style='font-family:Rajdhani,sans-serif;font-size:1rem;color:#14532d;line-height:1.6;'>"
+        "border-left:3px solid #2d6a4f;'>"
+        "<div style='font-family:Rajdhani,sans-serif;font-size:1rem;color:#2d6a4f;line-height:1.6;'>"
         "Imagine que você estava assistindo a um jogo e decidiu testar uma aposta. "
         "Por exemplo: você colocou <b>R$ 50</b> na vitória do <b>Flamengo</b> numa partida em que achava que o time tinha boas chances. "
         "Se o Flamengo ganhou e a casa pagou <b>R$ 120</b> no total (o que você recebeu de volta), informe esse valor aqui. "
@@ -2164,14 +2164,14 @@ elif _page == "historico":
 
     def _stat_card(label, value, sub=None, positive=None, compact=False):
         if positive is None:
-            bg, border, val_color = "#f0f5f2", "#14532d", "#14532d"
+            bg, border, val_color = "#f0f5f2", "#2d6a4f", "#2d6a4f"
         elif positive:
             bg, border, val_color = "#e8f5ee", "#1a6641", "#1a6641"
         else:
             bg, border, val_color = "#fdf0f0", "rgba(160,40,40,0.5)", "rgba(160,40,40,0.9)"
         sub_html = (
             f"<div style='font-family:Rajdhani,sans-serif;font-size:0.82rem;"
-            f"color:#14532d;margin-top:3px;'>{sub}</div>"
+            f"color:#2d6a4f;margin-top:3px;'>{sub}</div>"
         ) if sub else ""
         val_size = "1.35rem" if compact else "1.7rem"
         pad = "16px 14px" if compact else "22px 20px"
@@ -2196,12 +2196,12 @@ elif _page == "historico":
 
         st.markdown(
             "<div style='display:flex;align-items:center;gap:12px;margin:24px 0 14px;'>"
-            "<div style='width:30px;height:30px;background:#14532d;border-radius:50%;"
+            "<div style='width:30px;height:30px;background:#2d6a4f;border-radius:50%;"
             "display:flex;align-items:center;justify-content:center;flex-shrink:0;'>"
             "<span style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;color:#fff;'>2</span>"
             "</div>"
             "<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;font-weight:900;"
-            "letter-spacing:2px;color:#14532d;text-transform:uppercase;flex:1;padding-bottom:5px;border-bottom:1px solid rgba(22,59,44,0.25);'>"
+            "letter-spacing:2px;color:#2d6a4f;text-transform:uppercase;flex:1;padding-bottom:5px;border-bottom:1px solid rgba(22,59,44,0.25);'>"
             "Desempenho das bets</div>"
             "</div>",
             unsafe_allow_html=True,
@@ -2242,12 +2242,12 @@ elif _page == "historico":
 
         st.markdown(
             "<div style='display:flex;align-items:center;gap:12px;margin:24px 0 14px;'>"
-            "<div style='width:30px;height:30px;background:#14532d;border-radius:50%;"
+            "<div style='width:30px;height:30px;background:#2d6a4f;border-radius:50%;"
             "display:flex;align-items:center;justify-content:center;flex-shrink:0;'>"
             "<span style='font-family:Rajdhani,sans-serif;font-size:0.85rem;font-weight:700;color:#fff;'>3</span>"
             "</div>"
             "<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;font-weight:900;"
-            "letter-spacing:2px;color:#14532d;text-transform:uppercase;flex:1;padding-bottom:5px;border-bottom:1px solid rgba(22,59,44,0.25);'>"
+            "letter-spacing:2px;color:#2d6a4f;text-transform:uppercase;flex:1;padding-bottom:5px;border-bottom:1px solid rgba(22,59,44,0.25);'>"
             "Comparação com CDI</div>"
             "</div>",
             unsafe_allow_html=True,
@@ -2267,12 +2267,12 @@ elif _page == "historico":
 
         st.markdown(
             "<div style='display:flex;align-items:center;gap:12px;margin:24px 0 14px;'>"
-            "<div style='width:30px;height:30px;background:#14532d;border-radius:50%;"
+            "<div style='width:30px;height:30px;background:#2d6a4f;border-radius:50%;"
             "display:flex;align-items:center;justify-content:center;flex-shrink:0;'>"
             "<span style='font-family:Rajdhani,sans-serif;font-size:0.7rem;font-weight:700;color:#fff;'>4</span>"
             "</div>"
             "<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;font-weight:900;"
-            "letter-spacing:2px;color:#14532d;text-transform:uppercase;flex:1;padding-bottom:5px;border-bottom:1px solid rgba(22,59,44,0.25);'>"
+            "letter-spacing:2px;color:#2d6a4f;text-transform:uppercase;flex:1;padding-bottom:5px;border-bottom:1px solid rgba(22,59,44,0.25);'>"
             "Lançamentos</div>"
             "</div>",
             unsafe_allow_html=True,
