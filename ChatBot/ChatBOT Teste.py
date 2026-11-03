@@ -411,7 +411,7 @@ components.html("""
       'box-shadow:0 4px 18px rgba(22,59,44,0.08);';
     bar.innerHTML =
       '<span style="font-family:Rajdhani,sans-serif;font-size:1.8rem;font-weight:900;' +
-      'letter-spacing:5px;color:#2d6a4f;">BETBOT AI</span>';
+      'letter-spacing:5px;color:#111;">BETBOT AI</span>';
 
     doc.body.appendChild(bar);
   }
