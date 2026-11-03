@@ -417,8 +417,9 @@ components.html("""
       'border-bottom:1px solid rgba(22,59,44,0.25);' +
       'box-shadow:0 4px 18px rgba(22,59,44,0.08);';
     bar.innerHTML =
-      '<span style="font-family:\'Orbitron\',sans-serif;font-size:1.5rem;font-weight:900;' +
-      'letter-spacing:6px;color:#1a3d2b;text-transform:uppercase;">BETBOT AI</span>';
+      '<span style="display:inline-block;font-family:Rajdhani,sans-serif;font-size:2rem;font-weight:900;' +
+      'letter-spacing:8px;color:#1a3d2b;text-transform:uppercase;transform:scaleX(1.3);' +
+      'transform-origin:center;">BETBOT AI</span>';
 
     doc.body.appendChild(bar);
   }
