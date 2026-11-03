@@ -401,6 +401,13 @@ components.html("""
     var oldBar = doc.getElementById(BAR_ID);
     if (oldBar) oldBar.remove();
 
+    if (!doc.getElementById('betbot-font')) {
+      var fl = doc.createElement('link');
+      fl.id = 'betbot-font'; fl.rel = 'stylesheet';
+      fl.href = 'https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap';
+      doc.head.appendChild(fl);
+    }
+
     var bar = doc.createElement('div');
     bar.id = BAR_ID;
     bar.style.cssText =
@@ -410,8 +417,8 @@ components.html("""
       'border-bottom:1px solid rgba(22,59,44,0.25);' +
       'box-shadow:0 4px 18px rgba(22,59,44,0.08);';
     bar.innerHTML =
-      '<span style="font-family:Rajdhani,sans-serif;font-size:1.8rem;font-weight:900;' +
-      'letter-spacing:5px;color:#1a3d2b;">BETBOT AI</span>';
+      '<span style="font-family:\'Orbitron\',sans-serif;font-size:1.5rem;font-weight:900;' +
+      'letter-spacing:6px;color:#1a3d2b;text-transform:uppercase;">BETBOT AI</span>';
 
     doc.body.appendChild(bar);
   }
