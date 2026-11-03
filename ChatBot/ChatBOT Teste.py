@@ -1002,11 +1002,11 @@ if _page == "chat":
         "<div style='background:#163b2c;border-radius:8px;padding:16px 20px 14px;margin-bottom:20px;'>"
         "<div style='font-family:Rajdhani,sans-serif;font-size:1rem;font-weight:900;"
         "letter-spacing:3px;color:#fff;'>CHAT COM O BETBOT</div>"
-        "<p style='font-family:Rajdhani,sans-serif;font-size:1rem;color:rgba(255,255,255,0.85);"
+        "<div style='font-family:Rajdhani,sans-serif;font-size:1rem;color:rgba(255,255,255,0.85);"
         "margin:8px 0 0;line-height:1.5;'>"
         "Tire suas dúvidas sobre apostas esportivas. Pergunte sobre odds, tipos de apostas, "
         "estratégias e como funciona a margem das casas — tudo em linguagem simples, sem enrolação."
-        "</p></div>",
+        "</div></div>",
         unsafe_allow_html=True,
     )
     chat_container = st.container()
@@ -1470,12 +1470,12 @@ elif _page == "simulacao":
         "<div style='background:#163b2c;border-radius:8px;padding:16px 20px 14px;margin-bottom:20px;'>"
         "<div style='font-family:Rajdhani,sans-serif;font-size:1rem;font-weight:900;"
         "letter-spacing:3px;color:#fff;'>SIMULADOR DE APOSTAS</div>"
-        "<p style='font-family:Rajdhani,sans-serif;font-size:1rem;color:rgba(255,255,255,0.85);"
+        "<div style='font-family:Rajdhani,sans-serif;font-size:1rem;color:rgba(255,255,255,0.85);"
         "margin:8px 0 0;line-height:1.5;'>"
         "Calcule quanto pode ganhar ou perder <b>antes de apostar</b>. "
         "Informe a odd e o valor — veja o retorno se acertar e o prejuízo se errar. "
         "Mais abaixo simule o que acontece repetindo a mesma aposta várias vezes."
-        "</p></div>",
+        "</div></div>",
         unsafe_allow_html=True,
     )
 
@@ -1895,7 +1895,7 @@ elif _page == "simulacao":
                 f"Diferente das apostas, <b>não há risco de perder</b>: você contrata uma taxa e recebe no final. "
                 f"Com {_smr['mc_cdi_rate']:.2f}% ao ano, investir R$ {_smr_bk:.2f} renderia "
                 f"<b>R$ {_smr['cdi_gain']:.2f} em 1 ano</b> — sem precisar acertar nenhuma aposta."
-                f"</p></div>",
+                f"</div></div>",
                 unsafe_allow_html=True,
             )
             _smr_delta = _smr["mean_gain"] - _smr["cdi_gain"]
@@ -2104,11 +2104,11 @@ elif _page == "historico":
         "<div style='background:#163b2c;border-radius:8px;padding:16px 20px 14px;margin-bottom:20px;'>"
         "<div style='font-family:Rajdhani,sans-serif;font-size:1rem;font-weight:900;"
         "letter-spacing:3px;color:#fff;'>HISTÓRICO DE BETS</div>"
-        "<p style='font-family:Rajdhani,sans-serif;font-size:1rem;color:rgba(255,255,255,0.85);"
+        "<div style='font-family:Rajdhani,sans-serif;font-size:1rem;color:rgba(255,255,255,0.85);"
         "margin:8px 0 0;line-height:1.5;'>"
         "Registre as apostas que já fez e acompanhe seu desempenho real ao longo do tempo. "
         "O BetBot calcula seu lucro e rendimento percentual, e compara com a renda fixa."
-        "</p></div>",
+        "</div></div>",
         unsafe_allow_html=True,
     )
 
