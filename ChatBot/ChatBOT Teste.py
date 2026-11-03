@@ -999,14 +999,10 @@ _page = st.session_state.active_page
 # ============================
 if _page == "chat":
     st.markdown(
-        "<div style='background:#14532d;border-radius:8px;padding:16px 20px 14px;margin-bottom:20px;'>"
+        "<div style='background:#14532d;border-radius:8px;padding:14px 20px;margin-bottom:20px;'>"
         "<div style='font-family:Rajdhani,sans-serif;font-size:1rem;font-weight:900;"
         "letter-spacing:3px;color:#fff;'>CHAT COM O BETBOT</div>"
-        "<div style='font-family:Rajdhani,sans-serif;font-size:1rem;color:rgba(255,255,255,0.85);"
-        "margin:8px 0 0;line-height:1.5;'>"
-        "Tire suas dúvidas sobre apostas esportivas. Pergunte sobre odds, tipos de apostas, "
-        "estratégias e como funciona a margem das casas — tudo em linguagem simples, sem enrolação."
-        "</div></div>",
+        "</div>",
         unsafe_allow_html=True,
     )
     chat_container = st.container()
