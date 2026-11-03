@@ -1473,8 +1473,7 @@ elif _page == "simulacao":
         "<div style='font-family:Rajdhani,sans-serif;font-size:1rem;color:rgba(255,255,255,0.85);"
         "margin:8px 0 0;line-height:1.5;'>"
         "Calcule quanto pode ganhar ou perder <b>antes de apostar</b>. "
-        "Informe a odd e o valor — veja o retorno se acertar e o prejuízo se errar. "
-        "Mais abaixo simule o que acontece repetindo a mesma aposta várias vezes."
+        "Veja o retorno se acertar e o prejuízo se errar."
         "</div></div>",
         unsafe_allow_html=True,
     )
