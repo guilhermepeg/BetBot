@@ -2142,10 +2142,9 @@ elif _page == "historico":
         "letter-spacing:3px;color:#fff;'>REGISTRO DE APOSTAS</div>"
         "<div style='font-family:Rajdhani,sans-serif;font-size:1rem;color:rgba(255,255,255,0.85);"
         "margin:8px 0 0;line-height:1.5;'>"
-        "Anote cada aposta que você fez — resultado, odd e valor apostado. "
-        "O BetBot calcula seu lucro ou prejuízo acumulado e seu rendimento percentual real, "
-        "e compara o quanto você ganhou ou perdeu com o que teria rendido se tivesse investido "
-        "o mesmo valor na renda fixa."
+        "Se você já aposta, registre cada resultado: quanto apostou, qual era a odd e se ganhou ou perdeu. "
+        "O BetBot constrói o seu histórico e, ao final, responde: se você tivesse investido "
+        "o mesmo valor total na renda fixa pelo mesmo período, quanto teria rendido?"
         "</div></div>",
         unsafe_allow_html=True,
     )
