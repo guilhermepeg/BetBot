@@ -1969,7 +1969,7 @@ elif _page == "simulacao":
                 f"<div style='background:{_smr_diff_bg};border-radius:8px;padding:14px 16px;"
                 f"border-left:3px solid {_smr_diff_border};height:100%;'>"
                 f"<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;font-weight:700;"
-                f"color:#1a3d2b;text-transform:uppercase;margin-bottom:6px;'>Diferença vs CDI</div>"
+                f"color:#1a3d2b;text-transform:uppercase;margin-bottom:6px;'>Apostas vs Renda Fixa</div>"
                 f"<div style='font-family:Rajdhani,sans-serif;font-size:1.5rem;font-weight:700;"
                 f"color:{_smr_diff_color};'>R$ {abs(_smr_delta):.2f}</div>"
                 f"<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;color:{_smr_diff_color};margin-top:3px;'>"
