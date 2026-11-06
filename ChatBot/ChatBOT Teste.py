@@ -463,9 +463,9 @@ components.html("""
 # --- Session state ---
 WELCOME_MSG_TEXT = (
     "Olá! Sou o BetBot, uma ferramenta de análise de apostas esportivas. "
-    "Posso explicar como as apostas funcionam, o que são odds, como gerenciar seu dinheiro e muito mais — "
+    "Posso explicar como as apostas funcionam, o que são odds, como gerenciar seu dinheiro e muito mais, "
     "sem recomendar apostar ou não apostar. "
-    "Se quiser calcular o retorno de uma aposta, é só pedir — abro o simulador aqui mesmo no chat."
+    "Se quiser calcular o retorno de uma aposta, é só pedir. Abro o simulador aqui mesmo no chat."
 )
 if "messages" not in st.session_state:
     st.session_state.messages = [{"role": "assistant", "content": WELCOME_MSG_TEXT}]
