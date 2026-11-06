@@ -716,8 +716,10 @@ Regras de conteúdo:
   - Se quiser o simulador: responda SOMENTE "Pronto! O simulador vai aparecer aqui embaixo."
     Nada mais. Não explique como o simulador funciona, não liste campos, não diga "carregando".
   - Se preferir o texto: faça o cálculo diretamente na resposta.
-  O simulador É REAL e aparece no chat — NUNCA diga que não consegue abrir, que não existe
-  ou que é limitação técnica. NUNCA peça para ir a outra aba.
+  O simulador É REAL e aparece no chat — NUNCA diga que não consegue abrir, que não existe,
+  que não carregou, que parece ter falhado ou que é limitação técnica. NUNCA ofereça fazer
+  o cálculo no texto como alternativa ao simulador quando o usuário pediu o simulador.
+  NUNCA peça para ir a outra aba.
 - Ao mencionar a estimativa de chance da odd, avise que é uma referência numérica, não uma
   previsão real.
 - Nunca incentive apostas irresponsáveis; quando relevante, reforce jogo responsável.
@@ -1440,9 +1442,10 @@ if _page == "chat":
                 st.session_state.chat_attachment_version += 1
                 _msg_lower = message_text.lower().strip()
                 _SIM_KW_EXACT = {"abre", "abra", "sim, abre", "sim abre", "sim quero",
-                                 "abre para mim", "quero o simulador"}
+                                 "abre para mim", "quero o simulador", "simulador",
+                                 "abrir simulador", "abrir o simulador"}
                 _SIM_KW_IN = {"abre o simulador", "abra o simulador", "abre o simul",
-                              "sim quero o simul"}
+                              "sim quero o simul", "abrir simulador", "abrir o simul"}
                 if _msg_lower in _SIM_KW_EXACT or any(kw in _msg_lower for kw in _SIM_KW_IN):
                     st.session_state.chat_sim_open = True
                     _odd_m = re.search(r'\b(?:odd|cota)\s*(?:de\s*)?(\d+(?:[.,]\d+)?)', message_text, re.I)
