@@ -556,7 +556,7 @@ with st.sidebar:
                  type="primary" if st.session_state.active_page == "simulacao" else "secondary"):
         st.session_state.active_page = "simulacao"
         st.rerun()
-    if st.button("Histórico de Bets", use_container_width=True,
+    if st.button("Registro de Apostas", use_container_width=True,
                  type="primary" if st.session_state.active_page == "historico" else "secondary"):
         st.session_state.active_page = "historico"
         st.rerun()
@@ -2139,11 +2139,13 @@ elif _page == "historico":
     st.markdown(
         "<div style='background:#2d6a4f;border-radius:8px;padding:16px 20px 14px;margin-bottom:20px;'>"
         "<div style='font-family:Rajdhani,sans-serif;font-size:1rem;font-weight:900;"
-        "letter-spacing:3px;color:#fff;'>HISTÓRICO DE BETS</div>"
+        "letter-spacing:3px;color:#fff;'>REGISTRO DE APOSTAS</div>"
         "<div style='font-family:Rajdhani,sans-serif;font-size:1rem;color:rgba(255,255,255,0.85);"
         "margin:8px 0 0;line-height:1.5;'>"
-        "Registre as apostas que já fez e acompanhe seu desempenho real ao longo do tempo. "
-        "O BetBot calcula seu lucro e rendimento percentual, e compara com a renda fixa."
+        "Anote cada aposta que você fez — resultado, odd e valor apostado. "
+        "O BetBot calcula seu lucro ou prejuízo acumulado e seu rendimento percentual real, "
+        "e compara o quanto você ganhou ou perdeu com o que teria rendido se tivesse investido "
+        "o mesmo valor na renda fixa."
         "</div></div>",
         unsafe_allow_html=True,
     )
