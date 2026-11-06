@@ -1947,7 +1947,7 @@ elif _page == "simulacao":
                 f"<div style='background:#f0f5f2;border-radius:8px;padding:14px 16px;"
                 f"border-left:3px solid #4b8068;height:100%;'>"
                 f"<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;font-weight:700;"
-                f"color:#1a3d2b;text-transform:uppercase;margin-bottom:6px;'>Total com CDI</div>"
+                f"color:#1a3d2b;text-transform:uppercase;margin-bottom:6px;'>Total da Renda Fixa</div>"
                 f"<div style='font-family:Rajdhani,sans-serif;font-size:1.5rem;font-weight:700;"
                 f"color:#1a3d2b;'>R$ {_smr_bk + _smr['cdi_gain']:.2f}</div>"
                 f"<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;color:#1a6641;margin-top:3px;'>"
