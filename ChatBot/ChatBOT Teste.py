@@ -633,6 +633,8 @@ if "chat_show_traj" not in st.session_state:
     st.session_state.chat_show_traj = None
 if "chat_show_mc" not in st.session_state:
     st.session_state.chat_show_mc = None
+if "chat_thinking" not in st.session_state:
+    st.session_state.chat_thinking = False
 if "sim_show_traj" not in st.session_state:
     st.session_state.sim_show_traj = None
 if "sim_show_mc" not in st.session_state:
@@ -710,9 +712,12 @@ Regras de conteúdo:
 - Se a pergunta não tiver relação com apostas esportivas (ex: receitas, programação, saúde),
   informe educadamente e redirecione para o escopo da ferramenta.
 - Quando o usuário pedir para simular, calcular, ou ver quanto pode ganhar ou perder:
-  Pergunte apenas: "O que você estava pensando em simular?" Depois que ele responder,
-  pergunte apenas: "Quer que eu abra o simulador para você ou prefere que eu faça o
-  cálculo aqui no texto?"
+  Em no máximo 2 trocas de mensagem, chegue à oferta do simulador. Se o usuário já
+  informou o que quer simular (odd, valor ou aposta), pule a primeira pergunta e vá
+  direto: "Quer que eu abra o simulador para você ou prefere que eu faça o cálculo
+  aqui no texto?" Caso contrário, pergunte apenas: "O que você estava pensando em
+  simular?" Depois que ele responder, pergunte apenas: "Quer que eu abra o simulador
+  para você ou prefere que eu faça o cálculo aqui no texto?"
   - Se quiser o simulador: responda SOMENTE "Pronto! O simulador vai aparecer aqui embaixo."
     Nada mais. Não explique como o simulador funciona, não liste campos, não diga "carregando".
   - Se preferir o texto: faça o cálculo diretamente na resposta.
@@ -1042,6 +1047,20 @@ if _page == "chat":
                             caption=attachment["name"],
                             width=250,
                         )
+
+    if st.session_state.chat_thinking:
+        with chat_container:
+            st.markdown('<div class="bot-label">BetBot</div>', unsafe_allow_html=True)
+            with st.spinner("BetBot está analisando..."):
+                _response = get_bot_response(st.session_state.messages)
+        st.session_state.messages.append({"role": "assistant", "content": _response})
+        st.session_state.chat_thinking = False
+        _supabase_save(
+            st.session_state.supabase_user_code,
+            st.session_state.chats,
+            st.session_state.bet_history,
+        )
+        st.rerun()
 
     st.divider()
 
@@ -1467,9 +1486,7 @@ if _page == "chat":
                             "ver":   st.session_state.chat_sim_prefill["ver"] + 1,
                         }
                 else:
-                    with st.spinner("BetBot está analisando..."):
-                        response = get_bot_response(st.session_state.messages)
-                    st.session_state.messages.append({"role": "assistant", "content": response})
+                    st.session_state.chat_thinking = True
                 _supabase_save(
                     st.session_state.supabase_user_code,
                     st.session_state.chats,
