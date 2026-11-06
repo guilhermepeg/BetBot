@@ -1055,6 +1055,8 @@ if _page == "chat":
                 _response = get_bot_response(st.session_state.messages)
         st.session_state.messages.append({"role": "assistant", "content": _response})
         st.session_state.chat_thinking = False
+        if "simulador vai aparecer" in _response.lower():
+            st.session_state.chat_sim_open = True
         _supabase_save(
             st.session_state.supabase_user_code,
             st.session_state.chats,
@@ -1469,10 +1471,13 @@ if _page == "chat":
                 st.session_state.chat_attachment_version += 1
                 _msg_lower = message_text.lower().strip()
                 _SIM_KW_EXACT = {"abre", "abra", "sim, abre", "sim abre", "sim quero",
-                                 "abre para mim", "quero o simulador", "simulador",
-                                 "abrir simulador", "abrir o simulador"}
+                                 "abre para mim", "abre para mi", "abre pra mim", "abre pra mi",
+                                 "quero o simulador", "simulador", "quero sim", "sim quero sim",
+                                 "abrir simulador", "abrir o simulador", "pra mim", "pra mi",
+                                 "sim, abra", "quero abrir", "pode abrir", "abre aí"}
                 _SIM_KW_IN = {"abre o simulador", "abra o simulador", "abre o simul",
-                              "sim quero o simul", "abrir simulador", "abrir o simul"}
+                              "sim quero o simul", "abrir simulador", "abrir o simul",
+                              "abre pra", "abre para", "quero o simul", "pode abr"}
                 if _msg_lower in _SIM_KW_EXACT or any(kw in _msg_lower for kw in _SIM_KW_IN):
                     st.session_state.chat_sim_open = True
                     _odd_m = re.search(r'\b(?:odd|cota)\s*(?:de\s*)?(\d+(?:[.,]\d+)?)', message_text, re.I)
