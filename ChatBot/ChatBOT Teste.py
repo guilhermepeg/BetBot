@@ -1958,7 +1958,7 @@ elif _page == "simulacao":
                 f"<div style='background:{_smr_mean_bg};border-radius:8px;padding:14px 16px;"
                 f"border-left:3px solid {_smr_mean_border};height:100%;'>"
                 f"<div style='font-family:Rajdhani,sans-serif;font-size:0.9rem;font-weight:700;"
-                f"color:#1a3d2b;text-transform:uppercase;margin-bottom:6px;'>Resultado médio</div>"
+                f"color:#1a3d2b;text-transform:uppercase;margin-bottom:6px;'>Resultado médio apostando</div>"
                 f"<div style='font-family:Rajdhani,sans-serif;font-size:1.5rem;font-weight:700;"
                 f"color:{_smr_mean_color};'>R$ {_smr['mean_gain']:+.2f}</div>"
                 f"<div style='font-family:Rajdhani,sans-serif;font-size:0.85rem;color:{_smr_mean_color};margin-top:3px;'>"
