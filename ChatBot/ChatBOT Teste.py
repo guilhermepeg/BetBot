@@ -2144,7 +2144,7 @@ elif _page == "historico":
         "margin:8px 0 0;line-height:1.5;'>"
         "Se você já aposta, registre cada resultado: quanto apostou, qual era a odd e se ganhou ou perdeu. "
         "O BetBot constrói o seu histórico e, ao final, responde: se você tivesse investido "
-        "o mesmo valor total na renda fixa pelo mesmo período, quanto teria rendido?"
+        "o mesmo valor total na renda fixa por 1 ano, quanto teria rendido?"
         "</div></div>",
         unsafe_allow_html=True,
     )
